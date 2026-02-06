@@ -1,50 +1,49 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
+import React, { lazy, Suspense, useEffect } from "react";
+import { useAtomValue } from "jotai";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+
 import "./App.css";
+import Loader from "./components/Loading";
+import AnalysisPage from "./pages/Analysis";
+import ErrorBookPage from "./pages/ErrorBook";
+import FriendLinkPage from "./pages/FriendLink";
+import GalleryPage from "./pages/Gallery";
+import TypingPage from "./pages/Typing";
+import { isOpenDarkModeAtom } from "./store";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  // const Demo = lazy(
+  //   () =>
+  //     new Promise<{ default: React.ComponentType }>((resolve) =>
+  //       setTimeout(
+  //         () => resolve({ default: () => <div>真实页面内容</div> }),
+  //         2000,
+  //       ),
+  //     ),
+  // );
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
-
+  const darkMode = useAtomValue(isOpenDarkModeAtom);
+  useEffect(() => {
+    darkMode
+      ? document.documentElement.classList.add("dark")
+      : document.documentElement.classList.remove("dark");
+  }, [darkMode]);
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    <React.StrictMode>
+      <BrowserRouter>
+        <Suspense fallback={<Loader />}>
+          {/* <Demo /> */}
+          <Routes>
+            <Route path="/" element={<TypingPage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/analysis" element={<AnalysisPage />} />
+            <Route path="/error-book" element={<ErrorBookPage />} />
+            <Route path="/friend-link" element={<FriendLinkPage />} />
+            <Route path="/*" element={<Navigate to="/" />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </React.StrictMode>
   );
 }
 
