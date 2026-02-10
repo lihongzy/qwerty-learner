@@ -1,4 +1,4 @@
-import { classNames } from "@/utils";
+import clsx from "clsx";
 import {
   Dialog,
   DialogPanel,
@@ -64,9 +64,9 @@ export function Drawer(props: DrawerProps) {
           >
             {/* 抽屉面板 */}
             <DialogPanel
-              className={classNames(
+              className={clsx(
                 `${placement}-0`,
-                props.classNames || "",
+                props.classNames,
                 "absolute flex h-full w-140 flex-col drop-shadow-2xl transition-all duration-300 ease-out",
               )}
             >
