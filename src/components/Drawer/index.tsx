@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import {
   Dialog,
+  DialogBackdrop,
   DialogPanel,
   Transition,
   TransitionChild,
@@ -48,7 +49,7 @@ export function Drawer(props: DrawerProps) {
           leaveTo="opacity-0"
         >
           {/* 遮罩层 */}
-          <div className="fixed inset-0 bg-black/25" />
+          <DialogBackdrop className="fixed inset-0 bg-black/25" />
         </TransitionChild>
 
         {/* 抽屉面板的全屏容器 */}
