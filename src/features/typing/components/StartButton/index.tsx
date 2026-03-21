@@ -3,7 +3,7 @@ import { useCallback, useContext, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import IconRotate from '~icons/tabler/rotate-clockwise-2'
 import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
-import { randomConfigAtom } from '@/store'
+import { randomConfigAtom } from '@/shared/state'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 
 export const StartButton = ({ isLoading }: { isLoading: boolean }) => {

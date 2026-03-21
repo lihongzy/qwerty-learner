@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { useAtom, useAtomValue } from 'jotai'
 import useSWR from 'swr'
 
-import { currentChapterAtom, currentDictInfoAtom, reviewModeInfoAtom } from '@/store'
+import { currentChapterAtom, currentDictInfoAtom, reviewModeInfoAtom } from '@/shared/state'
 import { wordListFetcher } from '@/utils/wordListFetcher'
 import { Word, WordWithIndex } from '@/typings'
 import { CHAPTER_LENGTH } from '@/constants'

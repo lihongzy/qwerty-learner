@@ -1,6 +1,6 @@
 import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
-import { isOpenDarkModeAtom } from '@/store'
+import { isOpenDarkModeAtom } from '@/app/state/theme'
 import { useAtom } from 'jotai'
 import { memo, useContext } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'

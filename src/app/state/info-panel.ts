@@ -1,4 +1,4 @@
-﻿import { atom } from 'jotai'
+import { atom } from 'jotai'
 import type { InfoPanelState } from '@/typings'
 
 export const infoPanelStateAtom = atom<InfoPanelState>({

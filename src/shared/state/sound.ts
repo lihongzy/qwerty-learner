@@ -1,4 +1,4 @@
-﻿import { atomForConfig } from './atomForConfig'
+import { atomForConfig } from './atomForConfig'
 import { correctSoundResources, keySoundResources, wrongSoundResources } from '@/resources/soundResource'
 
 export const keySoundsConfigAtom = atomForConfig('keySoundsConfig', {

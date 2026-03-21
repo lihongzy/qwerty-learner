@@ -1,5 +1,5 @@
 import type { TErrorWordData } from './hooks/useErrorWords'
-import { currentChapterAtom, currentDictIdAtom, reviewModeInfoAtom } from '@/store'
+import { currentChapterAtom, currentDictIdAtom, reviewModeInfoAtom } from '@/shared/state'
 import type { Dictionary } from '@/typings/resource'
 import { generateNewWordReviewRecord, useGetLatestReviewRecord } from '@/shared/lib/db/review-record'
 import * as Progress from '@radix-ui/react-progress'

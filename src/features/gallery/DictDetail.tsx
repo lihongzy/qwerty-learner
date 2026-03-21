@@ -1,4 +1,4 @@
-import { currentChapterAtom, currentDictIdAtom, reviewModeInfoAtom } from '@/store'
+import { currentChapterAtom, currentDictIdAtom, reviewModeInfoAtom } from '@/shared/state'
 import type { Dictionary } from '@/typings/resource'
 import { useDeleteWordRecord } from '@/shared/lib/db'
 import range from '@/utils/range'

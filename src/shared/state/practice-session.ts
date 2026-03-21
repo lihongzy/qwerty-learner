@@ -1,7 +1,13 @@
-﻿import { atom } from 'jotai'
+import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { idDictionaryMap } from '@/resources/dictionary'
 import type { Dictionary } from '@/typings/resource'
+import type { ReviewRecord } from '@/shared/lib/db/record'
+
+export type ReviewModeInfo = {
+  isReviewMode: boolean
+  reviewRecord?: ReviewRecord
+}
 
 export const currentDictIdAtom = atomWithStorage('currentDict', 'cet4')
 
@@ -11,3 +17,10 @@ export const currentDictInfoAtom = atom<Dictionary>((get) => {
 })
 
 export const currentChapterAtom = atomWithStorage('currentChapter', 0)
+
+export const reviewModeInfoAtom = atomWithStorage<ReviewModeInfo>('reviewModeInfo', {
+  isReviewMode: false,
+  reviewRecord: undefined,
+})
+
+export const isReviewModeAtom = atom((get) => get(reviewModeInfoAtom).isReviewMode)

@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 import Dexie, { Table } from 'dexie'
 import { useCallback } from 'react'
-import { currentChapterAtom, currentDictIdAtom, isReviewModeAtom } from '@/store'
+import { currentChapterAtom, currentDictIdAtom, isReviewModeAtom } from '@/shared/state'
 import { ChapterRecord, IChapterRecord, IReviewRecord, IRevisionDictRecord, IWordRecord, ReviewRecord, RevisionWordRecord, WordRecord } from './record'
 import type { ChapterRecordInput, SaveWordRecordInput, SaveWordRecordOptions } from './types'
 

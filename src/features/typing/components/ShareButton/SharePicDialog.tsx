@@ -1,4 +1,4 @@
-﻿import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react'
+import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react'
 import { TypingContext } from '@/features/typing/store'
 import { Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import IconXMark from '~icons/heroicons/x-mark-solid'
@@ -13,7 +13,7 @@ import shareImage8 from '@/assets/sharePic/image-8.png'
 import shareImage9 from '@/assets/sharePic/image-9.png'
 import keyboardSvg from '@/assets/sharePic/keyBackground.svg'
 import { useAtomValue } from 'jotai'
-import { currentChapterAtom, currentDictInfoAtom } from '@/store'
+import { currentChapterAtom, currentDictInfoAtom } from '@/shared/state'
 
 const PIC_RATIO = 3
 const PIC_LIST = [shareImage1, shareImage2, shareImage3, shareImage4, shareImage5, shareImage6, shareImage7, shareImage8, shareImage9]

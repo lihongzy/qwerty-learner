@@ -5,15 +5,15 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { useNavigate } from 'react-router'
 import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
+import { infoPanelStateAtom } from '@/app/state/info-panel'
 import {
   currentChapterAtom,
   currentDictInfoAtom,
-  infoPanelStateAtom,
   isReviewModeAtom,
   randomConfigAtom,
   reviewModeInfoAtom,
   wordDictationConfigAtom,
-} from '@/store'
+} from '@/shared/state'
 import { InfoPanelType } from '@/typings'
 import IconX from '~icons/tabler/x'
 import IexportWords from '~icons/icon-park-outline/excel'

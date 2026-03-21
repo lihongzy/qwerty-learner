@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
 import { useImmerReducer } from 'use-immer'
-import { currentChapterAtom, currentDictIdAtom, isReviewModeAtom, randomConfigAtom, reviewModeInfoAtom } from '@/store'
+import { currentChapterAtom, currentDictIdAtom, isReviewModeAtom, randomConfigAtom, reviewModeInfoAtom } from '@/shared/state'
 import { idDictionaryMap } from '@/resources/dictionary'
 import { isDesktop, isLegal } from '@/utils'
 import { useSaveChapterRecord } from '@/shared/lib/db'

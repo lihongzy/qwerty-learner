@@ -1,6 +1,6 @@
-﻿import { useAtomValue } from 'jotai'
+import { useAtomValue } from 'jotai'
 import { useEffect, type PropsWithChildren } from 'react'
-import { isOpenDarkModeAtom } from '@/store'
+import { isOpenDarkModeAtom } from '@/app/state/theme'
 
 export function ThemeProvider({ children }: PropsWithChildren) {
   const darkMode = useAtomValue(isOpenDarkModeAtom)

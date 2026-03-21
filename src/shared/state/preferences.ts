@@ -1,4 +1,4 @@
-﻿import { atom } from 'jotai'
+import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import type { LoopWordTimesOption, PronunciationType, WordDictationOpenBy, WordDictationType } from '@/typings'
 import { defaultFontSizeConfig } from '@/constants'

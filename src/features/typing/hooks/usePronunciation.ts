@@ -1,4 +1,4 @@
-import { pronunciationConfigAtom } from '@/store'
+import { pronunciationConfigAtom } from '@/shared/state'
 import type { PronunciationType } from '@/typings'
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'

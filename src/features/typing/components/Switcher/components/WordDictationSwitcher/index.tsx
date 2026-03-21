@@ -1,4 +1,4 @@
-﻿import { wordDictationConfigAtom } from '@/store'
+import { wordDictationConfigAtom } from '@/shared/state'
 import type { WordDictationType } from '@/typings'
 import { useAtom } from 'jotai'
 import { Popover, Select, Switch } from 'radix-ui'

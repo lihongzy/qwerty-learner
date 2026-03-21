@@ -1,4 +1,4 @@
-﻿import { isOpenDarkModeAtom } from '@/store'
+import { isOpenDarkModeAtom } from '@/app/state/theme'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import type { Activity, DayName } from 'react-activity-calendar'

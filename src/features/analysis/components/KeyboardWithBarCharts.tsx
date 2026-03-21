@@ -1,6 +1,6 @@
 import Keyboard from './keyboard'
 import purple from './purple.json'
-import { isOpenDarkModeAtom } from '@/store'
+import { isOpenDarkModeAtom } from '@/app/state/theme'
 import { BarChart, MapChart } from 'echarts/charts'
 import { GeoComponent, ToolboxComponent, TooltipComponent, VisualMapComponent } from 'echarts/components'
 import * as echarts from 'echarts/core'

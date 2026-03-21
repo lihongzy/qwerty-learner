@@ -1,4 +1,4 @@
-﻿import { hintSoundsConfigAtom, keySoundsConfigAtom } from '@/store'
+import { hintSoundsConfigAtom, keySoundsConfigAtom } from '@/shared/state'
 import { useAtom } from 'jotai'
 import { Popover, Switch } from 'radix-ui'
 import { useCallback } from 'react'

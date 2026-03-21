@@ -5,7 +5,7 @@ import { UniversalTransition } from 'echarts/features'
 import { CanvasRenderer } from 'echarts/renderers'
 import { useEffect, useRef } from 'react'
 import { useAtom } from 'jotai'
-import { isOpenDarkModeAtom } from '@/store'
+import { isOpenDarkModeAtom } from '@/app/state/theme'
 import { useWindowSize } from 'usehooks-ts'
 import purple from './purple.json'
 echarts.registerTheme('purple', purple)

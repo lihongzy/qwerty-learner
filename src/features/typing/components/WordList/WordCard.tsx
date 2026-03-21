@@ -1,6 +1,6 @@
 import type { WordPronunciationIconRef } from '@/shared/components/WordPronunciationIcon'
 import { WordPronunciationIcon } from '@/shared/components/WordPronunciationIcon'
-import { currentDictInfoAtom } from '@/store'
+import { currentDictInfoAtom } from '@/shared/state'
 import type { Word } from '@/typings'
 import { useAtomValue } from 'jotai'
 import { useCallback, useRef } from 'react'

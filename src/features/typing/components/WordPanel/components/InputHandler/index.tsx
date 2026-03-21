@@ -1,4 +1,4 @@
-﻿import { currentDictInfoAtom } from '@/store'
+import { currentDictInfoAtom } from '@/shared/state'
 import { useAtomValue } from 'jotai'
 import { type ChangeEvent, useMemo } from 'react'
 import { KeyEventHandler } from '../KeyEventHandler'

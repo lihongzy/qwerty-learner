@@ -1,5 +1,5 @@
 import { defaultFontSizeConfig } from '@/constants'
-import { fontSizeConfigAtom } from '@/store'
+import { fontSizeConfigAtom } from '@/shared/state'
 import * as ScrollArea from '@radix-ui/react-scroll-area'
 import * as Slider from '@radix-ui/react-slider'
 import { useAtom } from 'jotai'

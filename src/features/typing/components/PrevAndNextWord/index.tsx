@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai'
 import { useCallback, useContext, useMemo } from 'react'
 import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
-import { currentDictInfoAtom, wordDictationConfigAtom } from '@/store'
+import { currentDictInfoAtom, wordDictationConfigAtom } from '@/shared/state'
 import IconNext from '~icons/tabler/arrow-narrow-right'
 import IconPrev from '~icons/tabler/arrow-narrow-left'
 

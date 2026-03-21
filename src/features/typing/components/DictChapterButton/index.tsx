@@ -1,5 +1,5 @@
 import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
-import { currentChapterAtom, currentDictInfoAtom, isReviewModeAtom } from '@/store'
+import { currentChapterAtom, currentDictInfoAtom, isReviewModeAtom } from '@/shared/state'
 import { useAtom, useAtomValue } from 'jotai'
 import { memo } from 'react'
 import { Select } from 'radix-ui'
