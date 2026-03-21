@@ -25,22 +25,22 @@ const StaticSwitcherControls = memo(function StaticSwitcherControls() {
 
   return (
     <>
-      <Tooltip content="Sound settings">
+      <Tooltip content="声音设置">
         <SoundSwitcher />
       </Tooltip>
-      <Tooltip className="h-7 w-7" content="Set the word repeat count">
+      <Tooltip className="h-7 w-7" content="设置单词重复次数">
         <LoopWordSwitcher />
       </Tooltip>
-      <Tooltip className="h-7 w-7" content="Toggle dictation mode (Ctrl + V)">
+      <Tooltip className="h-7 w-7" content="切换听写模式（Ctrl + V）">
         <WordDictationSwitcher />
       </Tooltip>
-      <Tooltip content="Error book">
+      <Tooltip content="错题本">
         <ErrorBookButton />
       </Tooltip>
-      <Tooltip className="h-7 w-7" content="View statistics">
+      <Tooltip className="h-7 w-7" content="查看统计">
         <AnalysisButton />
       </Tooltip>
-      <Tooltip className="h-7 w-7" content="Toggle dark mode">
+      <Tooltip className="h-7 w-7" content="切换深色模式">
         <button
           className="p-[2px] text-lg text-indigo-500 focus:outline-none"
           type="button"
@@ -48,15 +48,15 @@ const StaticSwitcherControls = memo(function StaticSwitcherControls() {
             changeDarkModeState()
             e.currentTarget.blur()
           }}
-          aria-label="Toggle dark mode"
+          aria-label="切换深色模式"
         >
           {isOpenDarkMode ? <IconMoon className="icon" /> : <IconSun className="icon" />}
         </button>
       </Tooltip>
-      <Tooltip className="h-7 w-7" content="Typing hand guide">
+      <Tooltip className="h-7 w-7" content="指法提示">
         <HandPositionIllustration />
       </Tooltip>
-      <Tooltip content="Settings">
+      <Tooltip content="设置">
         <Setting />
       </Tooltip>
     </>
@@ -81,7 +81,7 @@ export function Switcher() {
 
   return (
     <div className="flex items-center justify-center gap-2">
-      <Tooltip className="h-7 w-7" content="Toggle translation display (Ctrl + Shift + V)">
+      <Tooltip className="h-7 w-7" content="切换释义显示（Ctrl + Shift + V）">
         <button
           className={`p-[2px] ${state?.isTransVisible ? 'text-indigo-500' : 'text-gray-500'} text-lg focus:outline-none`}
           type="button"
@@ -89,7 +89,7 @@ export function Switcher() {
             changeTransVisibleState()
             e.currentTarget.blur()
           }}
-          aria-label="Toggle translation display (Ctrl + Shift + V)"
+          aria-label="切换释义显示（Ctrl + Shift + V）"
         >
           {state?.isTransVisible ? <IconLanguage /> : <IconLanguageOff />}
         </button>

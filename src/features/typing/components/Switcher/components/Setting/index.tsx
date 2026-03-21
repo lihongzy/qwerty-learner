@@ -20,10 +20,10 @@ const tabTriggerClassName =
   'flex h-14 w-full cursor-pointer items-center gap-2 rounded-lg px-4 py-2 text-left ring-0 outline-none transition-colors'
 
 const tabItems = [
-  { value: 'sound', label: 'Sound', icon: IconEar, panel: <SoundSetting /> },
-  { value: 'advanced', label: 'Advanced', icon: IconAdjustmentsHorizontal, panel: <AdvancedSetting /> },
-  { value: 'view', label: 'Display', icon: IconEye, panel: <ViewSetting /> },
-  { value: 'data', label: 'Data', icon: IconDatabaseCog, panel: <DataSetting /> },
+  { value: 'sound', label: '声音', icon: IconEar, panel: <SoundSetting /> },
+  { value: 'advanced', label: '高级', icon: IconAdjustmentsHorizontal, panel: <AdvancedSetting /> },
+  { value: 'view', label: '显示', icon: IconEye, panel: <ViewSetting /> },
+  { value: 'data', label: '数据', icon: IconDatabaseCog, panel: <DataSetting /> },
 ] as const
 
 export default function Setting() {
@@ -45,7 +45,7 @@ export default function Setting() {
         type="button"
         onClick={openModal}
         className={`${triggerClassName} ${isOpen ? 'bg-indigo-500 text-white' : ''}`}
-        title="Open settings"
+        title="打开设置"
       >
         <IconCog6Tooth className="icon" />
       </button>
@@ -56,8 +56,8 @@ export default function Setting() {
 
           <Dialog.Content className="fixed left-1/2 top-1/2 z-50 flex w-[50rem] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl bg-white p-0 shadow-xl outline-none dark:bg-gray-800">
             <div className="relative flex h-22 items-end justify-between rounded-t-lg border-b border-neutral-100 bg-stone-50 px-6 py-3 dark:border-neutral-700 dark:bg-gray-900">
-              <Dialog.Title className="text-3xl font-bold text-gray-600 dark:text-gray-200">Settings</Dialog.Title>
-              <button type="button" onClick={closeModal} title="Close settings">
+              <Dialog.Title className="text-3xl font-bold text-gray-600 dark:text-gray-200">设置</Dialog.Title>
+              <button type="button" onClick={closeModal} title="关闭设置">
                 <IconX className="absolute right-7 top-5 cursor-pointer text-gray-400" />
               </button>
             </div>
@@ -65,7 +65,7 @@ export default function Setting() {
             <Tabs.Root defaultValue="sound" orientation="vertical">
               <div className="flex h-[30rem] w-full">
                 <Tabs.List
-                  aria-label="Setting categories"
+                  aria-label="设置分类"
                   className="flex h-full w-52 flex-col items-start space-y-3 border-r border-neutral-100 bg-stone-50 px-6 py-3 dark:border-transparent dark:bg-gray-900"
                 >
                   {tabItems.map(({ value, label, icon: Icon }) => (

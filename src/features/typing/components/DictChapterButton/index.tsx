@@ -16,9 +16,9 @@ const contentClassName =
 const itemClassName =
   'relative flex cursor-pointer select-none items-center rounded-lg py-2 pl-9 pr-8 text-sm text-slate-700 outline-none transition-colors data-[highlighted]:bg-indigo-100 data-[highlighted]:text-indigo-900 dark:text-white/90 dark:data-[highlighted]:bg-gray-700 dark:data-[highlighted]:text-white'
 
-const TOOLTIP_DICT = 'Dictionary'
-const TOOLTIP_CHAPTER = 'Chapter'
-const REVIEW_MODE_LABEL = 'Review'
+const TOOLTIP_DICT = '词典'
+const TOOLTIP_CHAPTER = '章节'
+const REVIEW_MODE_LABEL = '复习'
 
 const DictChapterButtonComponent = () => {
   const currentDictInfo = useAtomValue(currentDictInfoAtom)
@@ -26,7 +26,7 @@ const DictChapterButtonComponent = () => {
   const isReviewMode = useAtomValue(isReviewModeAtom)
 
   const chapterIndexes = Array.from({ length: currentDictInfo.chapterCount }, (_, index) => index)
-  const currentChapterLabel = `Chapter ${currentChapter + 1}`
+  const currentChapterLabel = `第 ${currentChapter + 1} 章`
 
   const handleChapterChange = (value: string) => {
     const nextChapter = Number(value)
@@ -65,7 +65,7 @@ const DictChapterButtonComponent = () => {
                       <Select.ItemIndicator className="absolute left-3 inline-flex items-center text-indigo-500">
                         <IconCheck className="h-4 w-4" />
                       </Select.ItemIndicator>
-                      <Select.ItemText>{`Chapter ${chapterIndex + 1}`}</Select.ItemText>
+                      <Select.ItemText>{`第 ${chapterIndex + 1} 章`}</Select.ItemText>
                     </Select.Item>
                   ))}
                 </Select.Viewport>

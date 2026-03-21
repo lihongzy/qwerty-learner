@@ -28,12 +28,12 @@ const TypingPage = () => {
           <Switcher />
           <StartButton isLoading={session.isLoading} />
 
-          <Tooltip content="Skip this word">
+          <Tooltip content="跳过这个单词">
             <button
               className={`${session.state.isShowSkip ? 'bg-orange-400' : 'invisible w-0 bg-gray-300 px-0 opacity-0'} my-btn-primary transition-all duration-300`}
               onClick={session.skipWord}
             >
-              Skip
+              跳过
             </button>
           </Tooltip>
         </Header>
@@ -44,7 +44,7 @@ const TypingPage = () => {
               {session.isLoading ? (
                 <div className="text-center">
                   <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-dashed border-yellow-500" />
-                  <h2 className="mt-4 text-zinc-900 dark:text-white">Loading...</h2>
+                  <h2 className="mt-4 text-zinc-900 dark:text-white">加载中...</h2>
                 </div>
               ) : (
                 !session.state.isFinished && <WordPanel />

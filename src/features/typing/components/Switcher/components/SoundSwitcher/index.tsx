@@ -28,7 +28,7 @@ const SettingRow = ({ label, checked, onCheckedChange }: SettingRowProps) => {
           <Switch.Thumb className={switchThumbClassName} />
         </Switch.Root>
         <span className="text-right text-xs font-normal leading-tight text-gray-600 dark:text-white dark:text-opacity-60">
-          {checked ? 'Enabled' : 'Disabled'}
+          {checked ? '开启' : '关闭'}
         </span>
       </div>
     </div>
@@ -60,8 +60,8 @@ export default function SoundSwitcher() {
           type="button"
           className={triggerClassName}
           onFocus={(e) => e.currentTarget.blur()}
-          aria-label="Sound settings"
-          title="Sound settings"
+          aria-label="声音设置"
+          title="声音设置"
         >
           <IconSpeakerWave className="icon" />
         </button>
@@ -74,8 +74,8 @@ export default function SoundSwitcher() {
           className="shadow-upper z-30 w-60 select-none rounded-xl bg-white p-4 drop-shadow outline-none dark:bg-gray-800"
         >
           <div className="flex flex-col gap-4">
-            <SettingRow label="Key sounds" checked={keySoundsConfig.isOpen} onCheckedChange={onChangeKeySound} />
-            <SettingRow label="Hint sounds" checked={hintSoundsConfig.isOpen} onCheckedChange={onChangeHintSound} />
+            <SettingRow label="按键音" checked={keySoundsConfig.isOpen} onCheckedChange={onChangeKeySound} />
+            <SettingRow label="提示音" checked={hintSoundsConfig.isOpen} onCheckedChange={onChangeHintSound} />
           </div>
         </Popover.Content>
       </Popover.Portal>

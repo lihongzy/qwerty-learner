@@ -30,32 +30,32 @@ export const Footer = () => {
     <>
       <InfoPanel
         openState={infoPanelState.donate}
-        title="Buy us a coffee"
+        title="???????"
         icon={IconCoffee}
         buttonClassName="bg-amber-500 hover:bg-amber-400"
         iconClassName="text-amber-500 bg-amber-100"
         onClose={() => handleCloseInfoPanel('donate')}
       >
         <p className="indent-4 text-sm text-gray-500">
-          非常感谢大家使用 Qwerty Learner。本项目目前仍处于学习与完善阶段，为了持续为大家提供更优质的体验，我们需要您的支持。
+          ????? Qwerty Learner????????????????????????????????????????
           <br />
-          您的捐赠将用于改进功能与设计，并持续提升用户体验。
+          ????????????????????????
           <br />
         </p>
         <br />
         <p className="indent-4 text-sm text-gray-700 dark:text-gray-200">
-          我们相信，凝聚大家的力量可以让 Qwerty Learner 成为更好的学习平台，也相信您的支持会成为我们持续前进的动力。感谢您的支持！
+          ???????????? Qwerty Learner ??????????????????????????????
         </p>
         <br />
         <DonatingCard />
       </InfoPanel>
 
       <footer className="mt-4 mb-1 flex items-center justify-center gap-2.5 text-sm ease-in">
-        <a href="https://github.com/lihongzy/qwerty-learner" target="_blank" rel="noreferrer" aria-label="前往 GitHub 项目主页">
+        <a href="https://github.com/lihongzy/qwerty-learner" target="_blank" rel="noreferrer" aria-label="?? GitHub ????">
           <IconGitHub className="text-gray-500 hover:text-gray-800" />
         </a>
 
-        <a href="https://x.com/lihongzy6" target="_blank" title="x" rel="noreferrer">
+        <a href="https://x.com/lihongzy6" target="_blank" title="?? X ??" rel="noreferrer">
           <IconTwitter className="text-gray-500 hover:text-[#1DA1F2]" />
         </a>
 
@@ -65,7 +65,7 @@ export const Footer = () => {
           onClick={(e) => {
             ;(handleOpenInfoPanel('donate'), e.currentTarget.blur)
           }}
-          aria-label="考虑捐赠我们"
+          aria-label="??????"
         >
           <IconCoffee className="text-gray-500 hover:text-amber-500" />
         </button>

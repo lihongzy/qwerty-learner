@@ -68,8 +68,8 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
     <div className="flex flex-col rounded-[4rem] px-4 py-3 pl-5 text-gray-800 dark:text-gray-300">
       <div className="relative flex h-40 flex-col gap-2">
         <h3 className="text-2xl font-semibold">{dict.name}</h3>
-        <p className="mt-1">{dict.chapterCount} 章节</p>
-        <p>共 {dict.length} 词</p>
+        <p className="mt-1">{`${dict.chapterCount} ??`}</p>
+        <p>{`? ${dict.length} ?`}</p>
         <p>{dict.description}</p>
         <div className="absolute bottom-5 right-4">
           <ToggleGroup.Root type="single" value={curTab} onValueChange={handleTabChange} className="flex flex-wrap gap-2">
@@ -81,7 +81,7 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
               }`}
             >
               <MajesticonsPaperFoldTextLine className="mr-1.5 text-gray-500" />
-              章节选择
+              ????
             </ToggleGroup.Item>
             {errorWordData.length > 0 && (
               <>
@@ -93,7 +93,7 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
                   }`}
                 >
                   <IcOutlineCollectionsBookmark className="mr-1.5 text-gray-500" />
-                  查看错题
+                  ????
                 </ToggleGroup.Item>
                 <ToggleGroup.Item
                   value={Tab.Review}
@@ -103,7 +103,7 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
                   }`}
                 >
                   <PajamasReviewList className="mr-1.5 text-gray-500" />
-                  错题回顾
+                  ????
                 </ToggleGroup.Item>
               </>
             )}

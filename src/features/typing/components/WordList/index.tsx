@@ -23,10 +23,10 @@ export const WordList = () => {
 
   const currentDictTitle = useMemo(() => {
     if (isReviewMode) {
-      return `${currentDictInfo.name} Review`
+      return `${currentDictInfo.name} 复习`
     }
 
-    return `${currentDictInfo.name} Chapter ${currentChapter + 1}`
+    return `${currentDictInfo.name} 第 ${currentChapter + 1} 章`
   }, [currentChapter, currentDictInfo.name, isReviewMode])
 
   const closeModal = () => {
@@ -40,7 +40,7 @@ export const WordList = () => {
 
   return (
     <>
-      <Tooltip content="Word list" placement="top" className="!absolute left-5 top-1/2 z-20">
+      <Tooltip content="单词列表" placement="top" className="!absolute left-5 top-1/2 z-20">
         <button type="button" onClick={openModal} className={triggerClassName}>
           <ListIcon className="h-6 w-6" />
         </button>
@@ -60,7 +60,7 @@ export const WordList = () => {
                   type="button"
                   onClick={closeModal}
                   className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-stone-200 hover:text-slate-700 dark:hover:bg-gray-800 dark:hover:text-white"
-                  title="Close word list"
+                  title="关闭单词列表"
                 >
                   <IconX className="h-5 w-5" />
                 </button>

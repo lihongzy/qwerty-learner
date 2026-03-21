@@ -10,10 +10,10 @@ import IconCheck from '~icons/tabler/check'
 import IconChevronDown from '~icons/tabler/chevron-down'
 
 const wordDictationTypeList: { name: string; type: WordDictationType }[] = [
-  { name: 'Hide all letters', type: 'hideAll' },
-  { name: 'Hide vowels', type: 'hideVowel' },
-  { name: 'Hide consonants', type: 'hideConsonant' },
-  { name: 'Hide random letters', type: 'randomHide' },
+  { name: '隐藏全部字母', type: 'hideAll' },
+  { name: '隐藏元音', type: 'hideVowel' },
+  { name: '隐藏辅音', type: 'hideConsonant' },
+  { name: '随机隐藏字母', type: 'randomHide' },
 ]
 
 const triggerClassName =
@@ -49,7 +49,7 @@ const SettingRow = ({ label, checked, onCheckedChange }: SettingRowProps) => {
           <Switch.Thumb className={switchThumbClassName} />
         </Switch.Root>
         <span className="text-right text-xs font-normal leading-tight text-gray-600 dark:text-white dark:text-opacity-60">
-          {checked ? 'Enabled' : 'Disabled'}
+          {checked ? '开启' : '关闭'}
         </span>
       </div>
     </div>
@@ -103,8 +103,8 @@ export default function WordDictationSwitcher() {
         <button
           className={`${triggerClassName} ${wordDictationConfig.isOpen ? 'text-indigo-500' : 'text-gray-500'}`}
           type="button"
-          aria-label="Toggle dictation mode"
-          title="Toggle dictation mode"
+          aria-label="切换听写模式"
+          title="切换听写模式"
           onFocus={(e) => e.currentTarget.blur()}
         >
           {wordDictationConfig.isOpen ? <IconEye className="icon" /> : <IconEyeSlash className="icon" />}
@@ -118,15 +118,15 @@ export default function WordDictationSwitcher() {
           className="shadow-upper z-30 w-60 select-none rounded-xl bg-white p-4 drop-shadow outline-none dark:bg-gray-800"
         >
           <div className="flex flex-col gap-4">
-            <SettingRow label="Dictation mode" checked={wordDictationConfig.isOpen} onCheckedChange={onToggleWordDictation} />
+            <SettingRow label="听写模式" checked={wordDictationConfig.isOpen} onCheckedChange={onToggleWordDictation} />
 
             {wordDictationConfig.isOpen && (
               <div className="flex w-full flex-col items-start gap-2">
-                <span className="text-sm font-normal leading-5 text-gray-900 dark:text-white dark:text-opacity-60">Mode</span>
+                <span className="text-sm font-normal leading-5 text-gray-900 dark:text-white dark:text-opacity-60">模式</span>
 
                 <Select.Root value={currentType.type} onValueChange={onChangeWordDictationType}>
-                  <Select.Trigger className={selectTriggerClassName} aria-label="Select dictation mode">
-                    <Select.Value placeholder="Select dictation mode" />
+                  <Select.Trigger className={selectTriggerClassName} aria-label="选择听写模式">
+                    <Select.Value placeholder="选择听写模式" />
                     <Select.Icon>
                       <IconChevronDown className="h-4 w-4" />
                     </Select.Icon>

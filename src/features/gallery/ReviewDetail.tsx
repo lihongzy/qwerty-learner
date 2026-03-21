@@ -47,9 +47,9 @@ export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[];
         <MdiRobotAngry fontSize={30} className="mb-4 text-indigo-300" />
         <blockquote>
           <p className="text-lg font-medium text-gray-600 dark:text-gray-300">
-            我们会根据该词典里的历史练习数据、错误次数和最近练习时间，生成一组复习列表。
+            ???????????????????????????????????????
             <br />
-            当前生成规则仍在迭代中，后续会继续优化。
+            ??????????????????????
           </p>
         </blockquote>
       </div>
@@ -71,20 +71,20 @@ export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[];
                 {latestReviewRecord.index + 1}/{latestReviewRecord.words.length}
               </span>
             </div>
-            <div className="mt-1 text-sm font-normal text-gray-500">{`( 创建于 ${timeStamp2String(latestReviewRecord.createTime)} )`}</div>
+            <div className="mt-1 text-sm font-normal text-gray-500">{`???? ${timeStamp2String(latestReviewRecord.createTime)}?`}</div>
           </>
         ) : (
-          <div>当前词典错词数: {errorData.length}</div>
+          <div>{`????????${errorData.length}`}</div>
         )}
 
         <div className="mt-6 flex gap-10">
           {latestReviewRecord && (
             <button type="button" className={buttonClassName} onClick={continueReview}>
-              继续当前进度
+              ??????
             </button>
           )}
           <button type="button" className={buttonClassName} onClick={() => void startReview()} disabled={errorData.length === 0}>
-            开始{latestReviewRecord ? '新的' : ''}复习
+            {`??${latestReviewRecord ? '??' : ''}??`}
           </button>
         </div>
       </div>

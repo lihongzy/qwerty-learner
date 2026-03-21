@@ -68,7 +68,7 @@ export const ResultScreen = () => {
   }, [correctRate])
 
   const isLastChapter = useMemo(() => currentChapter >= currentDictInfo.chapterCount - 1, [currentChapter, currentDictInfo.chapterCount])
-  const chapterTitle = `${currentDictInfo.name} ${isReviewMode ? 'Review' : `Chapter ${currentChapter + 1}`}`
+  const chapterTitle = `${currentDictInfo.name} ${isReviewMode ? '复习' : `第 ${currentChapter + 1} 章`}`
   const exportFileName = `${currentDictInfo.name}-Chapter-${currentChapter + 1}.xlsx`
   const nextButtonClassName = `my-btn-primary h-12 text-base font-bold${isLastChapter ? ' cursor-not-allowed opacity-50' : ''}`
 
@@ -113,7 +113,7 @@ export const ResultScreen = () => {
         writeFileXLSX(wb, exportFileName)
       })
       .catch(() => {
-        console.log('Failed to load the xlsx module')
+        console.log('加载 xlsx 模块失败')
       })
   }, [exportFileName, state.chapterData])
 
@@ -165,8 +165,8 @@ export const ResultScreen = () => {
                 <button className="absolute right-7 top-5" onClick={exitButtonHandler}><IconX className="text-gray-400" /></button>
                 <div className="mt-10 flex flex-row gap-2 overflow-hidden">
                   <div className="flex flex-shrink-0 flex-grow-0 flex-col gap-3 px-4 sm:px-1 md:px-2 lg:px-4">
-                    <RemarkRing remark={`${state.timerData.accuracy}%`} caption="Accuracy" percentage={state.timerData.accuracy} />
-                    <RemarkRing remark={timeString} caption="Elapsed" />
+                    <RemarkRing remark={`${state.timerData.accuracy}%`} caption="正确率" percentage={state.timerData.accuracy} />
+                    <RemarkRing remark={timeString} caption="用时" />
                     <RemarkRing remark={`${state.timerData.wpm}`} caption="WPM" />
                   </div>
                   <div className="z-10 ml-6 flex-1 overflow-visible rounded-xl bg-indigo-50 dark:bg-gray-700">
@@ -180,7 +180,7 @@ export const ResultScreen = () => {
                   <div className="ml-2 flex flex-col items-center justify-end gap-3 text-xl">
                     <AuthorButton />
                     {!isReviewMode && <><ShareButton /><IexportWords fontSize={18} className="cursor-pointer text-gray-500" onClick={exportWords} /></>}
-                    <button onClick={(e) => { handleOpenInfoPanel('donate'); e.currentTarget.blur() }} className="cursor-pointer" type="button" title="Support this project">
+                    <button onClick={(e) => { handleOpenInfoPanel('donate'); e.currentTarget.blur() }} className="cursor-pointer" type="button" title="支持这个项目">
                       <IconCoffee fontSize={17} className={`text-gray-500 hover:text-amber-500 focus:outline-none ${styles.imgShake}`} />
                     </button>
                     <a href="https://github.com/lihongzy/qwerty-learner" target="_blank" rel="noreferrer" className="leading-[0px]">
@@ -190,11 +190,11 @@ export const ResultScreen = () => {
                 </div>
                 <div className="mt-10 flex w-full justify-center gap-5 px-5 text-xl">
                   {!isReviewMode && <>
-                    <Tooltip content="Shortcut: Shift + Enter"><button className="my-btn-primary h-12 border-2 border-solid border-gray-300 bg-white text-base text-gray-700 dark:border-gray-700 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700" type="button" onClick={dictationButtonHandler} title="Dictation for this chapter">Dictation for this chapter</button></Tooltip>
-                    <Tooltip content="Shortcut: Space"><button className="my-btn-primary h-12 border-2 border-solid border-gray-300 bg-white text-base text-gray-700 dark:border-gray-700 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700" type="button" onClick={repeatButtonHandler} title="Repeat this chapter">Repeat this chapter</button></Tooltip>
+                    <Tooltip content="快捷键：Shift + Enter"><button className="my-btn-primary h-12 border-2 border-solid border-gray-300 bg-white text-base text-gray-700 dark:border-gray-700 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700" type="button" onClick={dictationButtonHandler} title="本章听写">本章听写</button></Tooltip>
+                    <Tooltip content="快捷键：Space"><button className="my-btn-primary h-12 border-2 border-solid border-gray-300 bg-white text-base text-gray-700 dark:border-gray-700 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700" type="button" onClick={repeatButtonHandler} title="重新练习本章">重新练习本章</button></Tooltip>
                   </>}
-                  {!isLastChapter && !isReviewMode && <Tooltip content="Shortcut: Enter"><button className={nextButtonClassName} type="button" onClick={nextButtonHandler} title="Next chapter">Next chapter</button></Tooltip>}
-                  {isReviewMode && <button className="my-btn-primary h-12 text-base font-bold" type="button" onClick={onNavigateToGallery} title="Practice other chapters">Practice other chapters</button>}
+                  {!isLastChapter && !isReviewMode && <Tooltip content="快捷键：Enter"><button className={nextButtonClassName} type="button" onClick={nextButtonHandler} title="下一章">下一章</button></Tooltip>}
+                  {isReviewMode && <button className="my-btn-primary h-12 text-base font-bold" type="button" onClick={onNavigateToGallery} title="练习其他章节">练习其他章节</button>}
                 </div>
               </div>
             </div>

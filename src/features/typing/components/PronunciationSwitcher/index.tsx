@@ -131,7 +131,7 @@ const PronunciationSwitcherComponent = () => {
   }, [pronunciationList, setPronunciationConfig])
 
   const currentLabel = useMemo(() => {
-    return pronunciationConfig.isOpen ? pronunciationConfig.name : 'Off'
+    return pronunciationConfig.isOpen ? pronunciationConfig.name : '关闭'
   }, [pronunciationConfig.isOpen, pronunciationConfig.name])
 
   const canUseSpeechSynthesis = typeof window !== 'undefined' && 'speechSynthesis' in window
@@ -146,7 +146,7 @@ const PronunciationSwitcherComponent = () => {
             e.currentTarget.blur()
           }}
         >
-          <Tooltip content="Pronunciation and phonetics">{currentLabel}</Tooltip>
+          <Tooltip content="发音与音标">{currentLabel}</Tooltip>
         </button>
       </Popover.Trigger>
 
@@ -157,29 +157,29 @@ const PronunciationSwitcherComponent = () => {
           className="shadow-upper z-30 w-72 select-none rounded-2xl bg-white p-4 text-left shadow-xl outline-none dark:bg-gray-800"
         >
           <div className="flex flex-col gap-4">
-            <SettingRow label="Phonetics" checked={phoneticConfig.isOpen} onCheckedChange={onChangePhoneticIsOpen} checkedText="Enabled" uncheckedText="Disabled" />
-            <SettingRow label="Word pronunciation" checked={pronunciationConfig.isOpen} onCheckedChange={onChangePronunciationIsOpen} checkedText="Enabled" uncheckedText="Disabled" />
+            <SettingRow label="音标" checked={phoneticConfig.isOpen} onCheckedChange={onChangePhoneticIsOpen} checkedText="开启" uncheckedText="关闭" />
+            <SettingRow label="单词发音" checked={pronunciationConfig.isOpen} onCheckedChange={onChangePronunciationIsOpen} checkedText="开启" uncheckedText="关闭" />
 
             {canUseSpeechSynthesis && (
               <SettingRow
-                label="Translation speech"
+                label="释义朗读"
                 checked={pronunciationConfig.isTransRead}
                 onCheckedChange={onChangePronunciationIsTransRead}
-                checkedText="Enabled"
-                uncheckedText="Disabled"
+                checkedText="开启"
+                uncheckedText="关闭"
               />
             )}
 
             {pronunciationConfig.isOpen && (
               <div className="flex flex-col gap-4 rounded-xl border border-indigo-100 bg-indigo-50/60 p-3 dark:border-gray-700 dark:bg-gray-900/70">
-                <SettingRow label="Loop pronunciation" checked={pronunciationConfig.isLoop} onCheckedChange={onChangePronunciationIsLoop} checkedText="Enabled" uncheckedText="Disabled" />
+                <SettingRow label="循环发音" checked={pronunciationConfig.isLoop} onCheckedChange={onChangePronunciationIsLoop} checkedText="开启" uncheckedText="关闭" />
 
                 <div className="flex flex-col gap-2">
-                  <span className="text-sm font-normal leading-5 text-gray-900 dark:text-white dark:text-opacity-70">Accent</span>
+                  <span className="text-sm font-normal leading-5 text-gray-900 dark:text-white dark:text-opacity-70">发音类型</span>
 
                   <Select.Root value={pronunciationConfig.type} onValueChange={onChangePronunciationType}>
-                    <Select.Trigger className={selectTriggerClassName} aria-label="Accent">
-                      <Select.Value placeholder="Select an accent" />
+                    <Select.Trigger className={selectTriggerClassName} aria-label="发音类型">
+                      <Select.Value placeholder="选择发音类型" />
                       <Select.Icon>
                         <IconChevronDown className="h-4 w-4" />
                       </Select.Icon>
@@ -202,7 +202,7 @@ const PronunciationSwitcherComponent = () => {
                   </Select.Root>
                 </div>
 
-                <span className="text-center text-xs font-medium text-gray-500 dark:text-white dark:text-opacity-60">Shortcut: Ctrl + J</span>
+                <span className="text-center text-xs font-medium text-gray-500 dark:text-white dark:text-opacity-60">快捷键：Ctrl + J</span>
               </div>
             )}
           </div>

@@ -48,7 +48,7 @@ const DropdownExport: FC<DropdownProps> = ({ renderRecords }) => {
             const data = await wordListFetcher(url)
             return { url, data }
           } catch (error) {
-            console.error(`Failed to fetch dictionary data from ${url}:`, error)
+            console.error(`获取词典数据失败：${url}`, error)
             return { url, data: [] }
           }
         }),
@@ -83,14 +83,14 @@ const DropdownExport: FC<DropdownProps> = ({ renderRecords }) => {
       } else {
         const worksheet = XLSX.utils.json_to_sheet(exportData)
         const workbook = XLSX.utils.book_new()
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+        XLSX.utils.book_append_sheet(workbook, worksheet, '错题')
         const excelBuffer = XLSX.write(workbook, { bookType: bookType as XLSX.BookType, type: 'array' })
         blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
       }
 
-      saveAs(blob, `ErrorBook_${formatTimestamp(new Date())}.${bookType}`)
+      saveAs(blob, `错题本_${formatTimestamp(new Date())}.${bookType}`)
     } catch (error) {
-      console.error('Export failed:', error)
+      console.error('导出失败：', error)
       alert('导出失败，请重试')
     } finally {
       setIsExporting(false)
