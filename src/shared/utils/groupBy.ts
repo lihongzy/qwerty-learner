@@ -1,4 +1,4 @@
-import type { Dictionary } from '@/typings/resource'
+import type { Dictionary } from '@/shared/types/resource'
 
 function appendToGroup<T>(groups: Record<string, T[]>, key: string, value: T) {
   ;(groups[key] ??= []).push(value)

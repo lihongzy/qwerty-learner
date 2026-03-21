@@ -1,6 +1,6 @@
 import { createContext } from 'react'
-import shuffle from '@/utils/shuffle'
-import type { WordWithIndex } from '@/typings'
+import shuffle from '@/shared/utils/shuffle'
+import type { WordWithIndex } from '@/shared/types'
 import type { LetterMistakes } from '@/shared/lib/db/record'
 import type { TypingState, UserInputLog } from './type'
 

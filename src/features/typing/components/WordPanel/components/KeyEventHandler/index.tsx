@@ -1,7 +1,7 @@
 ﻿import { useCallback, useContext, useEffect, useRef } from 'react'
 import { TypingContext } from '@/features/typing/store'
 import type { WordUpdateAction } from '../InputHandler'
-import { isChineseSymbol, isLegal } from '@/utils'
+import { isChineseSymbol, isLegal } from '@/shared/utils'
 
 type ActiveElementDebug = {
   tagName?: string

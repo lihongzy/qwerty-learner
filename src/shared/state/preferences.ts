@@ -1,5 +1,5 @@
 import { atomWithStorage } from 'jotai/utils'
-import { defaultFontSizeConfig } from '@/constants'
+import { defaultFontSizeConfig } from '@/shared/constants'
 import type { PhoneticType } from '@/features/typing/state'
 import { atomForConfig } from './atomForConfig'
 

@@ -1,5 +1,5 @@
-import { Dictionary, DictionaryResource } from '@/typings/resource'
-import { calcChapterCount } from '@/utils'
+import { Dictionary, DictionaryResource } from '@/shared/types/resource'
+import { calcChapterCount } from '@/shared/utils'
 
 // 中国考试
 const chinaExam: DictionaryResource[] = [

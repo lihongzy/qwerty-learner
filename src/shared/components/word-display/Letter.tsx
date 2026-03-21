@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { useAtomValue } from 'jotai'
 import { memo } from 'react'
-import { EXPLICIT_SPACE } from '@/constants'
+import { EXPLICIT_SPACE } from '@/shared/constants'
 import { fontSizeConfigAtom } from '@/shared/state'
 
 export type LetterState = 'normal' | 'correct' | 'wrong'

@@ -3,7 +3,7 @@ import { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { isReviewModeAtom, phoneticConfigAtom, reviewModeInfoAtom } from '@/shared/state'
 import { isShowPrevAndNextWordAtom, loopWordConfigAtom } from '@/features/typing/state'
-import type { Word } from '@/typings'
+import type { Word } from '@/shared/types'
 import { usePrefetchPronunciationSound } from '../../hooks/usePronunciation'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 

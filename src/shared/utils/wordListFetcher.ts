@@ -1,4 +1,4 @@
-import { Word } from "@/typings"
+import { Word } from "@/shared/types"
 
 export async function wordListFetcher(url:string) :Promise<Word[]>{
     const URL_PREFIX :string = ''

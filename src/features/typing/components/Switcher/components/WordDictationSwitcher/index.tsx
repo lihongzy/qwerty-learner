@@ -1,5 +1,5 @@
 import { wordDictationConfigAtom } from '@/features/typing/state'
-import type { WordDictationType } from '@/typings'
+import type { WordDictationType } from '@/shared/types'
 import { useAtom } from 'jotai'
 import { Popover, Select, Switch } from 'radix-ui'
 import { useCallback, useMemo } from 'react'

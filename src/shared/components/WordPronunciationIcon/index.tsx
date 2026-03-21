@@ -1,6 +1,6 @@
 import { SoundIcon } from './SoundIcon'
 import { usePronunciationSound } from '@/features/typing/hooks/usePronunciation.ts'
-import type { Word } from '@/typings'
+import type { Word } from '@/shared/types'
 import clsx from 'clsx'
 import { useCallback, useImperativeHandle, useMemo } from 'react'
 

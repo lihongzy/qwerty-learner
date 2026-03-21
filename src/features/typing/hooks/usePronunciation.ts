@@ -1,5 +1,5 @@
 import { pronunciationConfigAtom } from '@/features/typing/state'
-import type { PronunciationType } from '@/typings'
+import type { PronunciationType } from '@/shared/types'
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import useSound from 'use-sound'

@@ -1,6 +1,6 @@
 import type { TErrorWordData } from './hooks/useErrorWords'
 import { currentChapterAtom, currentDictIdAtom, reviewModeInfoAtom } from '@/shared/state'
-import type { Dictionary } from '@/typings/resource'
+import type { Dictionary } from '@/shared/types/resource'
 import { generateNewWordReviewRecord, useGetLatestReviewRecord } from '@/shared/lib/db/review-record'
 import * as Progress from '@radix-ui/react-progress'
 import { useSetAtom } from 'jotai'

@@ -1,5 +1,5 @@
 import { atomForConfig } from '@/shared/state/atomForConfig'
-import { correctSoundResources, keySoundResources, wrongSoundResources } from '@/resources/soundResource'
+import { correctSoundResources, keySoundResources, wrongSoundResources } from '@/shared/resources/soundResource'
 
 export const keySoundsConfigAtom = atomForConfig('keySoundsConfig', {
   isOpen: true,

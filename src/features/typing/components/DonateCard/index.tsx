@@ -6,7 +6,7 @@ import IconParty from '~icons/logos/partytown-icon'
 import { useChapterNumber, useDayFromFirstWordRecord, useSumWrongCount, useWordNumber } from './useWordStats'
 import { DonatingCard } from '@/shared/components/DonatingCard'
 import dayjs from 'dayjs'
-import { DONATE_DATE } from '@/constants'
+import { DONATE_DATE } from '@/shared/constants'
 
 export const DonateCard = () => {
   const [show, setShow] = useState(true)

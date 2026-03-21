@@ -3,9 +3,9 @@ import { useAtom, useAtomValue } from 'jotai'
 import useSWR from 'swr'
 
 import { currentChapterAtom, currentDictInfoAtom, reviewModeInfoAtom } from '@/shared/state'
-import { wordListFetcher } from '@/utils/wordListFetcher'
-import { Word, WordWithIndex } from '@/typings'
-import { CHAPTER_LENGTH } from '@/constants'
+import { wordListFetcher } from '@/shared/utils/wordListFetcher'
+import { Word, WordWithIndex } from '@/shared/types'
+import { CHAPTER_LENGTH } from '@/shared/constants'
 
 /** 获取词列表的结果类型 */
 export type UseWordListResult = {

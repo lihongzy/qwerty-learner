@@ -1,5 +1,5 @@
-﻿import { idDictionaryMap } from '@/resources/dictionary'
-import { wordListFetcher } from '@/utils/wordListFetcher'
+import { idDictionaryMap } from '@/shared/resources/dictionary'
+import { wordListFetcher } from '@/shared/utils/wordListFetcher'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { saveAs } from 'file-saver'
 import type { FC } from 'react'

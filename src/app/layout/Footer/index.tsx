@@ -6,7 +6,7 @@ import IconGitHub from '~icons/mdi/github'
 import IconTwitter from '~icons/mdi/twitter'
 
 import { infoPanelStateAtom } from '@/app/state'
-import { InfoPanelType } from '@/typings'
+import { InfoPanelType } from '@/shared/types'
 import { InfoPanel } from '@/shared/components/InfoPanel'
 import { DonatingCard } from '@/shared/components/DonatingCard'
 

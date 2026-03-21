@@ -1,5 +1,5 @@
-import { KEY_SOUND_URL_PREFIX, keySoundResources } from '@/resources/soundResource'
-import type { SoundResource } from '@/resources/soundResource'
+import { KEY_SOUND_URL_PREFIX, keySoundResources } from '@/shared/resources/soundResource'
+import type { SoundResource } from '@/shared/resources/soundResource'
 import { hintSoundsConfigAtom, keySoundsConfigAtom, pronunciationConfigAtom } from '@/features/typing/state'
 import { Howl, Howler } from 'howler'
 import { useAtom } from 'jotai'

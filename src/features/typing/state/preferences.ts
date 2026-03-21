@@ -1,6 +1,6 @@
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import type { LoopWordTimesOption, PronunciationType, WordDictationOpenBy, WordDictationType } from '@/typings'
+import type { LoopWordTimesOption, PronunciationType, WordDictationOpenBy, WordDictationType } from '@/shared/types'
 import { atomForConfig } from '@/shared/state/atomForConfig'
 
 export type PhoneticType = 'us' | 'uk' | 'romaji' | 'zh' | 'ja' | 'de' | 'hapin' | 'kk' | 'id'

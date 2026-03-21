@@ -1,4 +1,4 @@
-import type { Word } from '@/typings'
+import type { Word } from '@/shared/types'
 import type { LetterMistakes } from './record'
 
 export type ChapterRecordInput = {

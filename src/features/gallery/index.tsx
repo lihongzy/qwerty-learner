@@ -1,5 +1,5 @@
 import { Layout } from '@/app/layout/Layout'
-import { Dictionary, LanguageCategoryType } from '@/typings/resource'
+import { Dictionary, LanguageCategoryType } from '@/shared/types/resource'
 import { createContext, useCallback, useMemo } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useNavigate } from 'react-router'
@@ -9,7 +9,7 @@ import { LanguageTabSwitcher } from './LanguageTabSwitcher'
 import DictRequest from './DictRequest'
 import { ScrollArea } from 'radix-ui'
 import IconInfo from '~icons/ic/outline-info'
-import { dictionaries } from '@/resources/dictionary'
+import { dictionaries } from '@/shared/resources/dictionary'
 import DictionaryGroup from './DictionaryGroup'
 
 

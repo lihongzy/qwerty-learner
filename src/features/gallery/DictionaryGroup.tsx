@@ -1,4 +1,4 @@
-import { Dictionary } from '@/typings/resource'
+import { Dictionary } from '@/shared/types/resource'
 import { useCallback, useMemo, useState } from 'react'
 import DictTagSwitcher from './DictTagSwitcher'
 import DictionaryComponent from './DictionaryComponent'

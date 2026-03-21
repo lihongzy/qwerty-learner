@@ -1,4 +1,4 @@
-import type { WordWithIndex } from '@/typings'
+import type { WordWithIndex } from '@/shared/types'
 import type { LetterMistakes } from '@/shared/lib/db/record'
 
 export type ChapterData = {

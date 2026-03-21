@@ -1,5 +1,5 @@
-import { getUTCUnixTimestamp } from '@/utils'
-import { Word } from '@/typings'
+import { getUTCUnixTimestamp } from '@/shared/utils'
+import { Word } from '@/shared/types'
 
 export interface IWordRecord {
   word: string

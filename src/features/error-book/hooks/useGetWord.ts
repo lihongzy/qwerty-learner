@@ -1,6 +1,6 @@
-﻿import type { Word } from '@/typings'
-import type { Dictionary } from '@/typings/resource'
-import { wordListFetcher } from '@/utils/wordListFetcher'
+import type { Word } from '@/shared/types'
+import type { Dictionary } from '@/shared/types/resource'
+import { wordListFetcher } from '@/shared/utils/wordListFetcher'
 import { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 

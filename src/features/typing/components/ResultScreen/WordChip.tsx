@@ -1,5 +1,5 @@
 
-import type { WordWithIndex } from '@/typings'
+import type { WordWithIndex } from '@/shared/types'
 import { flip, offset, shift, useFloating, useHover, useInteractions, useRole } from '@floating-ui/react'
 import { useCallback, useState } from 'react'
 import { usePronunciationSound } from '../../hooks/usePronunciation'

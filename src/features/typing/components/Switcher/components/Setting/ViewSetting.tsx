@@ -1,4 +1,4 @@
-import { defaultFontSizeConfig } from '@/constants'
+import { defaultFontSizeConfig } from '@/shared/constants'
 import { fontSizeConfigAtom } from '@/shared/state'
 import * as ScrollArea from '@radix-ui/react-scroll-area'
 import * as Slider from '@radix-ui/react-slider'

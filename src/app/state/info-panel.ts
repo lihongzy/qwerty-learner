@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import type { InfoPanelState } from '@/typings'
+import type { InfoPanelState } from '@/shared/types'
 
 export const infoPanelStateAtom = atom<InfoPanelState>({
   donate: false,

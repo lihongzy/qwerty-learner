@@ -1,4 +1,4 @@
-import { KEY_SOUND_URL_PREFIX, SOUND_URL_PREFIX, keySoundResources } from '@/resources/soundResource'
+import { KEY_SOUND_URL_PREFIX, SOUND_URL_PREFIX, keySoundResources } from '@/shared/resources/soundResource'
 import { hintSoundsConfigAtom, keySoundsConfigAtom } from '@/features/typing/state'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useEffect, useMemo } from 'react'

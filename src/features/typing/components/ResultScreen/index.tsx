@@ -11,7 +11,7 @@ import {
   randomConfigAtom,
   wordDictationConfigAtom,
 } from '@/features/typing/state'
-import { InfoPanelType } from '@/typings'
+import { InfoPanelType } from '@/shared/types'
 import IconX from '~icons/tabler/x'
 import IexportWords from '~icons/icon-park-outline/excel'
 import IconCoffee from '~icons/mdi/coffee'

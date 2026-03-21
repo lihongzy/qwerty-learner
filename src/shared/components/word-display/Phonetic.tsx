@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { useAtomValue } from 'jotai'
 import { isTextSelectableAtom, phoneticConfigAtom } from '@/shared/state'
-import { Word, WordWithIndex } from '@/typings'
+import { Word, WordWithIndex } from '@/shared/types'
 
 export type PhoneticProps = {
   word: WordWithIndex | Word

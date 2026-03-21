@@ -1,7 +1,7 @@
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { idDictionaryMap } from '@/resources/dictionary'
-import type { Dictionary } from '@/typings/resource'
+import { idDictionaryMap } from '@/shared/resources/dictionary'
+import type { Dictionary } from '@/shared/types/resource'
 import type { ReviewRecord } from '@/shared/lib/db/record'
 
 export type ReviewModeInfo = {

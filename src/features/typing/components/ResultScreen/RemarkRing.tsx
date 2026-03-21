@@ -1,5 +1,5 @@
 
-import clamp from '@/utils'
+import clamp from '@/shared/utils'
 import { useMemo } from 'react'
 import clsx from 'clsx'
 

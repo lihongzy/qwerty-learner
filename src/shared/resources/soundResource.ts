@@ -1,4 +1,4 @@
-﻿import { LanguageType } from '@/typings/resource'
+import { LanguageType } from '@/shared/types/resource'
 
 export type PronunciationType = 'us' | 'uk' | 'romaji' | 'zh' | 'ja' | 'de' | 'hapin' | 'kk' | 'id'
 export type PronunciationConfig = {

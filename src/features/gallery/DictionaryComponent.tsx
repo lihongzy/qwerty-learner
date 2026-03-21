@@ -1,15 +1,15 @@
-import DictDetail from './DictDetail'
-import { useDictStats } from './hooks/useDictStats'
-import bookCover from '@/assets/book-cover.png'
-import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
-import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
-import { currentDictIdAtom } from '@/shared/state'
-import type { Dictionary } from '@/typings/resource'
-import { calcChapterCount } from '@/utils'
 import * as Progress from '@radix-ui/react-progress'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { useIntersectionObserver } from 'usehooks-ts'
+import DictDetail from './DictDetail'
+import { useDictStats } from './hooks/useDictStats'
+import bookCover from '@/assets/book-cover.png'
+import { currentDictIdAtom } from '@/shared/state'
+import type { Dictionary } from '@/shared/types/resource'
+import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
+import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
+import { calcChapterCount } from '@/shared/utils'
 
 interface Props {
   dictionary: Dictionary
