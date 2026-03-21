@@ -7,8 +7,8 @@ import IconTwitter from '~icons/mdi/twitter'
 
 import { infoPanelStateAtom } from '@/store'
 import { InfoPanelType } from '@/typings'
-import { InfoPanel } from '../InfoPanel'
-import { DonatingCard } from '../DonatingCard'
+import { InfoPanel } from '@/components/InfoPanel'
+import { DonatingCard } from '@/components/DonatingCard'
 
 export const Footer = () => {
   const [infoPanelState, setInfoPanelState] = useAtom(infoPanelStateAtom)

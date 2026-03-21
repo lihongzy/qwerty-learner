@@ -1,6 +1,6 @@
 import type { ErrorColumn } from './columns'
 import { errorColumns } from './columns'
-import LoadingUI from '@/components/Loading'
+import LoadingUI from '@/shared/components/Loading'
 import type { SortingState } from '@tanstack/react-table'
 import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'

@@ -1,4 +1,4 @@
-import { Layout } from '@/components/Layout'
+import { Layout } from '@/app/layout/Layout'
 import { Dictionary, LanguageCategoryType } from '@/typings/resource'
 import { createContext, useCallback, useMemo } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'

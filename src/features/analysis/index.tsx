@@ -1,4 +1,4 @@
-import { Layout } from '@/components/Layout'
+import { Layout } from '@/app/layout/Layout'
 import dayjs from 'dayjs'
 import { ScrollArea } from 'radix-ui'
 import { useCallback } from 'react'

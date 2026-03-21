@@ -1,5 +1,5 @@
-import type { WordPronunciationIconRef } from '@/components/WordPronunciationIcon'
-import { WordPronunciationIcon } from '@/components/WordPronunciationIcon'
+import type { WordPronunciationIconRef } from '@/shared/components/WordPronunciationIcon'
+import { WordPronunciationIcon } from '@/shared/components/WordPronunciationIcon'
 import { currentDictInfoAtom } from '@/store'
 import type { Word } from '@/typings'
 import { useAtomValue } from 'jotai'

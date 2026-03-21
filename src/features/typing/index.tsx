@@ -1,6 +1,6 @@
 import { DonateCard } from '@/components/DonateCard'
-import { Header } from '@/components/Header'
-import { Layout } from '@/components/Layout'
+import { Header } from '@/app/layout/Header'
+import { Layout } from '@/app/layout/Layout'
 import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { DictChapterButton } from './components/DictChapterButton'
 import { PronunciationSwitcher } from './components/PronunciationSwitcher'

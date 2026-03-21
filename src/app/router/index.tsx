@@ -1,4 +1,4 @@
-﻿import Loader from '@/components/Loading'
+import Loader from '@/shared/components/Loading'
 import { Suspense, useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import { desktopRoutes, sharedRoutes } from './routes'

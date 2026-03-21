@@ -1,4 +1,4 @@
-﻿import Loader from '@/components/Loading'
+import Loader from '@/shared/components/Loading'
 import type { FC } from 'react'
 import ErrorIcon from '~icons/ic/outline-error'
 

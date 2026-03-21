@@ -1,4 +1,4 @@
-import { SoundIcon } from '@/components/WordPronunciationIcon/SoundIcon.tsx'
+import { SoundIcon } from './SoundIcon'
 import { usePronunciationSound } from '@/features/typing/hooks/usePronunciation.ts'
 import type { Word } from '@/typings'
 import clsx from 'clsx'
