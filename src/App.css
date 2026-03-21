@@ -159,31 +159,34 @@ code {
   }
 
   .my-btn-primary {
-    @apply flex items-center justify-center rounded-md px-6 py-2 text-sm font-semibold text-white focus:outline-none;
-    background-image: linear-gradient(135deg, var(--app-accent-strong) 0%, var(--app-accent) 56%, var(--app-accent-cool) 100%);
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-      0 14px 28px rgba(17, 119, 137, 0.2);
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+    @apply flex items-center justify-center rounded-lg px-6 py-2 text-sm font-semibold text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-55;
+    background-color: var(--app-accent);
+    border: 1px solid transparent;
     transition:
-      transform 160ms ease,
-      box-shadow 160ms ease,
-      filter 160ms ease,
-      opacity 160ms ease;
+      background-color 160ms ease,
+      opacity 160ms ease,
+      border-color 160ms ease;
   }
 
   .my-btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.12) inset,
-      0 18px 34px rgba(17, 119, 137, 0.26),
-      0 0 20px rgba(124, 240, 255, 0.14);
-    filter: saturate(1.04);
+    background-color: var(--app-accent-strong);
   }
 
   .my-btn-primary:active {
-    transform: translateY(0);
+    opacity: 0.92;
+  }
+
+  .my-btn-primary:focus-visible {
+    border-color: color-mix(in srgb, var(--app-accent-cool) 42%, transparent 58%);
+  }
+
+  html.dark .my-btn-primary {
+    color: #03141a;
+    background-color: var(--app-accent);
+  }
+
+  html.dark .my-btn-primary:hover {
+    background-color: var(--app-accent-cool);
   }
 
   .my-tooltip {
