@@ -1,9 +1,9 @@
-﻿import { Transition } from '@headlessui/react'
+import { Transition } from '@headlessui/react'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useNavigate } from 'react-router'
-import { Tooltip } from '@/components/Tooltip'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/pages/Typing/store'
 import {
   currentChapterAtom,
@@ -207,3 +207,4 @@ export const ResultScreen = () => {
     </div>
   )
 }
+

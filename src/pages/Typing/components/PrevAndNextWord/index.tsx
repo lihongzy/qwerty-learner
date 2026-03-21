@@ -1,4 +1,4 @@
-ï»¿import { Tooltip } from '@/components/Tooltip'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/pages/Typing/store'
 import { currentDictInfoAtom, wordDictationConfigAtom } from '@/store'
 import { useAtomValue } from 'jotai'
@@ -60,7 +60,7 @@ export const PrevAndNextWord = ({ type }: LastAndNextWordProps) => {
                 {headWord}
               </p>
               {state.isTransVisible && (
-                <p className="line-clamp-1 max-w-full text-sm font-normal text-gray-600 dark:text-gray-500">{word.trans.join('ï¼›')}</p>
+                <p className="line-clamp-1 max-w-full text-sm font-normal text-gray-600 dark:text-gray-500">{word.trans.join('£»')}</p>
               )}
             </div>
 
@@ -73,3 +73,4 @@ export const PrevAndNextWord = ({ type }: LastAndNextWordProps) => {
     </>
   )
 }
+

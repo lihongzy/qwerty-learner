@@ -1,4 +1,4 @@
-﻿import { Tooltip } from '@/components/Tooltip'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { currentChapterAtom, currentDictInfoAtom, isReviewModeAtom } from '@/store'
 import { useAtom, useAtomValue } from 'jotai'
 import { memo } from 'react'
@@ -79,3 +79,4 @@ const DictChapterButtonComponent = () => {
 }
 
 export const DictChapterButton = memo(DictChapterButtonComponent)
+

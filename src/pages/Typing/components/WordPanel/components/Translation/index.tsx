@@ -1,9 +1,9 @@
-import { Tooltip } from '@/components/Tooltip'
+﻿import { useAtomValue } from 'jotai'
+import { useCallback, useMemo } from 'react'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { SoundIcon } from '@/components/WordPronunciationIcon/SoundIcon'
 import useSpeech from '@/pages/Typing/hooks/useSpeech'
 import { fontSizeConfigAtom, isTextSelectableAtom, pronunciationConfigAtom } from '@/store'
-import { useAtomValue } from 'jotai'
-import { useCallback, useMemo } from 'react'
 
 export type TranslationProps = {
   trans: string
@@ -21,7 +21,6 @@ export const Translation = ({ trans, showTrans = true, onMouseEnter, onMouseLeav
   const speechOptions = useMemo(() => ({ volume: pronunciationConfig.transVolume }), [pronunciationConfig.transVolume])
   const { speak, speaking } = useSpeech(trans, speechOptions)
 
-  // 点击喇叭时朗读当前释义，必要时先中断正在播放的语音。
   const handleClickSoundIcon = useCallback(() => {
     speak(true)
   }, [speak])

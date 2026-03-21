@@ -1,20 +1,20 @@
-﻿import { currentChapterAtom, currentDictInfoAtom, isIgnoreCaseAtom, isShowAnswerOnHoverAtom, isTextSelectableAtom, pronunciationIsOpenAtom, wordDictationConfigAtom } from '@/store'
-import { EXPLICIT_SPACE } from '@/constants'
-import { Tooltip } from '@/components/Tooltip'
-import { WordPronunciationIcon, type WordPronunciationIconRef } from '@/components/WordPronunciationIcon'
-import { getUTCUnixTimestamp } from '@/utils'
-import { useSaveWordRecord } from '@/utils/db'
-import type { Word } from '@/typings'
+﻿import clsx from 'clsx'
 import { useAtomValue } from 'jotai'
-import clsx from 'clsx'
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useImmer } from 'use-immer'
-import { TypingContext, TypingStateActionType } from '@/pages/Typing/store'
+import { EXPLICIT_SPACE } from '@/constants'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
+import { WordPronunciationIcon, type WordPronunciationIconRef } from '@/components/WordPronunciationIcon'
+import { currentChapterAtom, currentDictInfoAtom, isIgnoreCaseAtom, isShowAnswerOnHoverAtom, isTextSelectableAtom, pronunciationIsOpenAtom, wordDictationConfigAtom } from '@/store'
+import type { Word } from '@/typings'
+import { useSaveWordRecord } from '@/utils/db'
+import { getUTCUnixTimestamp } from '@/utils'
 import useKeySounds from '@/pages/Typing/hooks/useKeySounds'
+import { TypingContext, TypingStateActionType } from '@/pages/Typing/store'
 import { InputHandler, type WordUpdateAction } from '../InputHandler'
-import { Letter } from './Letter'
 import { Notation } from './Notation'
 import { TipAlert } from './TipAlert'
+import { Letter } from './Letter'
 import { initialWordState, type WordState } from './type'
 
 const vowelLetters = ['A', 'E', 'I', 'O', 'U']
@@ -109,7 +109,15 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
 
       return true
     },
-    [isHoveringWord, isShowAnswerOnHover, wordDictationConfig.isOpen, wordDictationConfig.type, wordState.displayWord, wordState.letterStates, wordState.randomLetterVisible],
+    [
+      isHoveringWord,
+      isShowAnswerOnHover,
+      wordDictationConfig.isOpen,
+      wordDictationConfig.type,
+      wordState.displayWord,
+      wordState.letterStates,
+      wordState.randomLetterVisible,
+    ],
   )
 
   useEffect(() => {
@@ -178,7 +186,20 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
     if (currentChapter === 0 && state.chapterData.index === 0 && wordState.wrongCount >= 3) {
       setShowTipAlert(true)
     }
-  }, [currentChapter, dispatch, isIgnoreCase, playBeepSound, playHintSound, playKeySound, setWordState, state.chapterData.index, wordState.displayWord.length, wordState.hasWrong, wordState.inputWord, wordState.wrongCount])
+  }, [
+    currentChapter,
+    dispatch,
+    isIgnoreCase,
+    playBeepSound,
+    playHintSound,
+    playKeySound,
+    setWordState,
+    state.chapterData.index,
+    wordState.displayWord.length,
+    wordState.hasWrong,
+    wordState.inputWord,
+    wordState.wrongCount,
+  ])
 
   useEffect(() => {
     if (!wordState.isFinished || hasCommittedFinishRef.current) {
@@ -204,7 +225,16 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
       },
     )
     onFinish()
-  }, [dispatch, onFinish, saveWordRecord, word.name, wordState.letterMistake, wordState.letterTimeArray, wordState.isFinished, wordState.wrongCount])
+  }, [
+    dispatch,
+    onFinish,
+    saveWordRecord,
+    word.name,
+    wordState.letterMistake,
+    wordState.letterTimeArray,
+    wordState.isFinished,
+    wordState.wrongCount,
+  ])
 
   useEffect(() => {
     if (!wordState.hasWrong) {
@@ -227,7 +257,10 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
       <InputHandler updateInput={updateInput} />
       <div lang={currentLanguageCategory !== 'code' ? currentLanguageCategory : 'en'} className="flex flex-col items-center justify-center pb-1 pt-4">
         {['romaji', 'hapin'].includes(currentLanguage) && word.notation && <Notation notation={word.notation} />}
-        <div className={clsx('relative w-fit bg-transparent p-0 leading-normal shadow-none', wordDictationConfig.isOpen && 'tooltip')} data-tip="按 Tab 快捷键显示完整单词">
+        <div
+          className={clsx('relative w-fit bg-transparent p-0 leading-normal shadow-none', wordDictationConfig.isOpen && 'tooltip')}
+          data-tip="按 Tab 快捷键显示完整单词"
+        >
           <div
             onMouseEnter={() => setIsHoveringWord(true)}
             onMouseLeave={() => setIsHoveringWord(false)}
@@ -239,7 +272,7 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
           </div>
           {pronunciationIsOpen && (
             <div className="absolute -right-12 top-1/2 h-9 w-9 -translate-y-1/2 transform">
-              <Tooltip content="快捷键：CTRL + J">
+              <Tooltip content="快捷键：Ctrl + J">
                 <WordPronunciationIcon word={word} lang={currentLanguage} ref={wordPronunciationIconRef} className="h-full w-full" />
               </Tooltip>
             </div>
@@ -250,4 +283,3 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
     </>
   )
 }
-

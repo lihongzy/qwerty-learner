@@ -1,7 +1,7 @@
-﻿import { DonateCard } from '@/components/DonateCard'
+import { DonateCard } from '@/components/DonateCard'
 import { Header } from '@/components/Header'
 import { Layout } from '@/components/Layout'
-import { Tooltip } from '@/components/Tooltip'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { DictChapterButton } from './components/DictChapterButton'
 import { PronunciationSwitcher } from './components/PronunciationSwitcher'
 import { ResultScreen } from './components/ResultScreen'
@@ -62,3 +62,4 @@ const TypingPage = () => {
 }
 
 export default TypingPage
+

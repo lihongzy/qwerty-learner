@@ -1,4 +1,4 @@
-﻿import { Tooltip } from '@/components/Tooltip'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { currentChapterAtom, currentDictInfoAtom, isReviewModeAtom } from '@/store'
 import { useAtomValue } from 'jotai'
 import { useContext, useMemo, useState } from 'react'
@@ -84,4 +84,5 @@ export const WordList = () => {
     </>
   )
 }
+
 

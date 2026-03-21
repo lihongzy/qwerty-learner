@@ -1,4 +1,4 @@
-﻿import { Tooltip } from '@/components/Tooltip'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/pages/Typing/store'
 import { isOpenDarkModeAtom } from '@/store'
 import { useAtom } from 'jotai'
@@ -99,3 +99,4 @@ export function Switcher() {
     </div>
   )
 }
+

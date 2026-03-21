@@ -2,7 +2,7 @@
 import useGetWord from './hooks/useGetWord'
 import { currentRowDetailAtom } from './store'
 import type { groupedWordRecords } from './type'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { idDictionaryMap } from '@/resources/dictionary'
 import { useSetAtom } from 'jotai'
 import type { FC } from 'react'
@@ -39,16 +39,9 @@ const ErrorRow: FC<IErrorRowProps> = ({ record, onDelete }) => {
           onDelete()
         }}
       >
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <DeleteIcon />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>删除记录</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Tooltip content="删除记录">
+          <DeleteIcon />
+        </Tooltip>
       </span>
     </li>
   )

@@ -22,5 +22,29 @@ const TooltipContent = ({ className, sideOffset = 4, ...props }: TooltipContentP
 )
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+type SimpleTooltipProps = {
+  children: React.ReactNode
+  content: string
+  className?: string
+  placement?: 'top' | 'bottom'
+}
+
+const SimpleTooltip = ({ children, content, className, placement = 'top' }: SimpleTooltipProps) => {
+  const side = placement === 'bottom' ? 'bottom' : 'top'
+
+  return (
+    <TooltipProvider delayDuration={200}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className={clsx('inline-flex', className)}>{children}</span>
+        </TooltipTrigger>
+        <TooltipContent side={side} sideOffset={8}>
+          {content}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )
+}
+
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, SimpleTooltip }
 

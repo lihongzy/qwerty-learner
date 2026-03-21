@@ -1,8 +1,8 @@
-import type { TErrorWordData } from '../hooks/useErrorWords'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import type { ColumnDef } from '@tanstack/react-table'
-import PhArrowsDownUpFill from '~icons/ph/arrows-down-up-fill'
 import DeleteIcon from '~icons/weui/delete-filled'
+import PhArrowsDownUpFill from '~icons/ph/arrows-down-up-fill'
+import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
+import type { TErrorWordData } from '../hooks/useErrorWords'
 
 export type ErrorColumn = {
   word: string
@@ -74,18 +74,11 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
     size: 40,
     cell: ({ row }) => {
       return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button type="button" className="cursor-pointer" onClick={() => void onDelete(row.original.word)}>
-                <DeleteIcon />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Delete Records</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Tooltip content="删除记录">
+          <button type="button" className="cursor-pointer" onClick={() => void onDelete(row.original.word)}>
+            <DeleteIcon />
+          </button>
+        </Tooltip>
       )
     },
   },
@@ -95,7 +88,7 @@ export function getRowsFromErrorWordData(data: TErrorWordData[]): ErrorColumn[] 
   return data.map((item) => {
     return {
       word: item.word,
-      trans: item.originData.trans.join('，') ?? '',
+      trans: item.originData.trans.join('；') ?? '',
       errorCount: item.errorCount,
       errorChar: item.errorChar,
     }
