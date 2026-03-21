@@ -1,10 +1,9 @@
-﻿import { useAtomValue } from 'jotai'
-import { ChapterRecord, IChapterRecord, IReviewRecord, IRevisionDictRecord, IWordRecord, LetterMistakes, ReviewRecord, RevisionWordRecord, WordRecord } from './record'
+import { useAtomValue } from 'jotai'
 import Dexie, { Table } from 'dexie'
+import { useCallback } from 'react'
 import { currentChapterAtom, currentDictIdAtom, isReviewModeAtom } from '@/store'
-import { useCallback, useContext } from 'react'
-import type { TypingState } from '@/pages/Typing/store/type'
-import { TypingContext, TypingStateActionType } from '@/pages/Typing/store'
+import { ChapterRecord, IChapterRecord, IReviewRecord, IRevisionDictRecord, IWordRecord, ReviewRecord, RevisionWordRecord, WordRecord } from './record'
+import type { ChapterRecordInput, SaveWordRecordInput, SaveWordRecordOptions } from './types'
 
 class RecordDatabase extends Dexie {
   wordRecords!: Table<IWordRecord, number>
@@ -46,7 +45,7 @@ export function useSaveChapterRecord() {
   const dictID = useAtomValue(currentDictIdAtom)
 
   const saveChapterRecord = useCallback(
-    (typingState: TypingState) => {
+    (typingState: ChapterRecordInput) => {
       const {
         chapterData: { correctCount, wrongCount, userInputLogs, wordCount, words, wordRecordIds },
         timerData: { time },
@@ -68,6 +67,7 @@ export function useSaveChapterRecord() {
     },
     [currentChapter, dictID, isRevision],
   )
+
   return saveChapterRecord
 }
 
@@ -76,20 +76,8 @@ export function useSaveWordRecord() {
   const currentChapter = useAtomValue(currentChapterAtom)
   const dictID = useAtomValue(currentDictIdAtom)
 
-  const { dispatch } = useContext(TypingContext) ?? {}
-
   const saveWordRecord = useCallback(
-    async ({
-      word,
-      wrongCount,
-      letterTimeArray,
-      letterMistake,
-    }: {
-      word: string
-      wrongCount: number
-      letterTimeArray: number[]
-      letterMistake: LetterMistakes
-    }) => {
+    async ({ word, wrongCount, letterTimeArray, letterMistake }: SaveWordRecordInput, options?: SaveWordRecordOptions) => {
       const timing = []
       for (let i = 1; i < letterTimeArray.length; i++) {
         const diff = letterTimeArray[i] - letterTimeArray[i - 1]
@@ -101,15 +89,16 @@ export function useSaveWordRecord() {
       let dbID = -1
       try {
         dbID = await db.wordRecords.add(wordRecord)
-      } catch (e) {
-        console.error(e)
+      } catch (error) {
+        console.error(error)
       }
-      if (dispatch) {
-        dbID > 0 && dispatch({ type: TypingStateActionType.ADD_WORD_RECORD_ID, payload: dbID })
-        dispatch({ type: TypingStateActionType.SET_IS_SAVING_RECORD, payload: false })
+
+      if (dbID > 0) {
+        options?.onSavedRecordId?.(dbID)
       }
+      options?.onSettled?.()
     },
-    [currentChapter, dictID, dispatch, isRevision],
+    [currentChapter, dictID, isRevision],
   )
 
   return saveWordRecord
@@ -127,4 +116,3 @@ export function useDeleteWordRecord() {
 
   return { deleteWordRecord }
 }
-

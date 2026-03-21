@@ -187,12 +187,22 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
 
     hasCommittedFinishRef.current = true
     dispatch({ type: TypingStateActionType.SET_IS_SAVING_RECORD, payload: true })
-    saveWordRecord({
-      word: word.name,
-      wrongCount: wordState.wrongCount,
-      letterTimeArray: wordState.letterTimeArray,
-      letterMistake: wordState.letterMistake,
-    })
+    void saveWordRecord(
+      {
+        word: word.name,
+        wrongCount: wordState.wrongCount,
+        letterTimeArray: wordState.letterTimeArray,
+        letterMistake: wordState.letterMistake,
+      },
+      {
+        onSavedRecordId: (dbID) => {
+          dispatch({ type: TypingStateActionType.ADD_WORD_RECORD_ID, payload: dbID })
+        },
+        onSettled: () => {
+          dispatch({ type: TypingStateActionType.SET_IS_SAVING_RECORD, payload: false })
+        },
+      },
+    )
     onFinish()
   }, [dispatch, onFinish, saveWordRecord, word.name, wordState.letterMistake, wordState.letterTimeArray, wordState.isFinished, wordState.wrongCount])
 

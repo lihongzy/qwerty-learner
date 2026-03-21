@@ -1,7 +1,7 @@
-import type { TErrorWordData } from '@/pages/Gallery-N/hooks/useErrorWords'
+import { useEffect, useState } from 'react'
 import { db } from '@/utils/db'
 import { ReviewRecord } from '@/utils/db/record'
-import { useEffect, useState } from 'react'
+import type { ReviewWordCandidate } from './types'
 
 export function useGetLatestReviewRecord(dictID: string) {
   const [wordReviewRecord, setWordReviewRecord] = useState<ReviewRecord | undefined>(undefined)
@@ -42,7 +42,7 @@ export async function putWordReviewRecord(record: ReviewRecord) {
   await db.reviewRecords.put(record)
 }
 
-export async function generateNewWordReviewRecord(dictID: string, errorData: TErrorWordData[]) {
+export async function generateNewWordReviewRecord(dictID: string, errorData: ReviewWordCandidate[]) {
   const words = errorData
     .slice()
     .sort((a, b) => {
