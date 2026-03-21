@@ -63,7 +63,7 @@ export default function SoundSwitcher() {
           aria-label="声音设置"
           title="声音设置"
         >
-          <IconSpeakerWave className="icon" />
+          <IconSpeakerWave className="my-icon" />
         </button>
       </Popover.Trigger>
 
@@ -71,7 +71,7 @@ export default function SoundSwitcher() {
         <Popover.Content
           sideOffset={10}
           align="center"
-          className="shadow-upper z-30 w-60 select-none rounded-xl bg-white p-4 drop-shadow outline-none dark:bg-gray-800"
+          className="z-30 w-60 select-none rounded-xl bg-white p-4 shadow-[0_-12px_30px_rgba(0,0,0,0.08),0_20px_40px_rgba(0,0,0,0.14)] outline-none dark:bg-gray-800"
         >
           <div className="flex flex-col gap-4">
             <SettingRow label="按键音" checked={keySoundsConfig.isOpen} onCheckedChange={onChangeKeySound} />

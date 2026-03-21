@@ -50,7 +50,7 @@ const StaticSwitcherControls = memo(function StaticSwitcherControls() {
           }}
           aria-label="切换深色模式"
         >
-          {isOpenDarkMode ? <IconMoon className="icon" /> : <IconSun className="icon" />}
+          {isOpenDarkMode ? <IconMoon className="my-icon" /> : <IconSun className="my-icon" />}
         </button>
       </Tooltip>
       <Tooltip className="h-7 w-7" content="指法提示">

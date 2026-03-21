@@ -1,213 +1,266 @@
 @import 'tailwindcss';
 
+:root {
+  --app-bg: #e8edf1;
+  --app-bg-soft: #f4f7f9;
+  --app-bg-elevated: #ffffff;
+  --app-surface: rgba(248, 251, 252, 0.72);
+  --app-surface-strong: rgba(255, 255, 255, 0.9);
+  --app-border: rgba(56, 83, 94, 0.16);
+  --app-border-soft: rgba(56, 83, 94, 0.08);
+  --app-shadow:
+    0 26px 60px rgba(18, 31, 40, 0.12),
+    0 8px 22px rgba(18, 31, 40, 0.08);
+  --app-shadow-soft:
+    0 16px 36px rgba(18, 31, 40, 0.08),
+    0 6px 16px rgba(18, 31, 40, 0.05);
+  --app-text: #12202a;
+  --app-text-muted: #60727e;
+  --app-text-faint: #8d9ca6;
+  --app-accent: #1d9db2;
+  --app-accent-strong: #117789;
+  --app-accent-soft: rgba(29, 157, 178, 0.14);
+  --app-accent-cool: #7cf0ff;
+}
+
 html,
 body,
 :global(#root) {
-  height: 100%;
+  min-height: 100%;
+}
+
+html {
+  background:
+    radial-gradient(circle at 10% 14%, rgba(124, 240, 255, 0.12), transparent 24%),
+    radial-gradient(circle at 88% 8%, rgba(29, 157, 178, 0.1), transparent 20%),
+    linear-gradient(180deg, #f7fafb 0%, var(--app-bg-soft) 42%, var(--app-bg) 100%);
 }
 
 body {
   margin: 0;
+  color: var(--app-text);
   font-family:
-    -apple-system,
-    BlinkMacSystemFont,
+    'Avenir Next',
     'Segoe UI',
-    'Roboto',
-    'Oxygen',
-    'Ubuntu',
-    'Cantarell',
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
+    'PingFang SC',
+    'Microsoft YaHei',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #faf9ff;
+  background:
+    radial-gradient(circle at 12% 16%, rgba(255, 255, 255, 0.6), transparent 22%),
+    radial-gradient(circle at 82% 10%, rgba(29, 157, 178, 0.1), transparent 18%),
+    linear-gradient(180deg, transparent 0%, rgba(18, 32, 42, 0.02) 100%);
   user-select: none;
   @apply transition-colors duration-300;
 }
 
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  content: '';
+  background-image:
+    linear-gradient(rgba(18, 32, 42, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 32, 42, 0.028) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 90%);
+}
+
+body::after {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: '';
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 16%),
+    linear-gradient(90deg, rgba(124, 240, 255, 0.035), transparent 20%, transparent 80%, rgba(124, 240, 255, 0.025));
+}
+
+html.dark {
+  --app-bg: #071015;
+  --app-bg-soft: #0b151c;
+  --app-bg-elevated: #111c25;
+  --app-surface: rgba(10, 19, 26, 0.82);
+  --app-surface-strong: rgba(14, 26, 35, 0.94);
+  --app-border: rgba(124, 240, 255, 0.14);
+  --app-border-soft: rgba(124, 240, 255, 0.07);
+  --app-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.42),
+    0 10px 26px rgba(0, 0, 0, 0.26);
+  --app-shadow-soft:
+    0 18px 44px rgba(0, 0, 0, 0.22),
+    0 8px 18px rgba(0, 0, 0, 0.14);
+  --app-text: #dff8fb;
+  --app-text-muted: #88a8b0;
+  --app-text-faint: #56727a;
+  --app-accent: #2dd4eb;
+  --app-accent-strong: #1aa7bb;
+  --app-accent-soft: rgba(45, 212, 235, 0.14);
+  --app-accent-cool: #8cf6ff;
+}
+
+html.dark {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(45, 212, 235, 0.08), transparent 24%),
+    radial-gradient(circle at 88% 8%, rgba(140, 246, 255, 0.06), transparent 18%),
+    linear-gradient(180deg, #091116 0%, var(--app-bg-soft) 44%, var(--app-bg) 100%);
+}
+
 html.dark body {
-  @apply bg-gray-900;
+  background:
+    radial-gradient(circle at 14% 16%, rgba(45, 212, 235, 0.08), transparent 20%),
+    radial-gradient(circle at 84% 12%, rgba(140, 246, 255, 0.05), transparent 18%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.24) 100%);
+}
+
+html.dark body::before {
+  background-image:
+    linear-gradient(rgba(140, 246, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140, 246, 255, 0.045) 1px, transparent 1px);
+}
+
+html.dark body::after {
+  background:
+    linear-gradient(180deg, rgba(140, 246, 255, 0.035), transparent 14%),
+    linear-gradient(90deg, rgba(45, 212, 235, 0.03), transparent 18%, transparent 82%, rgba(45, 212, 235, 0.02));
+}
+
+::selection {
+  background: var(--app-accent-soft);
+  color: var(--app-text);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family:
+    'IBM Plex Mono',
+    'JetBrains Mono',
+    'SFMono-Regular',
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
 }
 
 .my-card {
-  box-shadow:
-    0 100px 80px rgba(50, 46, 129, 0.07),
-    0 41.7776px 33.4221px rgba(50, 46, 129, 0.0503198),
-    0 22.3363px 17.869px rgba(50, 46, 129, 0.0417275),
-    0 12.5216px 10.0172px rgba(50, 46, 129, 0.035),
-    0 6.6501px 5.32008px rgba(50, 46, 129, 0.0282725),
-    0 2.76726px 2.21381px rgba(50, 46, 129, 0.0196802);
-}
-
-.text-shadow {
-  text-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.16),
-    0 2px 4px rgba(0, 0, 0, 0.12),
-    0 4px 8px rgba(0, 0, 0, 0.08),
-    0 2px 4px rgba(0, 0, 0, 0.04);
-}
-
-.shadow-upper {
-  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
-}
-
-.customized-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  background: inherit;
-}
-
-.customized-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.25);
-}
-
-.customized-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  border: 1px solid var(--app-border);
+  background:
+    linear-gradient(180deg, var(--app-surface-strong), var(--app-surface));
+  box-shadow: var(--app-shadow);
+  backdrop-filter: blur(18px);
 }
 
 @layer components {
-  .icon {
-    @apply h-5.5 w-5.5 focus:outline-none;
+  .my-icon {
+    @apply h-5.5 w-5.5 shrink-0 focus:outline-none;
   }
 
   .my-btn-primary {
-    @apply flex items-center justify-center rounded-lg bg-indigo-400 px-6 py-1 text-lg text-white hover:opacity-90 focus:outline-none dark:text-white/80;
+    @apply flex items-center justify-center rounded-md px-6 py-2 text-sm font-semibold text-white focus:outline-none;
+    background-image: linear-gradient(135deg, var(--app-accent-strong) 0%, var(--app-accent) 56%, var(--app-accent-cool) 100%);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+      0 14px 28px rgba(17, 119, 137, 0.2);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease,
+      filter 160ms ease,
+      opacity 160ms ease;
   }
 
-  .my-btn-info-panel {
-    @apply mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm transition-colors focus:outline-none dark:bg-white/70 dark:text-white/80 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm;
+  .my-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+      0 18px 34px rgba(17, 119, 137, 0.26),
+      0 0 20px rgba(124, 240, 255, 0.14);
+    filter: saturate(1.04);
   }
 
-  .tooltip {
-    @apply whitespace-nowrap rounded-lg bg-white px-2 py-1 text-xs text-gray-500 shadow-md dark:bg-gray-700 dark:text-gray-300;
+  .my-btn-primary:active {
+    transform: translateY(0);
   }
 
-  .word-wrong {
+  .my-tooltip {
+    @apply whitespace-nowrap rounded-md px-2.5 py-1.5 text-[11px] shadow-md;
+    border: 1px solid var(--app-border);
+    background:
+      linear-gradient(180deg, var(--app-surface-strong), var(--app-surface));
+    color: var(--app-text-muted);
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(18px);
+  }
+
+  .my-word-wrong {
     animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }
 
-  .word-sound {
-    position: absolute;
-    right: -55px;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    fill: theme('colors.gray.600');
-    transform: translateY(calc(-50% - 23px));
+  .my-switch-root {
+    @apply relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border-transparent transition-colors duration-200 ease-in-out focus:outline-none;
+    border-width: 1px;
+    border-color: var(--app-border);
+    background:
+      linear-gradient(180deg, rgba(120, 136, 148, 0.34), rgba(97, 112, 124, 0.42));
+    box-shadow:
+      inset 0 1px 2px rgba(0, 0, 0, 0.12),
+      0 0 0 1px var(--app-border-soft);
   }
 
-  .word-sound .prefix__icon {
-    width: 40px;
-    height: 40px;
+  .my-switch-root[data-headlessui-state='checked'],
+  .my-switch-root[data-state='checked'] {
+    background:
+      linear-gradient(135deg, rgba(29, 157, 178, 0.78), rgba(124, 240, 255, 0.88));
+    box-shadow:
+      inset 0 1px 2px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(124, 240, 255, 0.18),
+      0 0 16px rgba(124, 240, 255, 0.12);
   }
 
-  .dark .word-sound {
-    fill: theme('colors.gray.50');
-    opacity: 0.8;
+  .my-switch-thumb {
+    @apply pointer-events-none inline-block h-4 w-4 translate-x-0 transform rounded-full ring-0 transition duration-200 ease-in-out;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(228, 239, 243, 0.96));
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.88);
   }
 
-  .word-chip {
-    @apply flex h-10 w-auto cursor-pointer flex-row items-center justify-center rounded-md border-2 border-solid border-indigo-400 bg-white px-2 py-0.5 transition-colors duration-100 hover:bg-indigo-100 dark:border-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 md:h-12 md:px-5 md:py-1;
-  }
-
-  .word-chip > span {
-    @apply font-mono text-2xl font-light text-gray-600 dark:text-gray-300 md:text-3xl;
-  }
-
-  .word-chip-tooltip {
-    @apply pointer-events-none flex items-center justify-center whitespace-nowrap rounded-lg bg-white px-2 py-1 text-xs text-gray-500 shadow-md dark:bg-gray-800 dark:text-gray-300;
-  }
-
-  .switch-root {
-    @apply relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border-3 border-transparent bg-gray-300 transition-colors duration-200 ease-in-out focus:outline-none;
-  }
-
-  .switch-root[data-headlessui-state='checked'],
-  .switch-root[data-state='checked'] {
-    @apply bg-indigo-400;
-  }
-
-  .switch-thumb {
-    @apply pointer-events-none inline-block h-4 w-4 translate-x-0 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out;
-  }
-
-  [data-headlessui-state='checked'] .switch-thumb,
-  [data-state='checked'] .switch-thumb {
+  [data-headlessui-state='checked'] .my-switch-thumb,
+  [data-state='checked'] .my-switch-thumb {
     @apply translate-x-[25px];
   }
 
-  .listbox-button {
-    @apply relative w-40 cursor-pointer rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none dark:bg-gray-600;
-  }
-
-  .listbox-button span:nth-of-type(1) {
-    @apply block truncate text-gray-900 dark:text-white/60;
-  }
-
-  .listbox-button span:nth-of-type(2) {
-    @apply pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 focus:outline-none;
-  }
-
-  .listbox-options {
-    @apply absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-none dark:bg-gray-600;
-  }
-
-  .listbox-options > li {
-    @apply relative cursor-pointer select-none py-2 pl-10 pr-4 text-gray-900 dark:text-white/60;
-  }
-
-  .listbox-options > li > span:first-child {
-    @apply block truncate font-normal;
-  }
-
-  .listbox-options > li[data-headlessui-state~='active'] {
-    @apply bg-indigo-100 text-indigo-900 dark:bg-gray-500 dark:text-indigo-300;
-  }
-
-  .listbox-options > li[data-headlessui-state~='selected'] > span:first-child {
-    @apply font-medium;
-  }
-
-  .listbox-options-icon {
-    @apply absolute inset-y-0 left-0 flex items-center pl-3 text-indigo-600 dark:text-indigo-400;
-  }
-
-  .slider {
+  .my-slider {
     @apply relative flex h-10 w-full cursor-pointer select-none items-center;
   }
 
-  .slider [data-disabled] {
+  .my-slider [data-disabled] {
     @apply pointer-events-none opacity-50;
   }
 
-  .slider > span:nth-child(1) {
-    @apply relative h-[5px] flex-grow rounded-full bg-gray-200;
+  .my-slider > span:nth-child(1) {
+    @apply relative h-[5px] flex-grow rounded-full;
+    background:
+      linear-gradient(90deg, rgba(29, 157, 178, 0.16), rgba(124, 240, 255, 0.16));
+    box-shadow: inset 0 0 0 1px var(--app-border-soft);
   }
 
-  .slider > span:nth-child(1) > span:nth-child(1) {
-    @apply absolute h-full rounded-full bg-indigo-400;
+  .my-slider > span:nth-child(1) > span:nth-child(1) {
+    @apply absolute h-full rounded-full;
+    background: linear-gradient(90deg, var(--app-accent), var(--app-accent-cool));
+    box-shadow: 0 0 14px rgba(124, 240, 255, 0.14);
   }
 
-  .slider > span:nth-child(2) {
-    @apply block h-4 w-4 cursor-pointer rounded-full border border-gray-200 bg-white drop-shadow-md;
+  .my-slider > span:nth-child(2) {
+    @apply block h-4 w-4 cursor-pointer rounded-full border bg-white;
+    border-color: var(--app-border);
+    box-shadow:
+      0 6px 16px rgba(18, 31, 40, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
-}
-
-.gradient-text {
-  color: transparent;
-  background-image: linear-gradient(90deg, #f66, #f90);
-  background-clip: text;
-  animation: gradient-text-hue 5s linear infinite;
-}
-
-.typewriter {
-  width: 30em;
-  margin: 0 auto;
 }
 
 @keyframes shake {
@@ -240,46 +293,5 @@ code {
 
   to {
     filter: hue-rotate(-1turn);
-  }
-}
-
-@keyframes typing {
-  from {
-    width: 0;
-  }
-
-  to {
-    width: 30em;
-  }
-}
-
-@keyframes blink-caret {
-  from,
-  to {
-    border-color: transparent;
-  }
-
-  50% {
-    border-color: #f0f0f0;
-  }
-}
-
-@keyframes hideCaret {
-  to {
-    border-right-color: transparent;
-  }
-}
-
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
   }
 }

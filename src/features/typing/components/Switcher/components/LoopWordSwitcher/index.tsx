@@ -60,7 +60,7 @@ export default function LoopWordSwitcher() {
         <Popover.Content
           sideOffset={10}
           align="center"
-          className="shadow-upper z-30 w-60 select-none rounded-xl bg-white p-4 drop-shadow outline-none dark:bg-gray-800"
+          className="z-30 w-60 select-none rounded-xl bg-white p-4 shadow-[0_-12px_30px_rgba(0,0,0,0.08),0_20px_40px_rgba(0,0,0,0.14)] outline-none dark:bg-gray-800"
         >
           <div className="flex w-full flex-col items-start gap-2">
             <span className="text-sm font-normal leading-5 text-gray-900 dark:text-white dark:text-opacity-60">选择单词循环次数</span>

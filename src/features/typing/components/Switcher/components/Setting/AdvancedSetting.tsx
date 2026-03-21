@@ -26,8 +26,8 @@ function SettingSwitchRow({
       </div>
 
       <div className="flex w-full items-center justify-between gap-4">
-        <Switch.Root checked={checked} onCheckedChange={onCheckedChange} className="switch-root">
-          <Switch.Thumb aria-hidden="true" className="switch-thumb" />
+        <Switch.Root checked={checked} onCheckedChange={onCheckedChange} className="my-switch-root">
+          <Switch.Thumb aria-hidden="true" className="my-switch-thumb" />
         </Switch.Root>
         <span className="text-right text-xs font-normal leading-tight text-gray-600 dark:text-gray-300">{statusLabel}</span>
       </div>

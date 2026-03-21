@@ -19,7 +19,7 @@ export default function HandPositionIllustration() {
         aria-label="查看推荐打字指法图示"
         title="查看推荐打字指法图示"
       >
-        <IconKeyboard className="icon" />
+        <IconKeyboard className="my-icon" />
       </button>
 
       <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>

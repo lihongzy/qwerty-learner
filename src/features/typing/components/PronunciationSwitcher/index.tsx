@@ -154,7 +154,7 @@ const PronunciationSwitcherComponent = () => {
         <Popover.Content
           sideOffset={10}
           align="center"
-          className="shadow-upper z-30 w-72 select-none rounded-2xl bg-white p-4 text-left shadow-xl outline-none dark:bg-gray-800"
+          className="z-30 w-72 select-none rounded-2xl bg-white p-4 text-left shadow-[0_-12px_30px_rgba(0,0,0,0.08),0_20px_40px_rgba(0,0,0,0.14)] outline-none dark:bg-gray-800"
         >
           <div className="flex flex-col gap-4">
             <SettingRow label="音标" checked={phoneticConfig.isOpen} onCheckedChange={onChangePhoneticIsOpen} checkedText="开启" uncheckedText="关闭" />

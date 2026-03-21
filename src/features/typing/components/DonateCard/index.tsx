@@ -70,7 +70,11 @@ export const DonateCard = () => {
             >
               <DialogPanel className="relative my-8 w-148 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all select-text">
                 <div className="flex w-full flex-col justify-center gap-4 bg-white px-2 pb-4 pt-5 dark:bg-gray-800 dark:text-gray-300">
-                  <h1 className="gradient-text w-full pt-3 text-center text-[2.4rem] font-bold">{`已完成 ${chapterNumber} 个章节`}</h1>
+                  <h1
+                    className="w-full bg-[linear-gradient(90deg,#c85d23_0%,#ef9c52_48%,#3f6f78_100%)] bg-clip-text pt-3 text-center text-[2.4rem] font-bold text-transparent [animation:gradient-text-hue_10s_linear_infinite]"
+                  >
+                    {`已完成 ${chapterNumber} 个章节`}
+                  </h1>
                   <div className="flex w-full flex-col gap-4 px-4">
                     <p className="mx-auto px-4 indent-4">
                       你已经完成了 <HighlightedText>{chapterNumber}</HighlightedText> 个章节，在 Qwerty Learner 坚持了

@@ -47,7 +47,7 @@ export default function Setting() {
         className={`${triggerClassName} ${isOpen ? 'bg-indigo-500 text-white' : ''}`}
         title="打开设置"
       >
-        <IconCog6Tooth className="icon" />
+        <IconCog6Tooth className="my-icon" />
       </button>
 
       <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>

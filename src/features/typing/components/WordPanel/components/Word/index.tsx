@@ -259,13 +259,13 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
       <div lang={currentLanguageCategory !== 'code' ? currentLanguageCategory : 'en'} className="flex flex-col items-center justify-center pb-1 pt-4">
         {['romaji', 'hapin'].includes(currentLanguage) && word.notation && <Notation notation={word.notation} />}
         <div
-          className={clsx('relative w-fit bg-transparent p-0 leading-normal shadow-none', wordDictationConfig.isOpen && 'tooltip')}
+          className={clsx('relative w-fit bg-transparent p-0 leading-normal shadow-none', wordDictationConfig.isOpen && 'my-tooltip')}
           data-tip="按 Tab 快捷键显示完整单词"
         >
           <div
             onMouseEnter={() => setIsHoveringWord(true)}
             onMouseLeave={() => setIsHoveringWord(false)}
-            className={clsx('flex items-center justify-center', { 'select-all': isTextSelectable }, wordState.hasWrong && 'word-wrong')}
+            className={clsx('flex items-center justify-center', { 'select-all': isTextSelectable }, wordState.hasWrong && 'my-word-wrong')}
           >
             {wordState.displayWord.split('').map((char, index) => (
               <Letter key={`${index}-${char}`} letter={char} visible={getLetterVisible(index)} state={wordState.letterStates[index]} />

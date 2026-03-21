@@ -170,7 +170,7 @@ export const ResultScreen = () => {
                     <RemarkRing remark={`${state.timerData.wpm}`} caption="WPM" />
                   </div>
                   <div className="z-10 ml-6 flex-1 overflow-visible rounded-xl bg-indigo-50 dark:bg-gray-700">
-                    <div className="customized-scrollbar z-20 mr-1 ml-8 flex h-80 flex-row flex-wrap content-start gap-4 overflow-x-hidden overflow-y-auto pb-0 pr-7 pt-9">
+                    <div className="z-20 mr-1 ml-8 flex h-80 flex-row flex-wrap content-start gap-4 overflow-x-hidden overflow-y-auto pb-0 pr-7 pt-9 [scrollbar-color:rgba(109,90,71,0.36)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar-thumb]:rounded-[999px] [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-[linear-gradient(180deg,rgba(200,104,43,0.52),rgba(69,107,115,0.38))] [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-2">
                       {wrongWords.map((word, index) => <WordChip key={`${index}-${word.name}`} word={word} />)}
                     </div>
                     <div className="align-center flex w-full flex-row justify-start rounded-b-xl bg-indigo-200 px-4 dark:bg-indigo-400">

@@ -107,7 +107,7 @@ export default function WordDictationSwitcher() {
           title="切换听写模式"
           onFocus={(e) => e.currentTarget.blur()}
         >
-          {wordDictationConfig.isOpen ? <IconEye className="icon" /> : <IconEyeSlash className="icon" />}
+          {wordDictationConfig.isOpen ? <IconEye className="my-icon" /> : <IconEyeSlash className="my-icon" />}
         </button>
       </Popover.Trigger>
 
@@ -115,7 +115,7 @@ export default function WordDictationSwitcher() {
         <Popover.Content
           sideOffset={10}
           align="center"
-          className="shadow-upper z-30 w-60 select-none rounded-xl bg-white p-4 drop-shadow outline-none dark:bg-gray-800"
+          className="z-30 w-60 select-none rounded-xl bg-white p-4 shadow-[0_-12px_30px_rgba(0,0,0,0.08),0_20px_40px_rgba(0,0,0,0.14)] outline-none dark:bg-gray-800"
         >
           <div className="flex flex-col gap-4">
             <SettingRow label="听写模式" checked={wordDictationConfig.isOpen} onCheckedChange={onToggleWordDictation} />

@@ -46,8 +46,8 @@ function SettingSwitchRow({
 }) {
   return (
     <div className="flex w-full items-center justify-between gap-4">
-      <Switch.Root checked={checked} onCheckedChange={onCheckedChange} className="switch-root">
-        <Switch.Thumb aria-hidden="true" className="switch-thumb" />
+      <Switch.Root checked={checked} onCheckedChange={onCheckedChange} className="my-switch-root">
+        <Switch.Thumb aria-hidden="true" className="my-switch-thumb" />
       </Switch.Root>
       <span className="text-right text-xs font-normal leading-tight text-gray-600 dark:text-gray-300">{statusLabel}</span>
     </div>
@@ -77,7 +77,7 @@ function SliderBlock({
     <div className="flex w-full flex-col items-start gap-4 rounded-xl border border-stone-200 bg-stone-50/80 px-5 py-5 dark:border-gray-700 dark:bg-gray-900/70">
       <span className="text-left text-base font-medium text-gray-700 dark:text-gray-200">{label}</span>
       <div className="flex h-5 w-full items-center justify-between">
-        <Slider.Root value={[value]} min={min} max={max} step={step} className="slider" onValueChange={onValueChange} disabled={disabled}>
+        <Slider.Root value={[value]} min={min} max={max} step={step} className="my-slider" onValueChange={onValueChange} disabled={disabled}>
           <Slider.Track>
             <Slider.Range />
           </Slider.Track>
