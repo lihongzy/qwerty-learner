@@ -1,0 +1,34 @@
+﻿import { useCallback, useMemo, useState } from 'react'
+import IconShare2 from '~icons/tabler/share-2'
+import SharePicDialog from './SharePicDialog'
+
+export default function ShareButton() {
+  const [isShowSharePanel, setIsShowSharePanel] = useState(false)
+
+  const randomChoose = useMemo(
+    () => ({
+      picRandom: Math.random(),
+      promoteRandom: Math.random(),
+    }),
+    [],
+  )
+
+  const onClickShare = useCallback(() => {
+    setIsShowSharePanel(true)
+  }, [])
+
+  return (
+    <>
+      {isShowSharePanel && <SharePicDialog showState={isShowSharePanel} setShowState={setIsShowSharePanel} randomChoose={randomChoose} />}
+
+      <button
+        type="button"
+        className="cursor-pointer text-xl text-gray-500 hover:text-indigo-400"
+        onClick={onClickShare}
+        title="Share your result"
+      >
+        <IconShare2 />
+      </button>
+    </>
+  )
+}

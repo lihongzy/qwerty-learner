@@ -1,117 +1,285 @@
-@import "tailwindcss";
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
+@import 'tailwindcss';
+
+html,
+body,
+:global(#root) {
+  height: 100%;
 }
 
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafb);
-}
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-
-  color: #0f0f0f;
-  background-color: #f6f6f6;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+body {
+  margin: 0;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+  background-color: #faf9ff;
+  user-select: none;
+  @apply transition-colors duration-300;
 }
 
-.container {
-  margin: 0;
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
+html.dark body {
+  @apply bg-gray-900;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.logo.tauri:hover {
-  filter: drop-shadow(0 0 2em #24c8db);
+.my-card {
+  box-shadow:
+    0 100px 80px rgba(50, 46, 129, 0.07),
+    0 41.7776px 33.4221px rgba(50, 46, 129, 0.0503198),
+    0 22.3363px 17.869px rgba(50, 46, 129, 0.0417275),
+    0 12.5216px 10.0172px rgba(50, 46, 129, 0.035),
+    0 6.6501px 5.32008px rgba(50, 46, 129, 0.0282725),
+    0 2.76726px 2.21381px rgba(50, 46, 129, 0.0196802);
 }
 
-.row {
-  display: flex;
-  justify-content: center;
+.text-shadow {
+  text-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.16),
+    0 2px 4px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+.shadow-upper {
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
 }
 
-a:hover {
-  color: #535bf2;
+.customized-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  background: inherit;
 }
 
-h1 {
-  text-align: center;
+.customized-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
 }
 
-input,
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+.customized-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  border-color: #396cd8;
-}
-button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
-}
-
-input,
-button {
-  outline: none;
-}
-
-#greet-input {
-  margin-right: 5px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
+@layer components {
+  .icon {
+    @apply h-5.5 w-5.5 focus:outline-none;
   }
 
-  a:hover {
-    color: #24c8db;
+  .my-btn-primary {
+    @apply flex items-center justify-center rounded-lg bg-indigo-400 px-6 py-1 text-lg text-white hover:opacity-90 focus:outline-none dark:text-white/80;
   }
 
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
+  .my-btn-info-panel {
+    @apply mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm transition-colors focus:outline-none dark:bg-white/70 dark:text-white/80 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm;
   }
-  button:active {
-    background-color: #0f0f0f69;
+
+  .tooltip {
+    @apply whitespace-nowrap rounded-lg bg-white px-2 py-1 text-xs text-gray-500 shadow-md dark:bg-gray-700 dark:text-gray-300;
+  }
+
+  .word-wrong {
+    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  .word-sound {
+    position: absolute;
+    right: -55px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    fill: theme('colors.gray.600');
+    transform: translateY(calc(-50% - 23px));
+  }
+
+  .word-sound .prefix__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .dark .word-sound {
+    fill: theme('colors.gray.50');
+    opacity: 0.8;
+  }
+
+  .word-chip {
+    @apply flex h-10 w-auto cursor-pointer flex-row items-center justify-center rounded-md border-2 border-solid border-indigo-400 bg-white px-2 py-0.5 transition-colors duration-100 hover:bg-indigo-100 dark:border-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 md:h-12 md:px-5 md:py-1;
+  }
+
+  .word-chip > span {
+    @apply font-mono text-2xl font-light text-gray-600 dark:text-gray-300 md:text-3xl;
+  }
+
+  .word-chip-tooltip {
+    @apply pointer-events-none flex items-center justify-center whitespace-nowrap rounded-lg bg-white px-2 py-1 text-xs text-gray-500 shadow-md dark:bg-gray-800 dark:text-gray-300;
+  }
+
+  .switch-root {
+    @apply relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border-3 border-transparent bg-gray-300 transition-colors duration-200 ease-in-out focus:outline-none;
+  }
+
+  .switch-root[data-headlessui-state='checked'],
+  .switch-root[data-state='checked'] {
+    @apply bg-indigo-400;
+  }
+
+  .switch-thumb {
+    @apply pointer-events-none inline-block h-4 w-4 translate-x-0 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out;
+  }
+
+  [data-headlessui-state='checked'] .switch-thumb,
+  [data-state='checked'] .switch-thumb {
+    @apply translate-x-[25px];
+  }
+
+  .listbox-button {
+    @apply relative w-40 cursor-pointer rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none dark:bg-gray-600;
+  }
+
+  .listbox-button span:nth-of-type(1) {
+    @apply block truncate text-gray-900 dark:text-white/60;
+  }
+
+  .listbox-button span:nth-of-type(2) {
+    @apply pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 focus:outline-none;
+  }
+
+  .listbox-options {
+    @apply absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-none dark:bg-gray-600;
+  }
+
+  .listbox-options > li {
+    @apply relative cursor-pointer select-none py-2 pl-10 pr-4 text-gray-900 dark:text-white/60;
+  }
+
+  .listbox-options > li > span:first-child {
+    @apply block truncate font-normal;
+  }
+
+  .listbox-options > li[data-headlessui-state~='active'] {
+    @apply bg-indigo-100 text-indigo-900 dark:bg-gray-500 dark:text-indigo-300;
+  }
+
+  .listbox-options > li[data-headlessui-state~='selected'] > span:first-child {
+    @apply font-medium;
+  }
+
+  .listbox-options-icon {
+    @apply absolute inset-y-0 left-0 flex items-center pl-3 text-indigo-600 dark:text-indigo-400;
+  }
+
+  .slider {
+    @apply relative flex h-10 w-full cursor-pointer select-none items-center;
+  }
+
+  .slider [data-disabled] {
+    @apply pointer-events-none opacity-50;
+  }
+
+  .slider > span:nth-child(1) {
+    @apply relative h-[5px] flex-grow rounded-full bg-gray-200;
+  }
+
+  .slider > span:nth-child(1) > span:nth-child(1) {
+    @apply absolute h-full rounded-full bg-indigo-400;
+  }
+
+  .slider > span:nth-child(2) {
+    @apply block h-4 w-4 cursor-pointer rounded-full border border-gray-200 bg-white drop-shadow-md;
+  }
+}
+
+.gradient-text {
+  color: transparent;
+  background-image: linear-gradient(90deg, #f66, #f90);
+  background-clip: text;
+  animation: gradient-text-hue 5s linear infinite;
+}
+
+.typewriter {
+  width: 30em;
+  margin: 0 auto;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+@keyframes gradient-text-hue {
+  from {
+    filter: hue-rotate(0);
+  }
+
+  to {
+    filter: hue-rotate(-1turn);
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 30em;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: #f0f0f0;
+  }
+}
+
+@keyframes hideCaret {
+  to {
+    border-right-color: transparent;
+  }
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
   }
 }

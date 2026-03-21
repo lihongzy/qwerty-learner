@@ -1,0 +1,55 @@
+import { SoundIcon } from '@/components/WordPronunciationIcon/SoundIcon.tsx'
+import { usePronunciationSound } from '@/pages/Typing/hooks/usePronunciation.ts'
+import type { Word } from '@/typings'
+import clsx from 'clsx'
+import { useCallback, useImperativeHandle, useMemo } from 'react'
+
+export type WordPronunciationIconRef = {
+  play: () => void
+}
+
+type Props = {
+  word: Word
+  lang: string
+  className?: string
+  iconClassName?: string
+  ref?: React.Ref<WordPronunciationIconRef>
+}
+
+export const WordPronunciationIcon = ({ word, lang, className, iconClassName, ref }: Props) => {
+  const currentWord = useMemo(() => {
+    if (lang === 'hapin') {
+      if (/[\u0400-\u04FF]/.test(word.notation || '')) {
+        return word.notation || ''
+      }
+
+      return word.trans[2]
+    }
+
+    return word.name
+  }, [lang, word.name, word.notation, word.trans])
+
+  const { play, stop, isPlaying } = usePronunciationSound(currentWord)
+
+  const playSound = useCallback(() => {
+    stop()
+    play()
+  }, [play, stop])
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      play: playSound,
+    }),
+    [playSound],
+  )
+
+  return (
+    <SoundIcon
+      animated={isPlaying}
+      onClick={playSound}
+      className={clsx('cursor-pointer text-gray-600', className)}
+      iconClassName={iconClassName}
+    />
+  )
+}
