@@ -1,4 +1,4 @@
-import { InfoPanel } from '@/components/InfoPanel'
+import { InfoPanel } from '@/shared/components/InfoPanel'
 import { useCallback, useState } from 'react'
 import IconBook2 from '~icons/tabler/book-2'
 export default function DictRequest() {

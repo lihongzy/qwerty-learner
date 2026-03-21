@@ -3,8 +3,8 @@ import { Transition, Dialog, TransitionChild, DialogBackdrop, DialogPanel } from
 import React, { useLayoutEffect, useState } from 'react'
 import { Fragment } from 'react/jsx-runtime'
 import IconParty from '~icons/logos/partytown-icon'
-import { useChapterNumber, useDayFromFirstWordRecord, useSumWrongCount, useWordNumber } from './hooks/useWordStats'
-import { DonatingCard } from '../DonatingCard'
+import { useChapterNumber, useDayFromFirstWordRecord, useSumWrongCount, useWordNumber } from './useWordStats'
+import { DonatingCard } from '@/shared/components/DonatingCard'
 import dayjs from 'dayjs'
 import { DONATE_DATE } from '@/constants'
 

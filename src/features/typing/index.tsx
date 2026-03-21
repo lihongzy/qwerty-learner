@@ -1,4 +1,4 @@
-import { DonateCard } from '@/components/DonateCard'
+import { DonateCard } from '@/features/typing/components/DonateCard'
 import { Header } from '@/app/layout/Header'
 import { Layout } from '@/app/layout/Layout'
 import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
