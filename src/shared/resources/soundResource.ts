@@ -23,7 +23,7 @@ export type SoundResource = {
 export const SOUND_URL_PREFIX = './sounds/'
 export const KEY_SOUND_URL_PREFIX = SOUND_URL_PREFIX + 'key-sound/'
 
-const videoList = import.meta.glob(['../../public/sounds/key-sound/*.(wav|mp3)'], {
+const videoList = import.meta.glob(['../../../public/sounds/key-sound/*.(wav|mp3)'], {
   eager: false,
 })
 

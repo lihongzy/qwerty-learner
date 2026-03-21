@@ -1,12 +1,11 @@
-import { Transition, Dialog, TransitionChild, DialogBackdrop, DialogPanel } from '@headlessui/react'
-
+import { Dialog, DialogBackdrop, DialogPanel, Transition, TransitionChild } from '@headlessui/react'
+import dayjs from 'dayjs'
 import React, { useLayoutEffect, useState } from 'react'
 import { Fragment } from 'react/jsx-runtime'
 import IconParty from '~icons/logos/partytown-icon'
 import { useChapterNumber, useDayFromFirstWordRecord, useSumWrongCount, useWordNumber } from './useWordStats'
-import { DonatingCard } from '@/shared/components/DonatingCard'
-import dayjs from 'dayjs'
 import { DONATE_DATE } from '@/shared/constants'
+import { DonatingCard } from '@/shared/components/DonatingCard'
 
 export const DonateCard = () => {
   const [show, setShow] = useState(true)
@@ -27,7 +26,7 @@ export const DonateCard = () => {
   }
 
   const HighlightedText = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <span className={`font-bold ${className ? className : 'text-indigo-500'}`}>{children}</span>
+    <span className={`font-bold ${className ?? 'text-indigo-500'}`}>{children}</span>
   )
 
   useLayoutEffect(() => {
@@ -55,7 +54,7 @@ export const DonateCard = () => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <DialogBackdrop className="bg-opacity-75 fixed inset-0 bg-gray-500 transition-opacity" />
+          <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </TransitionChild>
 
         <div className="fixed inset-0 z-10 overflow-auto">
@@ -63,34 +62,29 @@ export const DonateCard = () => {
             <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              enterFrom="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
+              enterTo="translate-y-0 opacity-100 sm:scale-100"
               leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              leaveFrom="translate-y-0 opacity-100 sm:scale-100"
+              leaveTo="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
             >
-              <DialogPanel
-                className={
-                  'relative my-8 w-148 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all select-text'
-                }
-              >
+              <DialogPanel className="relative my-8 w-148 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all select-text">
                 <div className="flex w-full flex-col justify-center gap-4 bg-white px-2 pb-4 pt-5 dark:bg-gray-800 dark:text-gray-300">
-                  <h1 className="gradient-text w-full pt-3 text-center text-[2.4rem] font-bold">{`??? ${chapterNumber} ???`}</h1>
+                  <h1 className="gradient-text w-full pt-3 text-center text-[2.4rem] font-bold">{`已完成 ${chapterNumber} 个章节`}</h1>
                   <div className="flex w-full flex-col gap-4 px-4">
                     <p className="mx-auto px-4 indent-4">
-                      ?????? <HighlightedText>{chapterNumber}</HighlightedText> ???????Qwerty Learner ??????
-                      <HighlightedText>{dayFromFirstWord}</HighlightedText> ???????
-                      <HighlightedText>{wordNumber}</HighlightedText>
-                      ????????????? <HighlightedText>{sumWrongCount}</HighlightedText> ???????????????????
+                      你已经完成了 <HighlightedText>{chapterNumber}</HighlightedText> 个章节，在 Qwerty Learner 坚持了
+                      <HighlightedText>{dayFromFirstWord}</HighlightedText> 天，累计练习了
+                      <HighlightedText>{wordNumber}</HighlightedText> 个单词，纠正了
+                      <HighlightedText>{sumWrongCount}</HighlightedText> 次错误输入。这个进度已经相当不错了。
                       <IconParty className="ml-2 inline-block" fontSize={16} />
                       <IconParty className="inline-block" fontSize={16} />
                       <IconParty className="inline-block" fontSize={16} />
-                      <br />
                     </p>
                     <p className="mx-auto px-4 indent-4">
-                      ???? <HighlightedText>{dayFromFirstWord}</HighlightedText> ???Qwerty Learner ?????????????????????????????????????????????????
+                      过去 <HighlightedText>{dayFromFirstWord}</HighlightedText> 天里，Qwerty Learner 一直在陪你练习打字、记忆单词和巩固拼写，希望它确实帮到了你。
                     </p>
-                    <p className="mx-auto px-4 indent-4">?????????????????? Qwerty Learner ?????</p>
+                    <p className="mx-auto px-4 indent-4">如果这个项目对你有帮助，欢迎支持 Qwerty Learner 的持续维护。</p>
                   </div>
                 </div>
 
@@ -101,10 +95,10 @@ export const DonateCard = () => {
                     className="my-btn-primary w-36 font-medium"
                     onClick={onClickHasDonated}
                   >
-                    ????
+                    我已支持
                   </button>
                   <button type="button" className="my-btn-primary w-36 font-medium" onClick={onClickRemindMeLater}>
-                    ??????
+                    下次再说
                   </button>
                 </div>
               </DialogPanel>

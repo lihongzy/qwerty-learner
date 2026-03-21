@@ -18,28 +18,35 @@ export default function useKeySounds(): [PlayFunction, PlayFunction, PlayFunctio
     correctResource,
   } = useAtomValue(hintSoundsConfigAtom)
 
-  const matchedResource = useMemo(
-    () => keySoundResources.find((item) => item.filename === keyResource.filename && item.key === keyResource.key),
-    [keyResource.filename, keyResource.key],
-  )
-
   const fallbackResource = useMemo(
     () => keySoundResources.find((item) => item.key === 'Default') || keySoundResources[0],
     [],
   )
 
+  const matchedResource = useMemo(
+    () =>
+      keyResource
+        ? keySoundResources.find((item) => item.filename === keyResource.filename && item.key === keyResource.key)
+        : undefined,
+    [keyResource],
+  )
+
   useEffect(() => {
-    if (!matchedResource) {
+    if (fallbackResource && !matchedResource) {
       setKeySoundsConfig((prev) => ({ ...prev, resource: fallbackResource }))
     }
   }, [fallbackResource, matchedResource, setKeySoundsConfig])
 
   const resolvedKeyResource = matchedResource || fallbackResource
-  const keySoundUrl = useMemo(() => `${KEY_SOUND_URL_PREFIX}${resolvedKeyResource.filename}`, [resolvedKeyResource.filename])
+  const keySoundUrl = useMemo(
+    () => (resolvedKeyResource ? `${KEY_SOUND_URL_PREFIX}${resolvedKeyResource.filename}` : undefined),
+    [resolvedKeyResource],
+  )
 
-  const [playClickSoundRaw] = useSound(keySoundUrl, {
+  const [playClickSoundRaw] = useSound(keySoundUrl ?? '', {
     volume: keyVolume,
     interrupt: true,
+    soundEnabled: Boolean(keySoundUrl),
   })
   const [playWrongSoundRaw] = useSound(`${SOUND_URL_PREFIX}${wrongResource.filename}`, {
     volume: hintVolume,
