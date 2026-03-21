@@ -1,4 +1,4 @@
-import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
+import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 import { isOpenDarkModeAtom } from '@/store'
 import { useAtom } from 'jotai'

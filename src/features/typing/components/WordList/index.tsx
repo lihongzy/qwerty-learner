@@ -1,4 +1,4 @@
-import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
+import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import { currentChapterAtom, currentDictInfoAtom, isReviewModeAtom } from '@/store'
 import { useAtomValue } from 'jotai'
 import { useContext, useMemo, useState } from 'react'

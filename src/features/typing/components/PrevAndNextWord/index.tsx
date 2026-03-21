@@ -1,6 +1,6 @@
-﻿import { useAtomValue } from 'jotai'
+import { useAtomValue } from 'jotai'
 import { useCallback, useContext, useMemo } from 'react'
-import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
+import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 import { currentDictInfoAtom, wordDictationConfigAtom } from '@/store'
 import IconNext from '~icons/tabler/arrow-narrow-right'

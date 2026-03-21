@@ -1,4 +1,4 @@
-﻿import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/shared/ui/alert'
 import clsx from 'clsx'
 import { useCallback } from 'react'
 import IconWarning from '~icons/material-symbols/warning'

@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import DeleteIcon from '~icons/weui/delete-filled'
 import PhArrowsDownUpFill from '~icons/ph/arrows-down-up-fill'
-import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
+import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import type { TErrorWordData } from '../hooks/useErrorWords'
 
 export type ErrorColumn = {

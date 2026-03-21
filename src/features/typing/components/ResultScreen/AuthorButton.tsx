@@ -1,6 +1,6 @@
-﻿import laity from '@/assets/laity.png'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import laity from '@/assets/laity.png'
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/ui/tooltip'
 
 export const AuthorButton = () => {
   return (
