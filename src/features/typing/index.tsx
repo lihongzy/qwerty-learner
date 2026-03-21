@@ -19,7 +19,7 @@ const TypingPage = () => {
   return (
     <TypingContext.Provider value={{ state: session.state, dispatch: session.dispatch }}>
       {session.state.isFinished && <DonateCard />}
-      {session.state.isFinished && <ResultScreen />}
+      { <ResultScreen />}
 
       <Layout>
         <Header>
