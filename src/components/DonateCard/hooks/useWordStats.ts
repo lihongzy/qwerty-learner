@@ -1,4 +1,4 @@
-import { db } from '@/utils/db'
+import { db } from '@/shared/lib/db'
 import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 

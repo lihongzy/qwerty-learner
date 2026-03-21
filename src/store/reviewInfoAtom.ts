@@ -1,5 +1,5 @@
-import { ReviewRecord } from "@/utils/db/record";
-import { putWordReviewRecord } from "@/utils/db/review-record";
+import { ReviewRecord } from "@/shared/lib/db/record";
+import { putWordReviewRecord } from "@/shared/lib/db/review-record";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 

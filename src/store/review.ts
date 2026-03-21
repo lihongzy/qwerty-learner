@@ -1,6 +1,6 @@
 ﻿import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import type { ReviewRecord } from '@/utils/db/record'
+import type { ReviewRecord } from '@/shared/lib/db/record'
 
 export type ReviewModeInfo = {
   isReviewMode: boolean
