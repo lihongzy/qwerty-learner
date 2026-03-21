@@ -1,7 +1,5 @@
-import { currentDictIdAtom } from '@/store'
 import { db } from '@/utils/db'
 import type { IChapterRecord } from '@/utils/db/record'
-import { useAtomValue } from 'jotai'
 import { useEffect, useState } from 'react'
 
 type ChapterStats = {
@@ -10,8 +8,7 @@ type ChapterStats = {
 }
 
 // 懒加载当前词典某一章节的统计信息，避免画廊页一次查询全部章节记录。
-export function useChapterStats(chapter: number, isStartLoad: boolean) {
-  const dictId = useAtomValue(currentDictIdAtom)
+export function useChapterStats(chapter: number, dictId: string, isStartLoad: boolean) {
   const [chapterStats, setChapterStats] = useState<ChapterStats | null>(null)
 
   useEffect(() => {

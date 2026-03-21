@@ -1,7 +1,7 @@
-﻿import AnalysisPage from '@/pages/Analysis'
+import AnalysisPage from '@/pages/Analysis'
 import ErrorBookPage from '@/pages/ErrorBook'
 import FriendLinkPage from '@/pages/FriendLink'
-import GalleryPage from '@/pages/Gallery-N'
+import GalleryPage from '@/pages/Gallery'
 import { MobilePage } from '@/pages/Mobile'
 import TypingPage from '@/pages/Typing'
 import type { ReactNode } from 'react'
@@ -20,3 +20,4 @@ export const desktopRoutes: AppRoute[] = [
 ]
 
 export const sharedRoutes: AppRoute[] = [{ path: '/mobile', element: <MobilePage /> }]
+
