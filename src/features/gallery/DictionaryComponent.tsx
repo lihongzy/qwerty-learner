@@ -8,7 +8,7 @@ import bookCover from '@/assets/book-cover.png'
 import { currentDictIdAtom } from '@/shared/state'
 import type { Dictionary } from '@/shared/types/resource'
 import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
-import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
 import { calcChapterCount } from '@/shared/utils'
 
 interface Props {

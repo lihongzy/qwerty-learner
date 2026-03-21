@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai'
 import { useCallback, useContext, useMemo } from 'react'
-import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 import { currentDictInfoAtom } from '@/shared/state'
 import { wordDictationConfigAtom } from '@/features/typing/state'

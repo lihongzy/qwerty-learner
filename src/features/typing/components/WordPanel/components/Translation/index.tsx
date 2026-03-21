@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai'
 import { useCallback, useMemo } from 'react'
-import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
 import { SoundIcon } from '@/shared/components/WordPronunciationIcon/SoundIcon'
 import useSpeech from '@/features/typing/hooks/useSpeech'
 import { fontSizeConfigAtom, isTextSelectableAtom } from '@/shared/state'

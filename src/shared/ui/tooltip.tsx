@@ -22,14 +22,14 @@ const TooltipContent = ({ className, sideOffset = 4, ...props }: TooltipContentP
 )
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-type SimpleTooltipProps = {
+type TooltipHintProps = {
   children: React.ReactNode
   content: string
   className?: string
   placement?: 'top' | 'bottom'
 }
 
-const SimpleTooltip = ({ children, content, className, placement = 'top' }: SimpleTooltipProps) => {
+const TooltipHint = ({ children, content, className, placement = 'top' }: TooltipHintProps) => {
   const side = placement === 'bottom' ? 'bottom' : 'top'
 
   return (
@@ -46,5 +46,4 @@ const SimpleTooltip = ({ children, content, className, placement = 'top' }: Simp
   )
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, SimpleTooltip }
-
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, TooltipHint }

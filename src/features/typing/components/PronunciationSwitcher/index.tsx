@@ -1,4 +1,4 @@
-import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
 import { LANG_PRON_MAP } from '@/shared/resources/soundResource'
 import { currentDictInfoAtom, phoneticConfigAtom } from '@/shared/state'
 import { pronunciationConfigAtom } from '@/features/typing/state'

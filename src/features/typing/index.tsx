@@ -1,7 +1,7 @@
 import { DonateCard } from '@/features/typing/components/DonateCard'
 import { Header } from '@/app/layout/Header'
 import { Layout } from '@/app/layout/Layout'
-import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
 import { DictChapterButton } from './components/DictChapterButton'
 import { PronunciationSwitcher } from './components/PronunciationSwitcher'
 import { ResultScreen } from './components/ResultScreen'
@@ -19,7 +19,7 @@ const TypingPage = () => {
   return (
     <TypingContext.Provider value={{ state: session.state, dispatch: session.dispatch }}>
       {session.state.isFinished && <DonateCard />}
-      { <ResultScreen />}
+      {session.state.isFinished && <ResultScreen />}
 
       <Layout>
         <Header>

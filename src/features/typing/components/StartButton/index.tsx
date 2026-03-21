@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai'
 import { useCallback, useContext, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import IconRotate from '~icons/tabler/rotate-clockwise-2'
-import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
 import { randomConfigAtom } from '@/features/typing/state'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 
