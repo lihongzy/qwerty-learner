@@ -1,6 +1,6 @@
 import { KEY_SOUND_URL_PREFIX, keySoundResources } from '@/resources/soundResource'
 import type { SoundResource } from '@/resources/soundResource'
-import { hintSoundsConfigAtom, keySoundsConfigAtom, pronunciationConfigAtom } from '@/shared/state'
+import { hintSoundsConfigAtom, keySoundsConfigAtom, pronunciationConfigAtom } from '@/features/typing/state'
 import { Howl, Howler } from 'howler'
 import { useAtom } from 'jotai'
 import { ScrollArea, Select, Slider, Switch } from 'radix-ui'

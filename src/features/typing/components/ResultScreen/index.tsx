@@ -6,14 +6,11 @@ import { useNavigate } from 'react-router'
 import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 import { infoPanelStateAtom } from '@/app/state/info-panel'
+import { currentChapterAtom, currentDictInfoAtom, isReviewModeAtom, reviewModeInfoAtom } from '@/shared/state'
 import {
-  currentChapterAtom,
-  currentDictInfoAtom,
-  isReviewModeAtom,
   randomConfigAtom,
-  reviewModeInfoAtom,
   wordDictationConfigAtom,
-} from '@/shared/state'
+} from '@/features/typing/state'
 import { InfoPanelType } from '@/typings'
 import IconX from '~icons/tabler/x'
 import IexportWords from '~icons/icon-park-outline/excel'

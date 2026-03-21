@@ -3,7 +3,8 @@ import { useCallback, useMemo } from 'react'
 import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import { SoundIcon } from '@/shared/components/WordPronunciationIcon/SoundIcon'
 import useSpeech from '@/features/typing/hooks/useSpeech'
-import { fontSizeConfigAtom, isTextSelectableAtom, pronunciationConfigAtom } from '@/shared/state'
+import { fontSizeConfigAtom, isTextSelectableAtom } from '@/shared/state'
+import { pronunciationConfigAtom } from '@/features/typing/state'
 
 export type TranslationProps = {
   trans: string

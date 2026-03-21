@@ -1,6 +1,7 @@
 import { SimpleTooltip as Tooltip } from '@/shared/ui/tooltip'
 import { LANG_PRON_MAP } from '@/resources/soundResource'
-import { currentDictInfoAtom, phoneticConfigAtom, pronunciationConfigAtom } from '@/shared/state'
+import { currentDictInfoAtom, phoneticConfigAtom } from '@/shared/state'
+import { pronunciationConfigAtom } from '@/features/typing/state'
 import type { PronunciationType } from '@/typings'
 import { useAtom, useAtomValue } from 'jotai'
 import { Popover, Select, Switch } from 'radix-ui'

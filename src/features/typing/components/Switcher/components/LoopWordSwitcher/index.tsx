@@ -1,4 +1,4 @@
-import { loopWordConfigAtom } from '@/shared/state'
+import { loopWordConfigAtom } from '@/features/typing/state'
 import type { LoopWordTimesOption } from '@/typings'
 import { useAtom } from 'jotai'
 import { Popover, RadioGroup } from 'radix-ui'

@@ -1,4 +1,5 @@
-import { isIgnoreCaseAtom, isShowAnswerOnHoverAtom, isShowPrevAndNextWordAtom, isTextSelectableAtom, randomConfigAtom } from '@/shared/state'
+import { isTextSelectableAtom } from '@/shared/state'
+import { isIgnoreCaseAtom, isShowAnswerOnHoverAtom, isShowPrevAndNextWordAtom, randomConfigAtom } from '@/features/typing/state'
 import * as ScrollArea from '@radix-ui/react-scroll-area'
 import * as Switch from '@radix-ui/react-switch'
 import { useAtom } from 'jotai'
