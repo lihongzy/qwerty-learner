@@ -1,8 +1,8 @@
+﻿import { useAtomValue } from 'jotai'
+import { useCallback, useContext, useMemo } from 'react'
 import { SimpleTooltip as Tooltip } from '@/components/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/pages/Typing/store'
 import { currentDictInfoAtom, wordDictationConfigAtom } from '@/store'
-import { useAtomValue } from 'jotai'
-import { useCallback, useContext, useMemo } from 'react'
 import IconNext from '~icons/tabler/arrow-narrow-right'
 import IconPrev from '~icons/tabler/arrow-narrow-left'
 
@@ -44,7 +44,7 @@ export const PrevAndNextWord = ({ type }: LastAndNextWordProps) => {
   return (
     <>
       {word ? (
-        <Tooltip content={`Shortcut: ${shortCutKey}`}>
+        <Tooltip content={`快捷键：${shortCutKey}`}>
           <div
             onClick={onClickWord}
             className="flex max-w-xs cursor-pointer select-none items-center text-gray-700 opacity-60 duration-200 ease-in-out hover:opacity-100 dark:text-gray-400"
@@ -60,7 +60,7 @@ export const PrevAndNextWord = ({ type }: LastAndNextWordProps) => {
                 {headWord}
               </p>
               {state.isTransVisible && (
-                <p className="line-clamp-1 max-w-full text-sm font-normal text-gray-600 dark:text-gray-500">{word.trans.join('��')}</p>
+                <p className="line-clamp-1 max-w-full text-sm font-normal text-gray-600 dark:text-gray-500">{word.trans.join('；')}</p>
               )}
             </div>
 
@@ -73,4 +73,3 @@ export const PrevAndNextWord = ({ type }: LastAndNextWordProps) => {
     </>
   )
 }
-
