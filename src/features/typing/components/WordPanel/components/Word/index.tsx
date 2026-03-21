@@ -14,7 +14,7 @@ import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 import { InputHandler, type WordUpdateAction } from '../InputHandler'
 import { Notation } from './Notation'
 import { TipAlert } from './TipAlert'
-import { Letter } from './Letter'
+import { Letter } from '@/shared/components/word-display'
 import { initialWordState, type WordState } from './type'
 
 const vowelLetters = ['A', 'E', 'I', 'O', 'U']

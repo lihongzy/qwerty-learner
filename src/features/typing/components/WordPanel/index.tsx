@@ -8,7 +8,7 @@ import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 
 import { PrevAndNextWord } from '../PrevAndNextWord'
 import { Progress } from '../Progress'
-import { Phonetic } from './components/Phonetic'
+import { Phonetic } from '@/shared/components/word-display'
 import { Translation } from './components/Translation'
 import { WordComponent } from './components/Word'
 

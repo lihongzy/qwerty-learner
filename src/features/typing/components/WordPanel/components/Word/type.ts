@@ -1,5 +1,5 @@
-import { LetterMistakes } from "@/shared/lib/db/record"
-import { LetterState } from "./Letter"
+import { LetterState } from '@/shared/components/word-display'
+import { LetterMistakes } from '@/shared/lib/db/record'
 
 export type WordState = {
    displayWord:string
