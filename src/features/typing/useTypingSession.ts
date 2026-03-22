@@ -1,9 +1,8 @@
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
 import { useImmerReducer } from 'use-immer'
-import { currentChapterAtom, currentDictIdAtom, isReviewModeAtom, reviewModeInfoAtom } from '@/shared/state'
+import { isReviewModeAtom, reviewModeInfoAtom } from '@/shared/state'
 import { randomConfigAtom } from '@/features/typing/state'
-import { idDictionaryMap } from '@/shared/resources/dictionary'
 import { isDesktop, isLegal } from '@/shared/utils'
 import { useSaveChapterRecord } from '@/shared/lib/db'
 import { useConfetti } from './hooks/useConfetti'
@@ -15,8 +14,6 @@ export function useTypingSession() {
   const [isLoading, setIsLoading] = useState(true)
 
   const { words } = useWordList()
-  const [currentDictId, setCurrentDictId] = useAtom(currentDictIdAtom)
-  const setCurrentChapter = useSetAtom(currentChapterAtom)
   const randomConfig = useAtomValue(randomConfigAtom)
   const reviewModeInfo = useAtomValue(reviewModeInfoAtom)
   const isReviewMode = useAtomValue(isReviewModeAtom)
@@ -29,9 +26,10 @@ export function useTypingSession() {
   useConfetti(state.isFinished)
 
   useEffect(() => {
+    // 移动端暂时使用兜底提示，后续应改成页面内提示条，避免阻塞交互。
     if (!isDesktop()) {
       const timerId = window.setTimeout(() => {
-        alert('Qwerty Learner is not optimized for mobile yet. Please use a desktop browser, or try a tablet with a hardware keyboard.')
+        alert('Qwerty Learner 暂未针对移动端进行优化，请使用桌面浏览器，或改用连接硬件键盘的平板设备。')
       }, 500)
 
       return () => window.clearTimeout(timerId)
@@ -39,17 +37,11 @@ export function useTypingSession() {
   }, [])
 
   useEffect(() => {
-    if (!(currentDictId in idDictionaryMap)) {
-      setCurrentDictId('cet4')
-      setCurrentChapter(0)
-    }
-  }, [currentDictId, setCurrentChapter, setCurrentDictId])
-
-  useEffect(() => {
     if (words === undefined) {
       return
     }
 
+    // 复习模式从上次记录的位置恢复，普通模式始终从章节起点开始。
     const initialIndex = isReviewMode ? (reviewModeInfo.reviewRecord?.index ?? 0) : 0
 
     dispatch({
@@ -67,6 +59,7 @@ export function useTypingSession() {
   }, [state.chapterData.words.length])
 
   useEffect(() => {
+    // 窗口失焦时立即暂停，避免计时和输入状态继续推进。
     const onBlur = () => {
       dispatch({ type: TypingStateActionType.SET_IS_TYPING, payload: false })
     }
@@ -80,6 +73,7 @@ export function useTypingSession() {
       return
     }
 
+    // 只在待开始状态下监听启动按键，开始后交给专门的输入流程处理。
     const onKeyDown = (e: KeyboardEvent) => {
       const isInputKey = isLegal(e.key) || e.key === ' '
       const hasModifier = e.altKey || e.ctrlKey || e.metaKey
@@ -95,6 +89,7 @@ export function useTypingSession() {
   }, [dispatch, isLoading, state.isTyping])
 
   useEffect(() => {
+    // 章节完成且单词记录已落库后，再统一保存本章结果。
     if (state.isFinished && !state.isSavingRecord) {
       saveChapterRecord(state)
     }
@@ -105,6 +100,7 @@ export function useTypingSession() {
       return
     }
 
+    // 计时器只在正在练习时递增。
     const intervalId = window.setInterval(() => {
       dispatch({ type: TypingStateActionType.TICK_TIMER })
     }, 1000)
