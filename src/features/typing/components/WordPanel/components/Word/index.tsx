@@ -258,54 +258,52 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
       <InputHandler updateInput={updateInput} />
       <div
         lang={currentLanguageCategory !== 'code' ? currentLanguageCategory : 'en'}
-        className="flex flex-col items-center justify-center gap-3 pb-2 pt-5"
+        className="flex flex-col items-center justify-center gap-2 pb-1 pt-3"
       >
         {['romaji', 'hapin'].includes(currentLanguage) && word.notation && <Notation notation={word.notation} />}
         <div
           className={clsx(
-            'relative flex min-h-[9.5rem] min-w-[min(74vw,46rem)] max-w-[min(86vw,52rem)] flex-col items-center justify-center overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[linear-gradient(180deg,var(--bg-elevated),var(--bg-panel))] px-8 py-7 shadow-[var(--shadow-panel)] backdrop-blur-md',
+            'relative flex min-h-[7.75rem] min-w-[min(70vw,40rem)] max-w-[min(84vw,48rem)] flex-col items-center justify-center overflow-hidden px-6 py-4',
             wordDictationConfig.isOpen && 'my-tooltip',
           )}
           data-tip="按 Tab 快捷键显示完整单词"
         >
-          <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_48%)]" />
-          <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(34,211,238,0.35),transparent)]" />
           <div
             onMouseEnter={() => setIsHoveringWord(true)}
             onMouseLeave={() => setIsHoveringWord(false)}
             className={clsx(
-              'relative flex min-h-[4.5rem] items-center justify-center rounded-[calc(var(--radius-lg)-8px)] px-2 text-center',
+              'relative flex min-h-[4rem] items-center justify-center px-2 text-center',
               { 'select-all': isTextSelectable },
               wordState.hasWrong && 'my-word-wrong',
             )}
           >
+            {pronunciationIsOpen && (
+              <div className="absolute -right-8 top-0 h-7 w-7 sm:-right-9">
+                <Tooltip content="快捷键：Ctrl + J">
+                  <WordPronunciationIcon
+                    word={word}
+                    lang={currentLanguage}
+                    ref={wordPronunciationIconRef}
+                    className="my-focus-ring h-7 w-7 rounded-full"
+                    iconClassName="h-4.5 w-4.5"
+                  />
+                </Tooltip>
+              </div>
+            )}
             {wordState.displayWord.split('').map((char, index) => (
               <Letter key={`${index}-${char}`} letter={char} visible={getLetterVisible(index)} state={wordState.letterStates[index]} />
             ))}
           </div>
-          <div className="relative mt-3 flex flex-wrap items-center justify-center gap-2 text-xs text-[var(--text-muted)]">
+          <div className="relative mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-[var(--text-muted)]">
             {wordDictationConfig.isOpen ? (
-              <span className="rounded-full border border-[var(--border-soft)] bg-[var(--bg-ghost)] px-3 py-1">
+              <span>
                 按 <span className="font-mono text-[var(--text-main)]">Tab</span> 查看完整拼写
               </span>
             ) : (
-              <span className="rounded-full border border-[var(--border-soft)] bg-[var(--bg-ghost)] px-3 py-1">当前为完整拼写展示</span>
+              <span>当前为完整拼写展示</span>
             )}
-            {pronunciationIsOpen && (
-              <span className="rounded-full border border-[var(--border-soft)] bg-[var(--bg-ghost)] px-3 py-1">
-                发音快捷键 <span className="font-mono text-[var(--text-main)]">Ctrl + J</span>
-              </span>
-            )}
+            {pronunciationIsOpen && <span>发音快捷键 <span className="font-mono text-[var(--text-main)]">Ctrl + J</span></span>}
           </div>
-          {pronunciationIsOpen && (
-            <div className="absolute right-4 top-4 h-10 w-10">
-              <Tooltip content="快捷键：Ctrl + J">
-                <div className="rounded-full border border-[var(--border-main)] bg-[var(--bg-ghost)] p-1 text-[var(--text-muted)] shadow-[var(--shadow-soft)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:bg-[var(--accent-primary-soft)] hover:text-[var(--accent-primary)]">
-                  <WordPronunciationIcon word={word} lang={currentLanguage} ref={wordPronunciationIconRef} className="h-full w-full" />
-                </div>
-              </Tooltip>
-            </div>
-          )}
         </div>
       </div>
       <TipAlert className="fixed bottom-10 right-3" show={showTipAlert} setShow={setShowTipAlert} />

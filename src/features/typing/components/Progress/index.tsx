@@ -32,16 +32,15 @@ export const Progress = ({ className }: { className?: string }) => {
   }, [progress])
 
   return (
-    <div className={clsx('relative w-full max-w-xs pt-1', className)}>
-      <div className="mb-2 flex items-center justify-between gap-3 text-[0.72rem] font-medium text-[var(--text-muted)]">
+    <div className={clsx('relative w-full max-w-sm px-4', className)}>
+      <div className="mb-1.5 flex items-center justify-between gap-3 text-[11px] font-medium text-[var(--text-muted)]">
         <span className="tracking-[0.16em] text-[var(--text-faint)]">PROGRESS</span>
         <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[var(--text-main)]">
           {totalWords === 0 ? '0/0' : `${Math.min(currentIndex + 1, totalWords)}/${totalWords}`}
         </span>
       </div>
 
-      <div className="relative h-2.5 overflow-hidden rounded-full border border-[var(--border-main)] bg-[var(--bg-ghost)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_58%)]" />
+      <div className="relative h-1.5 overflow-hidden rounded-full bg-[rgba(18,50,58,0.08)] dark:bg-[rgba(138,167,175,0.14)]">
         <div
           style={{ width: `${progress}%` }}
           className={clsx('h-full rounded-full transition-[width] duration-300 ease-out', progressTone)}

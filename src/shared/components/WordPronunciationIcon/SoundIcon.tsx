@@ -8,11 +8,12 @@ export type SoundIconProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>
   iconClassName?: string
   className?: string
+  ariaLabel?: string
 }
 
 const volumeIcons = [VolumeIcon, VolumeLowIcon, VolumeMediumIcon, VolumeHighIcon]
 
-export const SoundIcon = ({ duration = 500, animated = false, onClick, iconClassName, className }: SoundIconProps) => {
+export const SoundIcon = ({ duration = 500, animated = false, onClick, iconClassName, className, ariaLabel }: SoundIconProps) => {
   const [animationFrameIndex, setAnimationFrameIndex] = useState(0)
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export const SoundIcon = ({ duration = 500, animated = false, onClick, iconClass
   const Icon = volumeIcons[animationFrameIndex]
 
   return (
-    <button type={'button'} className={clsx('inline-flex items-center justify-center focus:outline-none', className)} onClick={onClick}>
+    <button type={'button'} aria-label={ariaLabel} className={clsx('inline-flex items-center justify-center focus:outline-none', className)} onClick={onClick}>
       <Icon className={clsx('h-8 w-8', iconClassName)} />
     </button>
   )

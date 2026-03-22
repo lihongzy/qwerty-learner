@@ -15,16 +15,13 @@ const emphasisClassMap: Record<NonNullable<InfoBoxProps['emphasis']>, string> = 
 
 const InfoBox: React.FC<InfoBoxProps> = ({ info, description, emphasis = 'default' }) => {
   return (
-    <div className="group relative flex min-h-[88px] flex-col justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-soft)] bg-[linear-gradient(180deg,var(--bg-elevated),var(--bg-panel))] px-4 py-3 transition-colors duration-200 hover:border-[var(--accent-primary)] hover:bg-[linear-gradient(180deg,var(--bg-panel-strong),var(--bg-panel))]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.08),transparent_34%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-      <div className="pointer-events-none absolute inset-y-4 right-0 w-px bg-gradient-to-b from-transparent via-[var(--border-main)] to-transparent group-last:hidden" />
-
+    <div className="relative flex min-h-[52px] flex-col justify-center pr-3 md:border-r md:border-[var(--border-soft)] md:pr-4 md:last:border-r-0">
       <span
-        className={`relative font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[1.45rem] font-semibold tracking-[0.06em] sm:text-[1.7rem] ${emphasisClassMap[emphasis]}`}
+        className={`font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[1.05rem] font-semibold tracking-[0.05em] sm:text-[1.2rem] ${emphasisClassMap[emphasis]}`}
       >
         {info}
       </span>
-      <span className="relative mt-2 text-[11px] font-semibold tracking-[0.22em] text-[var(--text-faint)] uppercase">
+      <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-faint)]">
         {description}
       </span>
     </div>

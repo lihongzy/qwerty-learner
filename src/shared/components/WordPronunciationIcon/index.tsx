@@ -48,7 +48,7 @@ export const WordPronunciationIcon = ({ word, lang, className, iconClassName, re
     <SoundIcon
       animated={isPlaying}
       onClick={playSound}
-      className={clsx('cursor-pointer text-gray-600', className)}
+      className={clsx('cursor-pointer text-[var(--text-faint)] transition-colors duration-150 hover:text-[var(--accent-primary)]', className)}
       iconClassName={iconClassName}
     />
   )
