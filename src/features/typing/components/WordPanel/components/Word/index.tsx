@@ -256,25 +256,53 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
   return (
     <>
       <InputHandler updateInput={updateInput} />
-      <div lang={currentLanguageCategory !== 'code' ? currentLanguageCategory : 'en'} className="flex flex-col items-center justify-center pb-1 pt-4">
+      <div
+        lang={currentLanguageCategory !== 'code' ? currentLanguageCategory : 'en'}
+        className="flex flex-col items-center justify-center gap-3 pb-2 pt-5"
+      >
         {['romaji', 'hapin'].includes(currentLanguage) && word.notation && <Notation notation={word.notation} />}
         <div
-          className={clsx('relative w-fit bg-transparent p-0 leading-normal shadow-none', wordDictationConfig.isOpen && 'my-tooltip')}
+          className={clsx(
+            'relative flex min-h-[9.5rem] min-w-[min(74vw,46rem)] max-w-[min(86vw,52rem)] flex-col items-center justify-center overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[linear-gradient(180deg,var(--bg-elevated),var(--bg-panel))] px-8 py-7 shadow-[var(--shadow-panel)] backdrop-blur-md',
+            wordDictationConfig.isOpen && 'my-tooltip',
+          )}
           data-tip="按 Tab 快捷键显示完整单词"
         >
+          <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_48%)]" />
+          <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(34,211,238,0.35),transparent)]" />
           <div
             onMouseEnter={() => setIsHoveringWord(true)}
             onMouseLeave={() => setIsHoveringWord(false)}
-            className={clsx('flex items-center justify-center', { 'select-all': isTextSelectable }, wordState.hasWrong && 'my-word-wrong')}
+            className={clsx(
+              'relative flex min-h-[4.5rem] items-center justify-center rounded-[calc(var(--radius-lg)-8px)] px-2 text-center',
+              { 'select-all': isTextSelectable },
+              wordState.hasWrong && 'my-word-wrong',
+            )}
           >
             {wordState.displayWord.split('').map((char, index) => (
               <Letter key={`${index}-${char}`} letter={char} visible={getLetterVisible(index)} state={wordState.letterStates[index]} />
             ))}
           </div>
+          <div className="relative mt-3 flex flex-wrap items-center justify-center gap-2 text-xs text-[var(--text-muted)]">
+            {wordDictationConfig.isOpen ? (
+              <span className="rounded-full border border-[var(--border-soft)] bg-[var(--bg-ghost)] px-3 py-1">
+                按 <span className="font-mono text-[var(--text-main)]">Tab</span> 查看完整拼写
+              </span>
+            ) : (
+              <span className="rounded-full border border-[var(--border-soft)] bg-[var(--bg-ghost)] px-3 py-1">当前为完整拼写展示</span>
+            )}
+            {pronunciationIsOpen && (
+              <span className="rounded-full border border-[var(--border-soft)] bg-[var(--bg-ghost)] px-3 py-1">
+                发音快捷键 <span className="font-mono text-[var(--text-main)]">Ctrl + J</span>
+              </span>
+            )}
+          </div>
           {pronunciationIsOpen && (
-            <div className="absolute -right-12 top-1/2 h-9 w-9 -translate-y-1/2 transform">
+            <div className="absolute right-4 top-4 h-10 w-10">
               <Tooltip content="快捷键：Ctrl + J">
-                <WordPronunciationIcon word={word} lang={currentLanguage} ref={wordPronunciationIconRef} className="h-full w-full" />
+                <div className="rounded-full border border-[var(--border-main)] bg-[var(--bg-ghost)] p-1 text-[var(--text-muted)] shadow-[var(--shadow-soft)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:bg-[var(--accent-primary-soft)] hover:text-[var(--accent-primary)]">
+                  <WordPronunciationIcon word={word} lang={currentLanguage} ref={wordPronunciationIconRef} className="h-full w-full" />
+                </div>
               </Tooltip>
             </div>
           )}
