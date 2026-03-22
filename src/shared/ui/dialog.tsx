@@ -3,6 +3,26 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import clsx from 'clsx'
 import { X } from 'lucide-react'
 
+const overlayClassName =
+  'fixed inset-0 z-50 bg-black/35 backdrop-blur-[2px] ' +
+  'duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ' +
+  'data-[state=open]:animate-in data-[state=closed]:animate-out ' +
+  'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0'
+
+const contentClassName =
+  'fixed left-1/2 top-1/2 z-50 flex w-[calc(100%-1.5rem)] max-w-xl ' +
+  'max-h-[90vh] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden ' +
+  'rounded-app-lg border border-border-main bg-bg-panel-strong p-5 shadow-app-soft ' +
+  'duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] focus:outline-none ' +
+  'data-[state=open]:animate-in data-[state=closed]:animate-out ' +
+  'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 ' +
+  'data-[state=closed]:zoom-out-[0.995] data-[state=open]:zoom-in-[0.995]'
+
+const closeButtonClassName =
+  'absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full ' +
+  'text-text-faint transition-colors duration-150 hover:text-text-strong focus:outline-none ' +
+  'focus-visible:ring-2 focus-visible:ring-accent-cool/40 disabled:pointer-events-none'
+
 const Dialog = DialogPrimitive.Root
 const DialogTrigger = DialogPrimitive.Trigger
 const DialogPortal = DialogPrimitive.Portal
@@ -14,10 +34,7 @@ function DialogOverlay({ className, ref, ...props }: DialogOverlayProps) {
   return (
     <DialogPrimitive.Overlay
       ref={ref}
-      className={clsx(
-        'fixed inset-0 z-50 bg-[var(--bg-overlay)] backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
-        className,
-      )}
+      className={clsx(overlayClassName, className)}
       {...props}
     />
   )
@@ -33,22 +50,17 @@ function DialogContent({ className, children, ref, showCloseButton = true, ...pr
   return (
     <DialogPortal>
       <DialogOverlay />
+      {/* 通用弹窗壳：负责定位、尺寸约束和基础表面，不承载具体业务布局。 */}
       <DialogPrimitive.Content
         ref={ref}
-        className={clsx(
-          'fixed left-[50%] top-[50%] z-50 flex max-h-[min(92vh,56rem)] w-[calc(100%-2rem)] max-w-lg translate-x-[-50%] translate-y-[-50%] flex-col overflow-hidden border border-[var(--border-main)] bg-[linear-gradient(180deg,var(--bg-panel-strong),var(--bg-panel))] p-6 shadow-[var(--shadow-panel)] backdrop-blur-xl duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-[var(--radius-lg)]',
-          className,
-        )}
+        className={clsx(contentClassName, className)}
         {...props}
       >
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_18%),radial-gradient(circle_at_top_right,rgba(103,232,249,0.12),transparent_22%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_16%),radial-gradient(circle_at_top_right,rgba(103,232,249,0.08),transparent_24%)]" />
         <div className="relative min-h-0 w-full flex-1">{children}</div>
         {showCloseButton && (
-          <DialogPrimitive.Close
-            className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border-main)] bg-[var(--bg-elevated)] text-[var(--text-muted)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:text-[var(--text-strong)] focus:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:pointer-events-none"
-          >
+          <DialogPrimitive.Close className={closeButtonClassName}>
             <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">关闭</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>
@@ -59,13 +71,15 @@ function DialogContent({ className, children, ref, showCloseButton = true, ...pr
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 function DialogHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={clsx('flex flex-col space-y-1.5 text-center sm:text-left', className)} {...props} />
+  // 统一标题区的纵向节奏，避免各个弹窗自己拼标题布局。
+  return <div className={clsx('flex flex-col gap-2 text-center sm:text-left', className)} {...props} />
 }
 
 DialogHeader.displayName = 'DialogHeader'
 
 function DialogFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={clsx('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)} {...props} />
+  // 小屏按钮倒序堆叠，大屏回到右对齐横排。
+  return <div className={clsx('flex flex-col-reverse gap-2.5 border-t border-border-soft pt-4 sm:flex-row sm:justify-end', className)} {...props} />
 }
 
 DialogFooter.displayName = 'DialogFooter'
@@ -76,7 +90,7 @@ function DialogTitle({ className, ref, ...props }: DialogTitleProps) {
   return (
     <DialogPrimitive.Title
       ref={ref}
-      className={clsx('text-lg font-semibold leading-none tracking-tight text-[var(--text-strong)]', className)}
+      className={clsx('text-xl font-semibold tracking-tight text-text-strong', className)}
       {...props}
     />
   )
@@ -90,7 +104,7 @@ function DialogDescription({ className, ref, ...props }: DialogDescriptionProps)
   return (
     <DialogPrimitive.Description
       ref={ref}
-      className={clsx('text-sm text-[var(--text-muted)]', className)}
+      className={clsx('text-sm leading-6 text-text-muted', className)}
       {...props}
     />
   )
