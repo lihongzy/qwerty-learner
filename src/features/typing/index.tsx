@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { DonateCard } from '@/features/typing/components/DonateCard'
 import { Header } from '@/app/layout/Header'
 import { Layout } from '@/app/layout/Layout'
@@ -15,11 +16,25 @@ import { useTypingSession } from './useTypingSession'
 
 const TypingPage = () => {
   const session = useTypingSession()
+  const isFinished = session.state.isFinished
+
+  let mainContent: React.ReactNode = null
+
+  if (session.isLoading) {
+    mainContent = (
+      <div className="flex flex-col items-center gap-3 text-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-accent-primary/25 border-t-accent-primary" />
+        <h2 className="text-sm font-medium text-text-muted">加载中...</h2>
+      </div>
+    )
+  } else if (!isFinished) {
+    mainContent = <WordPanel />
+  }
 
   return (
     <TypingContext.Provider value={{ state: session.state, dispatch: session.dispatch }}>
-      {session.state.isFinished && <DonateCard />}
-      {session.state.isFinished && <ResultScreen />}
+      {isFinished && <DonateCard />}
+      {isFinished && <ResultScreen />}
 
       <Layout>
         <Header>
@@ -30,7 +45,13 @@ const TypingPage = () => {
 
           <Tooltip content="跳过这个单词">
             <button
-              className={`${session.state.isShowSkip ? 'bg-orange-400' : 'invisible w-0 bg-gray-300 px-0 opacity-0'} my-btn-primary transition-all duration-300`}
+              className={clsx(
+                'my-btn-primary transition-all duration-300',
+                // 显示时使用警示色强调可跳过状态；隐藏时同时移除占位和点击能力，避免影响头部布局。
+                session.state.isShowSkip
+                  ? 'border-accent-warn bg-accent-warn opacity-100'
+                  : 'pointer-events-none invisible w-0 border-transparent px-0 opacity-0',
+              )}
               onClick={session.skipWord}
             >
               跳过
@@ -38,17 +59,10 @@ const TypingPage = () => {
           </Tooltip>
         </Header>
 
-        <div className="container mx-auto flex h-full flex-1 flex-col items-center justify-center">
-          <div className="relative container mx-auto flex h-full flex-col items-center">
-            <div className="container flex grow items-center justify-center">
-              {session.isLoading ? (
-                <div className="text-center">
-                  <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-dashed border-yellow-500" />
-                  <h2 className="mt-4 text-zinc-900 dark:text-white">加载中...</h2>
-                </div>
-              ) : (
-                !session.state.isFinished && <WordPanel />
-              )}
+        <div className="mx-auto flex h-full w-full max-w-6xl flex-1 flex-col items-center justify-center px-4">
+          <div className="relative flex h-full w-full flex-col items-center">
+            <div className="flex grow items-center justify-center">
+              {mainContent}
             </div>
 
             <Speed />
