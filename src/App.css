@@ -4,10 +4,10 @@
 :root {
   --bg-canvas: #edf4f5;
   --bg-subtle: #f7fbfb;
-  --bg-elevated: rgba(255, 255, 255, 0.82);
-  --bg-panel: rgba(255, 255, 255, 0.92);
+  --bg-elevated: rgba(255, 255, 255, 0.88);
+  --bg-panel: rgba(255, 255, 255, 0.94);
   --bg-panel-strong: rgba(255, 255, 255, 0.98);
-  --bg-ghost: rgba(255, 255, 255, 0.56);
+  --bg-ghost: rgba(255, 255, 255, 0.7);
   --bg-overlay: rgba(7, 18, 22, 0.34);
 
   --text-strong: #0f1f24;
@@ -36,11 +36,11 @@
   --radius-lg: 28px;
 
   --shadow-soft:
-    0 10px 30px rgba(15, 23, 42, 0.08),
-    0 2px 10px rgba(15, 23, 42, 0.05);
+    0 8px 24px rgba(15, 23, 42, 0.06),
+    0 1px 4px rgba(15, 23, 42, 0.04);
   --shadow-panel:
-    0 24px 72px rgba(15, 23, 42, 0.16),
-    0 10px 28px rgba(15, 23, 42, 0.08);
+    0 16px 48px rgba(15, 23, 42, 0.1),
+    0 4px 14px rgba(15, 23, 42, 0.06);
   --focus-ring: 0 0 0 2px color-mix(in srgb, var(--accent-cool) 42%, transparent 58%);
 
   /* Compatibility aliases for existing components. */
@@ -62,70 +62,59 @@
   --app-accent-cool: var(--accent-cool);
 }
 
-html,
-body,
-:global(#root) {
-  min-height: 100%;
-}
-
-html {
-  background:
-    radial-gradient(circle at 10% 14%, rgba(103, 232, 249, 0.12), transparent 24%),
-    radial-gradient(circle at 88% 8%, rgba(13, 148, 136, 0.09), transparent 20%),
-    linear-gradient(180deg, #fcfefe 0%, var(--bg-subtle) 42%, var(--bg-canvas) 100%);
-}
-
-body {
-  margin: 0;
-  color: var(--text-main);
-  font-family:
+@theme inline {
+  --color-bg-canvas: var(--bg-canvas);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-panel: var(--bg-panel);
+  --color-bg-panel-strong: var(--bg-panel-strong);
+  --color-bg-ghost: var(--bg-ghost);
+  --color-text-strong: var(--text-strong);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-border-soft: var(--border-soft);
+  --color-border-main: var(--border-main);
+  --color-border-strong: var(--border-strong);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-primary-hover: var(--accent-primary-hover);
+  --color-accent-primary-soft: var(--accent-primary-soft);
+  --color-accent-cool: var(--accent-cool);
+  --color-accent-cool-soft: var(--accent-cool-soft);
+  --color-accent-warn: var(--accent-warn);
+  --color-accent-warn-soft: var(--accent-warn-soft);
+  --color-state-success: var(--state-success);
+  --color-state-error: var(--state-error);
+  --color-state-info: var(--state-info);
+  --radius-app-sm: var(--radius-sm);
+  --radius-app-md: var(--radius-md);
+  --radius-app-lg: var(--radius-lg);
+  --shadow-app-soft: var(--shadow-soft);
+  --shadow-app-panel: var(--shadow-panel);
+  --font-sans:
     'IBM Plex Sans',
     'Avenir Next',
     'Segoe UI',
     'PingFang SC',
     'Microsoft YaHei',
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background:
-    radial-gradient(circle at 12% 16%, rgba(255, 255, 255, 0.62), transparent 22%),
-    radial-gradient(circle at 82% 10%, rgba(13, 148, 136, 0.08), transparent 18%),
-    linear-gradient(180deg, transparent 0%, rgba(18, 32, 42, 0.025) 100%);
-  user-select: none;
-  @apply transition-colors duration-300;
-}
-
-body::before {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  content: '';
-  background-image:
-    linear-gradient(rgba(18, 32, 42, 0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(18, 32, 42, 0.028) 1px, transparent 1px);
-  background-size: 24px 24px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 90%);
-}
-
-body::after {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  content: '';
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 16%),
-    linear-gradient(90deg, rgba(103, 232, 249, 0.035), transparent 20%, transparent 80%, rgba(103, 232, 249, 0.025));
+  --font-mono:
+    'IBM Plex Mono',
+    'JetBrains Mono',
+    'SFMono-Regular',
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
 }
 
 html.dark {
   --bg-canvas: #071216;
   --bg-subtle: #0b171c;
-  --bg-elevated: rgba(12, 24, 29, 0.82);
+  --bg-elevated: rgba(12, 24, 29, 0.88);
   --bg-panel: rgba(13, 27, 33, 0.94);
   --bg-panel-strong: rgba(16, 31, 37, 0.98);
-  --bg-ghost: rgba(8, 19, 24, 0.62);
+  --bg-ghost: rgba(8, 19, 24, 0.72);
   --bg-overlay: rgba(2, 8, 10, 0.72);
 
   --text-strong: #ecfeff;
@@ -150,236 +139,42 @@ html.dark {
   --state-info: #38bdf8;
 
   --shadow-soft:
-    0 14px 34px rgba(0, 0, 0, 0.2),
-    0 6px 18px rgba(0, 0, 0, 0.12);
+    0 10px 26px rgba(0, 0, 0, 0.22),
+    0 2px 10px rgba(0, 0, 0, 0.14);
   --shadow-panel:
-    0 30px 90px rgba(0, 0, 0, 0.42),
-    0 14px 36px rgba(0, 0, 0, 0.22);
+    0 20px 60px rgba(0, 0, 0, 0.34),
+    0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-html.dark {
-  background:
-    radial-gradient(circle at 12% 10%, rgba(20, 184, 166, 0.09), transparent 24%),
-    radial-gradient(circle at 88% 8%, rgba(103, 232, 249, 0.06), transparent 18%),
-    linear-gradient(180deg, #091116 0%, var(--bg-subtle) 44%, var(--bg-canvas) 100%);
-}
-
-html.dark body {
-  background:
-    radial-gradient(circle at 14% 16%, rgba(20, 184, 166, 0.08), transparent 20%),
-    radial-gradient(circle at 84% 12%, rgba(103, 232, 249, 0.05), transparent 18%),
-    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.24) 100%);
-}
-
-html.dark body::before {
-  background-image:
-    linear-gradient(rgba(103, 232, 249, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(103, 232, 249, 0.045) 1px, transparent 1px);
-}
-
-html.dark body::after {
-  background:
-    linear-gradient(180deg, rgba(103, 232, 249, 0.035), transparent 14%),
-    linear-gradient(90deg, rgba(20, 184, 166, 0.03), transparent 18%, transparent 82%, rgba(20, 184, 166, 0.02));
-}
-
-::selection {
-  background: var(--accent-primary-soft);
-  color: var(--text-main);
-}
-
-code {
-  font-family:
-    'IBM Plex Mono',
-    'JetBrains Mono',
-    'SFMono-Regular',
-    Menlo,
-    Monaco,
-    Consolas,
-    monospace;
-}
-
-.my-card {
-  border: 1px solid var(--border-main);
-  background:
-    linear-gradient(180deg, var(--bg-panel), var(--bg-elevated));
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(18px);
-}
-
-@layer components {
-  .my-focus-ring {
-    @apply focus:outline-none focus-visible:outline-none;
-    box-shadow: none;
+@layer base {
+  html,
+  body,
+  :global(#root) {
+    min-height: 100%;
   }
 
-  .my-focus-ring:focus-visible {
-    box-shadow: var(--focus-ring);
+  html {
+    background: var(--bg-canvas);
   }
 
-  .my-panel {
-    border: 1px solid var(--border-main);
-    border-radius: var(--radius-md);
-    background:
-      linear-gradient(180deg, var(--bg-panel), var(--bg-elevated));
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(18px);
-  }
-
-  .my-panel-strong {
-    border: 1px solid var(--border-main);
-    border-radius: var(--radius-lg);
-    background:
-      linear-gradient(180deg, var(--bg-panel-strong), var(--bg-panel));
-    box-shadow: var(--shadow-panel);
-    backdrop-filter: blur(22px);
-  }
-
-  .my-control-shell {
-    border: 1px solid var(--border-main);
-    border-radius: var(--radius-md);
-    background: linear-gradient(180deg, var(--bg-ghost), var(--bg-elevated));
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(18px);
-  }
-
-  .my-icon {
-    @apply h-5.5 w-5.5 shrink-0 focus:outline-none;
-  }
-
-  .my-btn-primary {
-    @apply flex items-center justify-center px-6 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55;
-    border-radius: var(--radius-sm);
-    background:
-      linear-gradient(135deg, var(--accent-primary), color-mix(in srgb, var(--accent-primary) 56%, var(--accent-cool) 44%));
-    border: 1px solid color-mix(in srgb, var(--accent-primary) 70%, transparent 30%);
-    transition:
-      background-color 160ms ease,
-      opacity 160ms ease,
-      border-color 160ms ease,
-      transform 120ms ease;
-  }
-
-  .my-btn-primary:hover {
-    background:
-      linear-gradient(135deg, var(--accent-primary-hover), color-mix(in srgb, var(--accent-primary-hover) 64%, var(--accent-cool) 36%));
-  }
-
-  .my-btn-primary:active {
-    opacity: 0.92;
-    transform: translateY(1px);
-  }
-
-  .my-btn-primary:focus-visible {
-    box-shadow: var(--focus-ring);
-  }
-
-  html.dark .my-btn-primary {
-    color: #03141a;
-  }
-
-  html.dark .my-btn-primary:hover {
-    background:
-      linear-gradient(135deg, var(--accent-primary-hover), color-mix(in srgb, var(--accent-primary-hover) 74%, var(--accent-cool) 26%));
-  }
-
-  .my-btn-secondary {
-    @apply flex items-center justify-center px-5 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-55;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-main);
-    background: linear-gradient(180deg, var(--bg-panel), var(--bg-elevated));
+  body {
+    margin: 0;
+    background: transparent;
     color: var(--text-main);
-    box-shadow: var(--shadow-soft);
-    transition:
-      border-color 160ms ease,
-      color 160ms ease,
-      background-color 160ms ease;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: color 160ms ease, background-color 160ms ease;
+    user-select: none;
   }
 
-  .my-btn-secondary:hover {
-    border-color: color-mix(in srgb, var(--accent-primary) 36%, var(--border-main) 64%);
-    color: var(--text-strong);
+  ::selection {
+    background: var(--accent-primary-soft);
+    color: var(--text-main);
   }
 
-  .my-btn-secondary:focus-visible {
-    box-shadow: var(--focus-ring);
-  }
-
-  .my-tooltip {
-    @apply whitespace-nowrap rounded-md px-2.5 py-1.5 text-[11px] shadow-md;
-    border: 1px solid var(--border-main);
-    background:
-      linear-gradient(180deg, var(--bg-panel-strong), var(--bg-panel));
-    color: var(--text-muted);
-    letter-spacing: 0.02em;
-    backdrop-filter: blur(18px);
-  }
-
-  .my-word-wrong {
-    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  }
-
-  .my-switch-root {
-    @apply relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border-transparent transition-colors duration-200 ease-in-out focus:outline-none;
-    border-width: 1px;
-    border-color: var(--border-main);
-    background:
-      linear-gradient(180deg, rgba(120, 136, 148, 0.34), rgba(97, 112, 124, 0.42));
-    box-shadow:
-      inset 0 1px 2px rgba(0, 0, 0, 0.12),
-      0 0 0 1px var(--border-soft);
-  }
-
-  .my-switch-root[data-headlessui-state='checked'],
-  .my-switch-root[data-state='checked'] {
-    background:
-      linear-gradient(135deg, rgba(29, 157, 178, 0.78), rgba(124, 240, 255, 0.88));
-    box-shadow:
-      inset 0 1px 2px rgba(0, 0, 0, 0.08),
-      0 0 0 1px rgba(124, 240, 255, 0.18),
-      0 0 16px rgba(124, 240, 255, 0.12);
-  }
-
-  .my-switch-thumb {
-    @apply pointer-events-none inline-block h-4 w-4 translate-x-0 transform rounded-full ring-0 transition duration-200 ease-in-out;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(228, 239, 243, 0.96));
-    box-shadow:
-      0 2px 8px rgba(0, 0, 0, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.88);
-  }
-
-  [data-headlessui-state='checked'] .my-switch-thumb,
-  [data-state='checked'] .my-switch-thumb {
-    @apply translate-x-[25px];
-  }
-
-  .my-slider {
-    @apply relative flex h-10 w-full cursor-pointer select-none items-center;
-  }
-
-  .my-slider [data-disabled] {
-    @apply pointer-events-none opacity-50;
-  }
-
-  .my-slider > span:nth-child(1) {
-    @apply relative h-[5px] flex-grow rounded-full;
-    background:
-      linear-gradient(90deg, rgba(13, 148, 136, 0.16), rgba(34, 211, 238, 0.16));
-    box-shadow: inset 0 0 0 1px var(--border-soft);
-  }
-
-  .my-slider > span:nth-child(1) > span:nth-child(1) {
-    @apply absolute h-full rounded-full;
-    background: linear-gradient(90deg, var(--accent-primary), var(--accent-cool));
-    box-shadow: 0 0 14px rgba(34, 211, 238, 0.14);
-  }
-
-  .my-slider > span:nth-child(2) {
-    @apply block h-4 w-4 cursor-pointer rounded-full border bg-white;
-    border-color: var(--border-main);
-    box-shadow:
-      0 6px 16px rgba(18, 31, 40, 0.16),
-      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  code {
+    font-family: var(--font-mono);
   }
 }
 
@@ -391,38 +186,5 @@ code {
     animation-iteration-count: 1 !important;
     transition-duration: 0ms !important;
     scroll-behavior: auto !important;
-  }
-}
-
-@keyframes shake {
-  10%,
-  90% {
-    transform: translate3d(-1px, 0, 0);
-  }
-
-  20%,
-  80% {
-    transform: translate3d(2px, 0, 0);
-  }
-
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-4px, 0, 0);
-  }
-
-  40%,
-  60% {
-    transform: translate3d(4px, 0, 0);
-  }
-}
-
-@keyframes gradient-text-hue {
-  from {
-    filter: hue-rotate(0);
-  }
-
-  to {
-    filter: hue-rotate(-1turn);
   }
 }
