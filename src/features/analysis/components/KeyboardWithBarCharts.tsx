@@ -54,9 +54,7 @@ interface KeyboardWithBarChartsProps {
 
 const KeyboardWithBarCharts: FC<KeyboardWithBarChartsProps> = ({ data, title, suffix, name }) => {
   const [isOpenDarkMode] = useAtom(isOpenDarkModeAtom)
-
   const chartRef = useRef<HTMLDivElement>(null)
-
   const { width, height } = useWindowSize()
 
   useEffect(() => {
@@ -64,7 +62,7 @@ const KeyboardWithBarCharts: FC<KeyboardWithBarChartsProps> = ({ data, title, su
 
     const myData = keyboardData
       .map((item) => {
-        const find = data.find((_) => _.name === item.name)
+        const find = data.find((entry) => entry.name === item.name)
         return { ...item, value: find?.value || 0 }
       })
       .sort((a, b) => b.value - a.value)
@@ -74,11 +72,20 @@ const KeyboardWithBarCharts: FC<KeyboardWithBarChartsProps> = ({ data, title, su
 
     chart = echarts.init(chartRef.current, isOpenDarkMode ? 'purple' : 'light')
 
+    const tooltipBase = {
+      backgroundColor: isOpenDarkMode ? 'rgba(9, 18, 24, 0.96)' : 'rgba(255, 255, 255, 0.98)',
+      borderColor: isOpenDarkMode ? 'rgba(103, 232, 249, 0.16)' : 'rgba(18, 50, 58, 0.14)',
+      textStyle: {
+        color: isOpenDarkMode ? '#d7f4f7' : '#18323a',
+      },
+    }
+
     const mapOption = {
       tooltip: {
         trigger: 'item',
         showDelay: 0,
         transitionDuration: 0.2,
+        ...tooltipBase,
       },
       toolbox: {
         feature: {
@@ -98,11 +105,11 @@ const KeyboardWithBarCharts: FC<KeyboardWithBarChartsProps> = ({ data, title, su
         min: 0,
         max: myData[0].value,
         inRange: {
-          color: isOpenDarkMode ? ['hsl(0, 0%, 22%)', '#818cf8'] : ['#f0f0f0', '#6366f1'],
+          color: isOpenDarkMode ? ['rgba(255,255,255,0.08)', '#22d3ee'] : ['#dcefed', '#0d9488'],
         },
-        text: ['多', '少'],
+        text: ['高', '低'],
         textStyle: {
-          color: isOpenDarkMode ? '#fff' : '#000',
+          color: isOpenDarkMode ? '#d7f4f7' : '#18323a',
         },
         calculable: true,
       },
@@ -116,13 +123,16 @@ const KeyboardWithBarCharts: FC<KeyboardWithBarChartsProps> = ({ data, title, su
           animationDurationUpdate: 1000,
           universalTransition: true,
           data: myData,
-          label: { show: true, color: isOpenDarkMode ? '#fff' : '#000' },
+          label: { show: true, color: isOpenDarkMode ? '#d7f4f7' : '#18323a' },
         },
       ],
     }
 
     const barOption = {
-      tooltip: { trigger: 'axis' },
+      tooltip: {
+        trigger: 'axis',
+        ...tooltipBase,
+      },
       toolbox: {
         feature: {
           myToKeyboard: {
@@ -138,25 +148,31 @@ const KeyboardWithBarCharts: FC<KeyboardWithBarChartsProps> = ({ data, title, su
       yAxis: {
         type: 'value',
         minInterval: 1,
+        axisLabel: {
+          color: isOpenDarkMode ? '#8aa7af' : '#607780',
+          formatter: (value: number) => `${value}${suffix || ''}`,
+        },
+        splitLine: {
+          lineStyle: {
+            color: isOpenDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(18, 50, 58, 0.08)',
+          },
+        },
       },
       xAxis: {
         type: 'category',
         axisLabel: {
           rotate: 30,
+          color: isOpenDarkMode ? '#8aa7af' : '#607780',
         },
-        data: myData.map(function (item) {
-          return item.name
-        }),
+        data: myData.map((item) => item.name),
       },
       animationDurationUpdate: 1000,
       series: {
         name,
         type: 'bar',
         id: 'population',
-        data: myData.map(function (item) {
-          return item.value
-        }),
-        color: isOpenDarkMode ? '#818cf8' : '#6366f1',
+        data: myData.map((item) => item.value),
+        color: isOpenDarkMode ? '#22d3ee' : '#0d9488',
         universalTransition: true,
       },
     }
@@ -172,8 +188,11 @@ const KeyboardWithBarCharts: FC<KeyboardWithBarChartsProps> = ({ data, title, su
 
   return (
     <div className="flex h-full flex-col">
-      <div className="text-center text-xl font-bold text-gray-600	dark:text-white">{title}</div>
-      <div style={{ width: '100%', height: '100%' }} ref={chartRef} className="line-chart flex-grow"></div>
+      <div className="mb-4">
+        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[var(--text-faint)]">Keyboard Map</div>
+        <div className="mt-1 text-xl font-semibold tracking-tight text-[var(--text-strong)]">{title}</div>
+      </div>
+      <div style={{ width: '100%', height: '100%' }} ref={chartRef} className="line-chart min-h-0 flex-grow" />
     </div>
   )
 }

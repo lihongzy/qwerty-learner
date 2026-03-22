@@ -17,12 +17,14 @@ interface LineChartsProps {
   name: string
   suffix?: string
 }
-export const LineCharts = ({ data, title, suffix, name }:LineChartsProps) => {
+
+export const LineCharts = ({ data, title, suffix, name }: LineChartsProps) => {
   const chartRef = useRef<HTMLDivElement>(null)
   const [isOpenDarkMode] = useAtom(isOpenDarkModeAtom)
 
   const { width, height } = useWindowSize()
- useEffect(() => {
+
+  useEffect(() => {
     if (!chartRef.current || !data.length) return
 
     let chart = echarts.getInstanceByDom(chartRef.current)
@@ -31,17 +33,35 @@ export const LineCharts = ({ data, title, suffix, name }:LineChartsProps) => {
     chart = echarts.init(chartRef.current, isOpenDarkMode ? 'purple' : 'light')
 
     const option = {
-      tooltip: { trigger: 'axis' },
+      color: [isOpenDarkMode ? '#22d3ee' : '#0d9488'],
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: isOpenDarkMode ? 'rgba(9, 18, 24, 0.96)' : 'rgba(255, 255, 255, 0.98)',
+        borderColor: isOpenDarkMode ? 'rgba(103, 232, 249, 0.16)' : 'rgba(18, 50, 58, 0.14)',
+        textStyle: {
+          color: isOpenDarkMode ? '#d7f4f7' : '#18323a',
+        },
+      },
       grid: {
-        left: '10%',
-        right: '10%',
-        top: '20%',
-        bottom: '10%',
+        left: '8%',
+        right: '4%',
+        top: '14%',
+        bottom: '12%',
       },
       xAxis: {
         type: 'time',
+        axisLine: {
+          lineStyle: {
+            color: isOpenDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(18, 50, 58, 0.12)',
+          },
+        },
+        axisLabel: {
+          color: isOpenDarkMode ? '#8aa7af' : '#607780',
+        },
         axisPointer: {
           label: {
+            color: isOpenDarkMode ? '#d7f4f7' : '#18323a',
+            backgroundColor: isOpenDarkMode ? '#12313a' : '#d7f4f7',
             formatter: function (params: { seriesData: [{ data: [string, number] }] }) {
               return params.seriesData[0].data[0]
             },
@@ -50,7 +70,18 @@ export const LineCharts = ({ data, title, suffix, name }:LineChartsProps) => {
       },
       yAxis: {
         type: 'value',
-        axisLabel: { formatter: (value: number) => value + (suffix || '') },
+        splitLine: {
+          lineStyle: {
+            color: isOpenDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(18, 50, 58, 0.08)',
+          },
+        },
+        axisLabel: {
+          color: isOpenDarkMode ? '#8aa7af' : '#607780',
+          formatter: (value: number) => value + (suffix || ''),
+        },
+        axisLine: {
+          show: false,
+        },
       },
       series: [
         {
@@ -59,6 +90,14 @@ export const LineCharts = ({ data, title, suffix, name }:LineChartsProps) => {
           smooth: true,
           data: data,
           emphasis: { focus: 'series' },
+          symbol: 'circle',
+          symbolSize: 7,
+          lineStyle: {
+            width: 3,
+          },
+          areaStyle: {
+            color: isOpenDarkMode ? 'rgba(34,211,238,0.16)' : 'rgba(13,148,136,0.12)',
+          },
         },
       ],
     }
@@ -74,8 +113,11 @@ export const LineCharts = ({ data, title, suffix, name }:LineChartsProps) => {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="text-center text-xl font-bold text-gray-600 dark:text-white">{title}</div>
-      <div style={{ width: '100%', height: '100%' }} ref={chartRef} className="line-chart flex-grow"></div>
+      <div className="mb-4">
+        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[var(--text-faint)]">Trend</div>
+        <div className="mt-1 text-xl font-semibold tracking-tight text-[var(--text-strong)]">{title}</div>
+      </div>
+      <div style={{ width: '100%', height: '100%' }} ref={chartRef} className="line-chart min-h-0 flex-grow" />
     </div>
   )
 }

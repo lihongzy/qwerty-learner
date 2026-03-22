@@ -26,7 +26,6 @@ const options: LanguageTabOption[] = [
 ]
 
 export function LanguageTabSwitcher() {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { state, setState } = useContext(GalleryContext)!
 
   const onChangeTab = useCallback(
@@ -40,20 +39,19 @@ export function LanguageTabSwitcher() {
 
   return (
     <Tabs.Root value={state.currentLanguageTab} onValueChange={onChangeTab}>
-      <Tabs.List aria-label="语言分类" className="flex items-center gap-4">
+      <Tabs.List aria-label="语言分类" className="my-control-shell flex flex-wrap items-center gap-2 px-2 py-2">
         {options.map((option) => (
           <Tabs.Trigger
             key={option.id}
             value={option.id}
             className={clsx(
-              'cursor-pointer border-b-2 border-transparent px-2 pb-1 outline-none transition-colors',
-              'data-[state=active]:border-indigo-500',
+              'my-focus-ring inline-flex items-center gap-2 rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium transition-colors duration-150',
+              'text-[var(--text-muted)] data-[state=active]:bg-[var(--accent-primary-soft)] data-[state=active]:text-[var(--text-strong)]',
+              'hover:bg-[var(--bg-ghost)] hover:text-[var(--text-strong)]',
             )}
           >
-            <span className="flex items-center">
-              <img src={option.flag} alt={`${option.name} flag`} className="mr-1.5 h-7 w-7" />
-              <span className="text-lg font-medium text-gray-700 dark:text-gray-200">{option.name}</span>
-            </span>
+            <img src={option.flag} alt={`${option.name} flag`} className="h-5 w-5 rounded-full object-cover" />
+            <span>{option.name}</span>
           </Tabs.Trigger>
         ))}
       </Tabs.List>

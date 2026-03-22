@@ -14,7 +14,7 @@ const TooltipContent = ({ className, sideOffset = 4, ...props }: TooltipContentP
   <TooltipPrimitive.Content
     sideOffset={sideOffset}
     className={clsx(
-      'z-50 overflow-hidden rounded-md border border-slate-100 bg-white px-2 py-[4px] text-sm text-slate-700 shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100',
+      'z-50 overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-main)] bg-[linear-gradient(180deg,var(--bg-panel-strong),var(--bg-panel))] px-2.5 py-1.5 text-[11px] tracking-[0.02em] text-[var(--text-muted)] shadow-[var(--shadow-soft)] backdrop-blur-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
       className,
     )}
     {...props}

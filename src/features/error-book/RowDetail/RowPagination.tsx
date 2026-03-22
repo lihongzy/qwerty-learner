@@ -2,8 +2,7 @@ import { currentRowDetailAtom } from '../store'
 import type { groupedWordRecords } from '../type'
 import { useAtom } from 'jotai'
 import type { FC } from 'react'
-import { useMemo } from 'react'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import NextIcon from '~icons/ooui/next-ltr'
 import PrevIcon from '~icons/ooui/next-rtl'
@@ -13,7 +12,8 @@ type IRowPaginationProps = {
   allRecords: groupedWordRecords[]
 }
 
-export const ITEM_PER_PAGE = 20
+const navButtonClassName =
+  'my-focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-main)] bg-[var(--bg-ghost)] text-[var(--text-main)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'
 
 const RowPagination: FC<IRowPaginationProps> = ({ className, allRecords }) => {
   const [currentRowDetail, setCurrentRowDetail] = useAtom(currentRowDetailAtom)
@@ -65,15 +65,12 @@ const RowPagination: FC<IRowPaginationProps> = ({ className, allRecords }) => {
   )
 
   return (
-    <div className={`-gap-1 flex select-none items-center ${className}`}>
-      <button
-        className="d cursor-pointer rounded-full  p-1  text-indigo-500 focus:outline-none dark:text-indigo-300"
-        onClick={prevRowDetail}
-      >
+    <div className={`flex select-none items-center gap-2 ${className ?? ''}`}>
+      <button className={navButtonClassName} onClick={prevRowDetail} disabled={currentIndex <= 0}>
         <PrevIcon />
       </button>
-      <span className="text-sm text-black dark:text-white">{`${currentIndex + 1} / ${allRecords.length}`}</span>
-      <button className="cursor-pointer rounded-full p-1 text-indigo-500  focus:outline-none dark:text-indigo-300" onClick={nextRowDetail}>
+      <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-sm text-[var(--text-main)]">{`${currentIndex + 1} / ${allRecords.length}`}</span>
+      <button className={navButtonClassName} onClick={nextRowDetail} disabled={currentIndex >= allRecords.length - 1}>
         <NextIcon />
       </button>
     </div>

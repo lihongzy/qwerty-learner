@@ -54,21 +54,27 @@ export default function HeatmapCharts({ data, title }: HeatmapChartsProps) {
 
   return (
     <div className="flex w-full flex-col items-center justify-center overflow-hidden">
-      <div className="mb-4 text-center text-xl font-bold text-gray-600 dark:text-white">{title}</div>
-      <div className="flex w-full justify-center overflow-hidden rounded-2xl">
+      <div className="mb-4 flex w-full items-start justify-between gap-4">
+        <div>
+          <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[var(--text-faint)]">Heatmap</div>
+          <div className="mt-1 text-xl font-semibold tracking-tight text-[var(--text-strong)]">{title}</div>
+        </div>
+      </div>
+
+      <div className="flex w-full justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-soft)] bg-[var(--bg-ghost)]">
         <ActivityCalendar
           fontSize={calendarConfig.fontSize}
           blockSize={calendarConfig.blockSize}
           blockRadius={calendarConfig.blockRadius}
           style={{
             padding: calendarConfig.padding,
-            color: isOpenDarkMode ? '#fff' : '#000',
+            color: isOpenDarkMode ? '#d7f4f7' : '#18323a',
           }}
           colorScheme={isOpenDarkMode ? 'dark' : 'light'}
           data={data}
           theme={{
-            light: ['#f0f0f0', '#6366f1'],
-            dark: ['hsl(0, 0%, 22%)', '#818cf8'],
+            light: ['#dcefed', '#0d9488'],
+            dark: ['rgba(255,255,255,0.06)', '#22d3ee'],
           }}
           tooltips={{
             activity: {
@@ -77,7 +83,7 @@ export default function HeatmapCharts({ data, title }: HeatmapChartsProps) {
           }}
           showWeekdayLabels={calendarConfig.showWeekdayLabels}
           labels={{
-            months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+            months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
             weekdays: ['日', '一', '二', '三', '四', '五', '六'],
             totalCount: '过去一年总计 {{count}} 次',
             legend: {

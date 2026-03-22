@@ -1,4 +1,4 @@
-﻿import clsx from 'clsx'
+import clsx from 'clsx'
 import type { FC } from 'react'
 import { useCallback } from 'react'
 import DownIcon from '~icons/fa/sort-down'
@@ -19,27 +19,25 @@ const HeadWrongNumber: FC<IHeadWrongNumberProps> = ({ className, sortType, setSo
       desc: 'none',
       none: 'asc',
     }
+
     setSortType(sortTypes[sortType])
   }, [setSortType, sortType])
 
   return (
-    <span className={`relative cursor-pointer ${className ?? ''}`} onClick={onClick}>
+    <button
+      type="button"
+      className={clsx(
+        'my-focus-ring inline-flex items-center gap-2 rounded-[var(--radius-sm)] border border-transparent px-2 py-1 text-left text-sm font-medium text-[var(--text-main)] transition-colors duration-150 hover:border-[var(--border-main)] hover:bg-[var(--bg-ghost)]',
+        className,
+      )}
+      onClick={onClick}
+    >
       错误次数
-      <div className="absolute -right-2 bottom-0 top-0 flex flex-col items-center justify-center text-[12px]">
-        <UPIcon
-          className={clsx('-mb-2', {
-            'text-indigo-500': sortType === 'asc',
-            'text-gray-400': sortType !== 'asc',
-          })}
-        />
-        <DownIcon
-          className={clsx({
-            'text-indigo-500': sortType === 'desc',
-            'text-gray-400': sortType !== 'desc',
-          })}
-        />
-      </div>
-    </span>
+      <span className="flex flex-col items-center justify-center text-[11px] leading-none">
+        <UPIcon className={clsx('-mb-1', sortType === 'asc' ? 'text-[var(--accent-primary)]' : 'text-[var(--text-faint)]')} />
+        <DownIcon className={clsx(sortType === 'desc' ? 'text-[var(--accent-primary)]' : 'text-[var(--text-faint)]')} />
+      </span>
+    </button>
   )
 }
 

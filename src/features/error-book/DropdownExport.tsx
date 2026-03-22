@@ -16,6 +16,9 @@ type DropdownProps = {
   renderRecords: ExportRecord[]
 }
 
+const menuItemClassName =
+  'my-focus-ring cursor-pointer rounded-[var(--radius-sm)] px-3 py-2 text-sm text-[var(--text-main)] transition-colors duration-150 hover:bg-[var(--accent-primary-soft)] hover:text-[var(--text-strong)]'
+
 const DropdownExport: FC<DropdownProps> = ({ renderRecords }) => {
   const [isExporting, setIsExporting] = useState(false)
 
@@ -48,7 +51,7 @@ const DropdownExport: FC<DropdownProps> = ({ renderRecords }) => {
             const data = await wordListFetcher(url)
             return { url, data }
           } catch (error) {
-            console.error(`获取词典数据失败：${url}`, error)
+            console.error(`获取词典数据失败: ${url}`, error)
             return { url, data: [] }
           }
         }),
@@ -88,9 +91,9 @@ const DropdownExport: FC<DropdownProps> = ({ renderRecords }) => {
         blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
       }
 
-      saveAs(blob, `错题本_${formatTimestamp(new Date())}.${bookType}`)
+      saveAs(blob, `错题本-${formatTimestamp(new Date())}.${bookType}`)
     } catch (error) {
-      console.error('导出失败：', error)
+      console.error('导出失败', error)
       alert('导出失败，请重试')
     } finally {
       setIsExporting(false)
@@ -98,31 +101,29 @@ const DropdownExport: FC<DropdownProps> = ({ renderRecords }) => {
   }
 
   return (
-    <div className="z-10">
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
-          <button className="my-btn-primary h-8 shadow transition hover:bg-indigo-600 disabled:opacity-50" disabled={isExporting}>
-            {isExporting ? '导出中…' : '导出'}
-          </button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content className="mt-1 rounded bg-indigo-500 text-white shadow-lg">
-          <DropdownMenu.Item
-            className="cursor-pointer rounded px-4 py-2 hover:bg-indigo-400 focus:bg-indigo-600 focus:outline-none"
-            onClick={() => void handleExport('xlsx')}
-            disabled={isExporting}
-          >
-            .xlsx
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <button className="my-btn-primary my-focus-ring h-9 px-4 text-sm shadow-none" disabled={isExporting}>
+          {isExporting ? '导出中...' : '导出'}
+        </button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          sideOffset={8}
+          className="z-50 min-w-[9rem] rounded-[var(--radius-md)] border border-[var(--border-main)] bg-[linear-gradient(180deg,var(--bg-panel-strong),var(--bg-panel))] p-1.5 text-[var(--text-main)] shadow-[var(--shadow-panel)] backdrop-blur-md"
+        >
+          <DropdownMenu.Item className={menuItemClassName} onClick={() => void handleExport('xlsx')} disabled={isExporting}>
+            导出为 .xlsx
           </DropdownMenu.Item>
-          <DropdownMenu.Item
-            className="cursor-pointer rounded px-4 py-2 hover:bg-indigo-600 focus:bg-indigo-600 focus:outline-none"
-            onClick={() => void handleExport('csv')}
-            disabled={isExporting}
-          >
-            .csv
+          <DropdownMenu.Item className={menuItemClassName} onClick={() => void handleExport('csv')} disabled={isExporting}>
+            导出为 .csv
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className={menuItemClassName} onClick={() => void handleExport('txt')} disabled={isExporting}>
+            导出为 .txt
           </DropdownMenu.Item>
         </DropdownMenu.Content>
-      </DropdownMenu.Root>
-    </div>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   )
 }
 

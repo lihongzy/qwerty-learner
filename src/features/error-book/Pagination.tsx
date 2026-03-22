@@ -12,6 +12,9 @@ type IPaginationProps = {
 
 export const ITEM_PER_PAGE = 20
 
+const buttonClassName =
+  'my-focus-ring inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-main)] bg-[linear-gradient(180deg,var(--bg-panel),var(--bg-elevated))] text-[var(--text-main)] shadow-[var(--shadow-soft)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] disabled:cursor-not-allowed disabled:opacity-40'
+
 const Pagination: FC<IPaginationProps> = ({ className, page, setPage, totalPages }) => {
   const nextPage = useCallback(() => {
     setPage(page + 1)
@@ -22,18 +25,12 @@ const Pagination: FC<IPaginationProps> = ({ className, page, setPage, totalPages
   }, [page, setPage])
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <button
-        className="cursor-pointer rounded-full bg-white p-2 text-indigo-500 shadow-md dark:bg-gray-800 dark:text-indigo-300"
-        onClick={prevPage}
-      >
+    <div className={`flex items-center justify-center gap-3 ${className ?? ''}`}>
+      <button className={buttonClassName} onClick={prevPage} disabled={page <= 1}>
         <PrevIcon />
       </button>
-      <span className="text-black dark:text-white">{`${page} / ${totalPages}`}</span>
-      <button
-        className="cursor-pointer rounded-full bg-white p-2 text-indigo-500 shadow-md dark:bg-gray-800 dark:text-indigo-300"
-        onClick={nextPage}
-      >
+      <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-sm text-[var(--text-main)]">{`${page} / ${totalPages}`}</span>
+      <button className={buttonClassName} onClick={nextPage} disabled={page >= totalPages}>
         <NextIcon />
       </button>
     </div>

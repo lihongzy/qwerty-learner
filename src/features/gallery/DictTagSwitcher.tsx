@@ -18,7 +18,7 @@ export default function DictTagSwitcher({ tagList, currentTag, onChangeCurrentTa
 
   return (
     <RadioGroup.Root value={currentTag} onValueChange={onChangeTag}>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-2">
         {tagList.map((option) => {
           const isChecked = currentTag === option
 
@@ -27,10 +27,10 @@ export default function DictTagSwitcher({ tagList, currentTag, onChangeCurrentTa
               key={option}
               value={option}
               className={clsx(
-                'cursor-pointer whitespace-nowrap rounded-[3rem] px-4 py-2 font-normal outline-none transition-colors',
+                'my-focus-ring cursor-pointer whitespace-nowrap rounded-full border px-3 py-1.5 text-sm font-medium transition-colors duration-150',
                 isChecked
-                  ? 'bg-indigo-400 text-white'
-                  : 'bg-white text-gray-600 hover:bg-indigo-100 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-600',
+                  ? 'border-[var(--accent-primary)] bg-[var(--accent-primary-soft)] text-[var(--text-strong)]'
+                  : 'border-[var(--border-main)] bg-[var(--bg-panel)] text-[var(--text-muted)] hover:bg-[var(--bg-ghost)] hover:text-[var(--text-strong)]',
               )}
             >
               {option}

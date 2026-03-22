@@ -1,32 +1,28 @@
 import { Layout } from '@/app/layout/Layout'
-import { Dictionary, LanguageCategoryType } from '@/shared/types/resource'
+import { dictionaries } from '@/shared/resources/dictionary'
+import type { Dictionary, LanguageCategoryType } from '@/shared/types/resource'
 import { createContext, useCallback, useMemo } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useNavigate } from 'react-router'
 import { Updater, useImmer } from 'use-immer'
-import IconX from '~icons/tabler/x'
-import { LanguageTabSwitcher } from './LanguageTabSwitcher'
-import DictRequest from './DictRequest'
-import { ScrollArea } from 'radix-ui'
 import IconInfo from '~icons/ic/outline-info'
-import { dictionaries } from '@/shared/resources/dictionary'
+import IconArrowLeft from '~icons/tabler/arrow-left'
+import DictRequest from './DictRequest'
 import DictionaryGroup from './DictionaryGroup'
-
+import { LanguageTabSwitcher } from './LanguageTabSwitcher'
 
 function appendToGroup<T>(groups: Record<string, T[]>, key: string, value: T) {
   ;(groups[key] ??= []).push(value)
 }
 
-// 按单个分组键聚合数组元素，常用于把词典按分类、语言等字段分组。
- function groupBy<T>(elements: T[], iteratee: (value: T) => string) {
+function groupBy<T>(elements: T[], iteratee: (value: T) => string) {
   return elements.reduce<Record<string, T[]>>((groups, value) => {
     appendToGroup(groups, iteratee(value), value)
     return groups
   }, Object.create(null) as Record<string, T[]>)
 }
 
-// 一个词典可能同时带有多个标签，所以这里会把同一个词典分发到多个 tag 分组里。
- function groupByDictTags(dicts: Dictionary[]) {
+function groupByDictTags(dicts: Dictionary[]) {
   return dicts.reduce<Record<string, Dictionary[]>>((groups, dict) => {
     dict.tags.forEach((tag) => {
       appendToGroup(groups, tag, dict)
@@ -36,12 +32,10 @@ function appendToGroup<T>(groups: Record<string, T[]>, key: string, value: T) {
   }, Object.create(null) as Record<string, Dictionary[]>)
 }
 
-
-
-
 export type GalleryState = {
   currentLanguageTab: LanguageCategoryType
 }
+
 export const GalleryContext = createContext<{
   state: GalleryState
   setState: Updater<GalleryState>
@@ -50,7 +44,8 @@ export const GalleryContext = createContext<{
 const initialGalleryState: GalleryState = {
   currentLanguageTab: 'en',
 }
-const GalleryNPage = () => {
+
+const GalleryPage = () => {
   const [galleryState, setGalleryState] = useImmer<GalleryState>(initialGalleryState)
 
   const navigate = useNavigate()
@@ -60,7 +55,7 @@ const GalleryNPage = () => {
 
   useHotkeys('enter,esc', onBack, { preventDefault: true })
 
-  const { groupedByCategoryAndTag } = useMemo(() => {
+  const { groupedByCategoryAndTag, currentLanguageDicts } = useMemo(() => {
     const currentLanguageCategoryDicts = dictionaries.filter((dict) => dict.languageCategory === galleryState.currentLanguageTab)
     const groupedByCategory = Object.entries(groupBy(currentLanguageCategoryDicts, (dict) => dict.category))
     const groupedByCategoryAndTag = groupedByCategory.map(
@@ -68,6 +63,7 @@ const GalleryNPage = () => {
     )
 
     return {
+      currentLanguageDicts: currentLanguageCategoryDicts,
       groupedByCategoryAndTag,
     }
   }, [galleryState.currentLanguageTab])
@@ -75,39 +71,62 @@ const GalleryNPage = () => {
   return (
     <Layout>
       <GalleryContext.Provider value={{ state: galleryState, setState: setGalleryState }}>
-        <div className="relative mt-auto mb-auto flex w-full flex-1 flex-col overflow-y-auto pl-20">
-          <IconX className="absolute top-10 right-20 mr-2 h-7 w-7 cursor-pointer text-gray-400" onClick={onBack} />
-          <div className="mt-20 flex w-full flex-1 flex-col items-center justify-center overflow-y-auto">
-            <div className="flex h-full flex-col overflow-y-auto">
-              <div className="flex h-20 w-full items-center justify-between pr-20 pb-6">
-                <LanguageTabSwitcher />
-                <DictRequest />
+        <div className="w-full px-4 pb-8 pt-6 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl">
+            <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div className="flex flex-col gap-2">
+                <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[0.72rem] font-medium uppercase tracking-[0.28em] text-[var(--text-faint)]">
+                  Dictionary Browser
+                </span>
+                <div>
+                  <h1 className="text-[1.85rem] font-semibold tracking-tight text-[var(--text-strong)] sm:text-[2.2rem]">词库浏览</h1>
+                  <p className="mt-1 max-w-2xl text-sm leading-6 text-[var(--text-muted)]">
+                    按语言、分类和标签浏览词库，查看章节规模、练习进度与错误记录，快速进入下一轮练习。
+                  </p>
+                </div>
               </div>
-              <ScrollArea.Root className="flex-1 overflow-y-auto">
-                <ScrollArea.Viewport className="h-full w-full">
-                  <div className="mr-4 flex flex-1 flex-col items-start justify-start gap-14 overflow-y-auto">
-                    {groupedByCategoryAndTag.map(([category, groupeByTag]) => (
-                      <DictionaryGroup key={category} groupedDictsByTag={groupeByTag} />
-                    ))}
-                  </div>
 
-                  <div className="flex items-center justify-center pt-[20rem] pb-10 text-gray-500">
-                    <IconInfo className="mr-1 h-5 w-5" />
-                    <p className="mr-5 w-10/12 text-xs">
-                      本项目的词典数据来自多个开源项目以及社区贡献者的无偿提供。我们深感感激并尊重每一位贡献者的知识产权。
-                      这些数据仅供个人学习和研究使用，严禁用于任何商业目的。如果你是数据的版权所有者，并且认为我们的使用方式侵犯了你的权利，请通过网站底部的电子邮件与我们联系。一旦收到有效的版权投诉，我们将在最短的时间内删除相关内容或寻求必要的许可。
-                      同时，我们也鼓励所有使用这些数据的人尊重版权所有者的权利，并且在使用这些数据时遵守所有相关的法律和规定。
-                      请注意，虽然我们尽力确保所有数据的合法性和准确性，但我们不能对任何数据的准确性、完整性、合法性或可靠性做出任何保证。使用这些数据的风险完全由用户自己承担。
-                    </p>
-                  </div>
-                </ScrollArea.Viewport>
-                 <ScrollArea.Scrollbar className="flex touch-none select-none bg-transparent " orientation="vertical"></ScrollArea.Scrollbar>
-              </ScrollArea.Root>
+              <button type="button" className="my-btn-secondary my-focus-ring inline-flex gap-2 self-start px-4 sm:self-auto" onClick={onBack}>
+                <IconArrowLeft className="h-4.5 w-4.5" />
+                返回练习
+              </button>
             </div>
+
+            <div className="mb-4 grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+              <LanguageTabSwitcher />
+              <DictRequest />
+            </div>
+
+            <section className="my-panel relative px-3 py-3 sm:px-4 sm:py-4">
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_18%),radial-gradient(circle_at_top_right,rgba(34,211,238,0.08),transparent_24%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_16%),radial-gradient(circle_at_top_right,rgba(34,211,238,0.06),transparent_24%)]" />
+
+              <div className="relative mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[var(--text-faint)]">Current Language</div>
+                  <div className="mt-1 text-base font-semibold tracking-tight text-[var(--text-strong)]">
+                    共 {currentLanguageDicts.length} 个词库，按分类与标签分组展示
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative flex flex-col gap-10 pb-4">
+                {groupedByCategoryAndTag.map(([category, groupedByTag]) => (
+                  <DictionaryGroup key={category} category={category} groupedDictsByTag={groupedByTag} />
+                ))}
+
+                <div className="my-control-shell flex items-start gap-3 px-4 py-3 text-sm leading-6 text-[var(--text-muted)]">
+                  <IconInfo className="mt-0.5 h-4.5 w-4.5 shrink-0 text-[var(--accent-primary)]" />
+                  <p>
+                    本项目词库数据来自多个开源项目与社区贡献，仅用于个人学习和研究。如涉及版权问题，请通过项目公开渠道联系维护者处理。
+                  </p>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </GalleryContext.Provider>
     </Layout>
   )
 }
-export default GalleryNPage
+
+export default GalleryPage

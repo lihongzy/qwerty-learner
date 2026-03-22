@@ -1,18 +1,15 @@
-import type { TErrorWordData } from './hooks/useErrorWords'
 import { currentChapterAtom, currentDictIdAtom, reviewModeInfoAtom } from '@/shared/state'
-import type { Dictionary } from '@/shared/types/resource'
 import { generateNewWordReviewRecord, useGetLatestReviewRecord } from '@/shared/lib/db/review-record'
+import type { Dictionary } from '@/shared/types/resource'
 import * as Progress from '@radix-ui/react-progress'
 import { useSetAtom } from 'jotai'
 import { useNavigate } from 'react-router'
 import MdiRobotAngry from '~icons/mdi/robot-angry'
+import type { TErrorWordData } from './hooks/useErrorWords'
 
 function timeStamp2String(timeStamp: number) {
   return new Date(timeStamp * 1000).toLocaleString('zh-CN', { hour12: false })
 }
-
-const buttonClassName =
-  'rounded-md bg-indigo-500 px-4 py-2 text-sm text-white transition-colors hover:bg-indigo-600 disabled:cursor-not-allowed disabled:opacity-50'
 
 export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[]; dict: Dictionary }) {
   const latestReviewRecord = useGetLatestReviewRecord(dict.id)
@@ -42,49 +39,51 @@ export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[];
   }
 
   return (
-    <div className="flex h-full flex-col items-center justify-around px-20 md:px-40">
-      <div className="max-w-2xl">
-        <MdiRobotAngry fontSize={30} className="mb-4 text-indigo-300" />
-        <blockquote>
-          <p className="text-lg font-medium text-gray-600 dark:text-gray-300">
-            ???????????????????????????????????????
-            <br />
-            ??????????????????????
-          </p>
+    <div className="flex h-full flex-col items-center justify-around px-6 py-6 md:px-14">
+      <div className="max-w-2xl text-center">
+        <MdiRobotAngry fontSize={30} className="mx-auto mb-4 text-[var(--accent-warn)]" />
+        <blockquote className="text-base leading-7 text-[var(--text-muted)]">
+          复习模式会把当前词库里输错过的单词重新整理出来，方便你集中补练。
+          <br />
+          最适合在一轮正常练习结束后立刻使用，先把高频错误快速清掉。
         </blockquote>
       </div>
+
       <div className="flex w-full max-w-2xl flex-col items-center">
         {latestReviewRecord ? (
           <>
-            <div className="ml-10 flex w-full items-center py-0">
+            <div className="w-full">
+              <div className="mb-2 flex items-center justify-between text-xs text-[var(--text-muted)]">
+                <span>上次复习进度</span>
+                <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace]">
+                  {latestReviewRecord.index + 1}/{latestReviewRecord.words.length}
+                </span>
+              </div>
               <Progress.Root
                 value={latestReviewRecord.index + 1}
                 max={latestReviewRecord.words.length}
-                className="mr-4 h-2 w-full rounded-full border border-indigo-400 bg-white"
+                className="h-2 w-full overflow-hidden rounded-full border border-[var(--border-main)] bg-[var(--bg-ghost)]"
               >
                 <Progress.Indicator
-                  className="h-full rounded-full bg-indigo-400"
+                  className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent-primary),var(--accent-cool))]"
                   style={{ width: `calc(${((latestReviewRecord.index + 1) / latestReviewRecord.words.length) * 100}% )` }}
                 />
               </Progress.Root>
-              <span className="p-0 text-xs">
-                {latestReviewRecord.index + 1}/{latestReviewRecord.words.length}
-              </span>
             </div>
-            <div className="mt-1 text-sm font-normal text-gray-500">{`???? ${timeStamp2String(latestReviewRecord.createTime)}?`}</div>
+            <div className="mt-2 text-sm text-[var(--text-muted)]">{`上次复习进度? ${timeStamp2String(latestReviewRecord.createTime)}`}</div>
           </>
         ) : (
-          <div>{`????????${errorData.length}`}</div>
+          <div className="text-sm text-[var(--text-muted)]">{`当前有 ${errorData.length} 上次复习进度??`}</div>
         )}
 
-        <div className="mt-6 flex gap-10">
+        <div className="mt-6 flex gap-4">
           {latestReviewRecord && (
-            <button type="button" className={buttonClassName} onClick={continueReview}>
-              ??????
+            <button type="button" className="my-btn-secondary my-focus-ring" onClick={continueReview}>
+              继续复习
             </button>
           )}
-          <button type="button" className={buttonClassName} onClick={() => void startReview()} disabled={errorData.length === 0}>
-            {`??${latestReviewRecord ? '??' : ''}??`}
+          <button type="button" className="my-btn-primary my-focus-ring" onClick={() => void startReview()} disabled={errorData.length === 0}>
+            {latestReviewRecord ? '上次复习进度' : '继续复习'}
           </button>
         </div>
       </div>

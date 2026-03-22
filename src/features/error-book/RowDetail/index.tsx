@@ -34,7 +34,7 @@ const RowDetail: React.FC<RowDetailProps> = ({ currentRowDetail, allRecords }) =
       currentRowDetail.records.length > 0
         ? currentRowDetail.records.reduce((acc, cur) => acc + cur.totalTime, 0) / currentRowDetail.records.length
         : 0
-    const timeStr = (time / 1000).toFixed(2)
+    const timeStr = `${(time / 1000).toFixed(2)}s`
     const correctCount = currentRowDetail.records.length
     const wrongCount = currentRowDetail.wrongCount
     const sumCount = correctCount + wrongCount
@@ -64,16 +64,29 @@ const RowDetail: React.FC<RowDetailProps> = ({ currentRowDetail, allRecords }) =
   )
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center">
-      <div className="my-card relative z-10 flex h-[32rem] min-w-[26rem] select-text flex-col items-center justify-around rounded-2xl bg-white px-3 py-10 dark:bg-gray-900">
-        <IconX className="absolute right-3 top-3 h-6 w-6 cursor-pointer text-gray-400" onClick={onClose} />
-        <div className="flex flex-col items-center justify-start">
-          <div>
+    <div className="absolute inset-0 z-40 flex items-center justify-center px-4 py-6">
+      <div className="absolute inset-0 bg-[var(--bg-overlay)] backdrop-blur-md" onClick={onClose} />
+      <div className="my-panel-strong relative z-10 flex w-full max-w-3xl flex-col overflow-hidden px-5 py-6 sm:px-6">
+        <button
+          type="button"
+          className="my-focus-ring absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-main)] bg-[var(--bg-ghost)] text-[var(--text-muted)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:text-[var(--text-strong)]"
+          onClick={onClose}
+        >
+          <IconX className="h-5 w-5" />
+        </button>
+
+        <div className="pr-12">
+          <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[var(--text-faint)]">Word Detail</div>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--text-strong)]">错词详情</h2>
+        </div>
+
+        <div className="mt-8 flex flex-col items-center justify-start">
+          <div className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[2rem] font-semibold tracking-tight text-[var(--text-strong)]">
             {currentRowDetail.word.split('').map((char, index) => (
               <Letter key={`${index}-${char}`} letter={char} visible state="normal" />
             ))}
           </div>
-          <div className="relative flex h-8 items-center">
+          <div className="relative mt-3 flex min-h-8 items-center">
             {word ? <Phonetic word={word} /> : <LoadingWordUI isLoading={isLoading} hasError={hasError} />}
             {word && (
               <WordPronunciationIcon
@@ -84,25 +97,22 @@ const RowDetail: React.FC<RowDetailProps> = ({ currentRowDetail, allRecords }) =
               />
             )}
           </div>
-          <div className="flex max-w-[24rem] items-center">
-            <span className="max-w-4xl text-center font-sans transition-colors duration-300 dark:text-white dark:text-opacity-80">
+          <div className="mt-4 flex max-w-2xl items-center">
+            <span className="text-center text-base leading-7 text-[var(--text-muted)]">
               {word ? word.trans.join('；') : <LoadingWordUI isLoading={isLoading} hasError={hasError} />}
             </span>
           </div>
         </div>
-        <div className="item flex flex-col gap-4">
-          <div className="flex gap-6">
-            <DataTag icon={ClockIcon} name="平均用时" data={rowDetailData.time} />
-            <DataTag icon={HashtagIcon} name="练习次数" data={rowDetailData.sumCount} />
-          </div>
-          <div className="flex gap-6">
-            <DataTag icon={CheckCircle} name="正确次数" data={rowDetailData.correctCount} />
-            <DataTag icon={XCircle} name="错误次数" data={rowDetailData.wrongCount} />
-          </div>
+
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          <DataTag icon={ClockIcon} name="平均用时" data={rowDetailData.time} />
+          <DataTag icon={HashtagIcon} name="练习次数" data={rowDetailData.sumCount} />
+          <DataTag icon={CheckCircle} name="正确次数" data={rowDetailData.correctCount} />
+          <DataTag icon={XCircle} name="错误次数" data={rowDetailData.wrongCount} />
         </div>
-        <RowPagination className="absolute bottom-6 mt-10" allRecords={allRecords} />
+
+        <RowPagination className="mt-6 self-center" allRecords={allRecords} />
       </div>
-      <div className="absolute inset-0 z-0 cursor-pointer bg-transparent" onClick={onClose} />
     </div>
   )
 }

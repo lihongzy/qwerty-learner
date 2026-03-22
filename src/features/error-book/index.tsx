@@ -1,4 +1,4 @@
-﻿import DropdownExport from './DropdownExport'
+import DropdownExport from './DropdownExport'
 import ErrorRow from './ErrorRow'
 import type { ISortType } from './HeadWrongNumber'
 import HeadWrongNumber from './HeadWrongNumber'
@@ -12,7 +12,24 @@ import * as ScrollArea from '@radix-ui/react-scroll-area'
 import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import IconX from '~icons/tabler/x'
+import IconArrowLeft from '~icons/tabler/arrow-left'
+
+type SummaryCardProps = {
+  label: string
+  value: string
+}
+
+const SummaryCard = ({ label, value }: SummaryCardProps) => (
+  <section className="my-panel relative overflow-hidden px-4 py-3">
+    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.1),transparent_28%)]" />
+    <div className="relative flex items-end justify-between gap-3">
+      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[var(--text-faint)]">{label}</div>
+      <div className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[1.45rem] font-semibold leading-none tracking-tight text-[var(--text-strong)]">
+        {value}
+      </div>
+    </div>
+  </section>
+)
 
 export function ErrorBook() {
   const [groupedRecords, setGroupedRecords] = useState<groupedWordRecords[]>([])
@@ -50,6 +67,7 @@ export function ErrorBook() {
       if (sortType === 'asc') {
         return a.wrongCount - b.wrongCount
       }
+
       return b.wrongCount - a.wrongCount
     })
   }, [groupedRecords, sortType])
@@ -59,6 +77,16 @@ export function ErrorBook() {
     const end = start + ITEM_PER_PAGE
     return sortedRecords.slice(start, end)
   }, [currentPage, sortedRecords])
+
+  const summary = useMemo(() => {
+    const totalWrongCount = groupedRecords.reduce((acc, item) => acc + item.wrongCount, 0)
+    const dictionaryCount = new Set(groupedRecords.map((item) => item.dict)).size
+
+    return {
+      totalWrongCount,
+      dictionaryCount,
+    }
+  }, [groupedRecords])
 
   useEffect(() => {
     db.wordRecords
@@ -92,34 +120,68 @@ export function ErrorBook() {
 
   return (
     <>
-      <div className={`relative flex h-screen w-full flex-col items-center pb-4 ease-in ${currentRowDetail ? 'blur-sm' : ''}`}>
-        <div className="mr-8 mt-4 flex w-auto items-center justify-center self-end">
-          <h1 className="mr-4 w-auto self-end text-gray-500 opacity-70">Tip: 点击错误单词查看详细信息</h1>
-          <IconX className="h-7 w-7 cursor-pointer text-gray-400" onClick={onBack} />
-        </div>
-
-        <div className="flex w-full flex-1 select-text items-start justify-center overflow-hidden">
-          <div className="flex h-full w-5/6 flex-col pt-10">
-            <div className="flex w-full justify-between rounded-lg bg-white px-6 py-5 text-lg text-black shadow-lg dark:bg-gray-800 dark:text-white">
-              <span className="basis-2/12">单词</span>
-              <span className="basis-6/12">释义</span>
-              <HeadWrongNumber className="basis-1/12" sortType={sortType} setSortType={setSort} />
-              <span className="basis-1/12">词典</span>
-              <DropdownExport renderRecords={sortedRecords} />
+      <div className={`flex h-screen w-full min-h-0 flex-col overflow-hidden px-4 pb-4 pt-4 sm:px-6 lg:px-8 ${currentRowDetail ? 'blur-sm' : ''}`}>
+        <div className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col">
+          <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex flex-col gap-2">
+              <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[0.72rem] font-medium uppercase tracking-[0.28em] text-[var(--text-faint)]">
+                Mistake Review
+              </span>
+              <div>
+                <h1 className="text-[1.75rem] font-semibold tracking-tight text-[var(--text-strong)] sm:text-[2rem]">错题本</h1>
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-[var(--text-muted)]">
+                  查看高频错误单词、按错误次数排序并导出记录，优先清理最容易反复出错的词条。
+                </p>
+              </div>
             </div>
-            <ScrollArea.Root className="flex-1 overflow-y-auto pt-5">
-              <ScrollArea.Viewport className="h-full">
-                <div className="flex flex-col gap-3">
-                  {renderRecords.map((record) => (
-                    <ErrorRow key={`${record.dict}-${record.word}`} record={record} onDelete={() => handleDelete(record.word, record.dict)} />
-                  ))}
-                </div>
-              </ScrollArea.Viewport>
-              <ScrollArea.Scrollbar className="flex touch-none select-none bg-transparent" orientation="vertical" />
-            </ScrollArea.Root>
+
+            <button type="button" className="my-btn-secondary my-focus-ring inline-flex gap-2 self-start px-4 sm:self-auto" onClick={onBack}>
+              <IconArrowLeft className="h-4.5 w-4.5" />
+              返回练习
+            </button>
           </div>
+
+          <div className="mb-3 grid gap-2 md:grid-cols-4">
+            <SummaryCard label="错题条目" value={`${groupedRecords.length}`} />
+            <SummaryCard label="总错误次数" value={`${summary.totalWrongCount}`} />
+            <SummaryCard label="涉及词典" value={`${summary.dictionaryCount}`} />
+            <SummaryCard label="当前页" value={`${currentPage}/${Math.max(totalPages, 1)}`} />
+          </div>
+
+          <section className="my-panel relative flex min-h-0 flex-1 flex-col overflow-hidden px-3 py-3 sm:px-4 sm:py-4">
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_18%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.08),transparent_24%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_16%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.06),transparent_24%)]" />
+            <div className="relative flex min-h-0 flex-1 flex-col">
+              <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[var(--text-faint)]">Error Records</div>
+                  <div className="mt-1 text-base font-semibold tracking-tight text-[var(--text-strong)]">按单词与词典聚合的错误记录</div>
+                </div>
+                <div className="text-xs text-[var(--text-muted)] sm:text-sm">点击任意行查看详细统计与发音信息</div>
+              </div>
+
+              <div className="sticky top-0 z-10 mb-2 grid grid-cols-[1.3fr_2.8fr_0.9fr_1.1fr_auto] items-center gap-3 rounded-[var(--radius-md)] border border-[var(--border-main)] bg-[linear-gradient(180deg,var(--bg-panel-strong),var(--bg-panel))] px-4 py-3 text-sm font-medium text-[var(--text-main)] shadow-[var(--shadow-soft)] backdrop-blur-md">
+                <span>单词</span>
+                <span>释义</span>
+                <HeadWrongNumber className="justify-self-start" sortType={sortType} setSortType={setSort} />
+                <span>词典</span>
+                <DropdownExport renderRecords={sortedRecords} />
+              </div>
+
+              <ScrollArea.Root className="min-h-0 flex-1 overflow-hidden">
+                <ScrollArea.Viewport className="h-full min-h-0">
+                  <div className="flex flex-col gap-2 pb-1">
+                    {renderRecords.map((record) => (
+                      <ErrorRow key={`${record.dict}-${record.word}`} record={record} onDelete={() => handleDelete(record.word, record.dict)} />
+                    ))}
+                  </div>
+                </ScrollArea.Viewport>
+                <ScrollArea.Scrollbar className="flex touch-none select-none bg-transparent" orientation="vertical" />
+              </ScrollArea.Root>
+            </div>
+          </section>
+
+          <Pagination className="pt-3" page={currentPage} setPage={setPage} totalPages={Math.max(totalPages, 1)} />
         </div>
-        <Pagination className="pt-3" page={currentPage} setPage={setPage} totalPages={totalPages} />
       </div>
       {currentRowDetail && <RowDetail currentRowDetail={currentRowDetail} allRecords={sortedRecords} />}
     </>
