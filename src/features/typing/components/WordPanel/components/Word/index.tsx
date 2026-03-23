@@ -323,14 +323,14 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
                     word={word}
                     lang={currentLanguage}
                     ref={wordPronunciationIconRef}
-                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-text-faint transition-colors duration-150 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cool/40"
+                    className="text-text-faint hover:text-accent-primary focus-visible:ring-accent-cool/40 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors duration-150 focus:outline-none focus-visible:ring-2"
                     iconClassName="h-4 w-4"
                   />
                 </Tooltip>
               )}
             </div>
           </div>
-          <div className="relative mt-2 text-xs text-text-faint">
+          <div className="text-text-faint relative mt-2 text-xs">
             {wordDictationConfig.isOpen && (
               <span>
                 按 <span className="text-text-main font-mono">Tab</span> 查看完整拼写
