@@ -9,10 +9,10 @@ import IconX from '~icons/tabler/x'
 import { WordCard } from './WordCard'
 
 const triggerClassName =
-  'my-focus-ring fixed left-0 top-1/2 z-20 inline-flex -translate-y-1/2 items-center justify-center rounded-r-[var(--radius-md)] border border-l-0 border-[var(--border-main)] bg-[linear-gradient(180deg,var(--bg-panel),var(--bg-elevated))] px-2.5 py-3 text-[var(--accent-primary)] shadow-[var(--shadow-soft)] backdrop-blur-md transition-colors duration-200 hover:border-[var(--accent-primary)] hover:bg-[var(--accent-primary-soft)] hover:text-[var(--text-strong)]'
+  'inline-flex items-center justify-center rounded-r-app-md border border-l-0 border-border-main bg-bg-panel px-2.5 py-3 text-accent-primary shadow-app-soft transition-colors duration-200 hover:border-accent-primary hover:bg-accent-primary-soft hover:text-text-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cool/40'
 
 const drawerContentClassName =
-  'fixed left-0 top-0 z-50 flex h-full w-[min(36rem,90vw)] flex-col overflow-hidden border-r border-[var(--border-main)] bg-[linear-gradient(180deg,var(--bg-panel-strong),var(--bg-panel))] shadow-[var(--shadow-panel)] outline-none'
+  'fixed left-0 top-0 z-50 flex h-full w-[min(36rem,90vw)] flex-col overflow-hidden border-r border-border-main bg-bg-panel-strong shadow-app-panel outline-none will-change-transform data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:duration-700 data-[state=closed]:duration-400 data-[state=open]:ease-[cubic-bezier(0.16,1,0.3,1)] data-[state=closed]:ease-[cubic-bezier(0.4,0,1,1)] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-left-6 data-[state=open]:slide-in-from-left-6'
 
 export const WordList = () => {
   const { state, dispatch } = useContext(TypingContext)!
@@ -40,45 +40,41 @@ export const WordList = () => {
 
   return (
     <>
-      <Tooltip content="单词列表" placement="top" className="!absolute left-5 top-1/2 z-20">
-        <button type="button" onClick={openModal} className={triggerClassName}>
-          <ListIcon className="h-6 w-6" />
-        </button>
-      </Tooltip>
+      <div className="fixed left-0 top-1/2 z-20 -translate-y-1/2">
+        <Tooltip content="单词列表" placement="right">
+          <button type="button" onClick={openModal} className={triggerClassName}>
+            <ListIcon className="h-6 w-6" />
+          </button>
+        </Tooltip>
+      </div>
 
       <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-40 bg-[var(--bg-overlay)] backdrop-blur-sm" />
+          <Dialog.Overlay className="fixed inset-0 z-40 bg-bg-overlay will-change-opacity data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:duration-600 data-[state=closed]:duration-300 data-[state=open]:ease-[cubic-bezier(0.16,1,0.3,1)] data-[state=closed]:ease-[cubic-bezier(0.4,0,1,1)] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
 
           <Dialog.Content className={drawerContentClassName}>
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_16%),radial-gradient(circle_at_top_right,rgba(103,232,249,0.1),transparent_26%)]" />
-
-            <div className="relative flex items-center justify-between gap-4 border-b border-[var(--border-main)] px-5 py-4">
+            <div className="relative flex items-center justify-between gap-4 border-b border-border-main px-5 py-4">
               <div className="min-w-0">
-                <div className="text-[0.68rem] font-semibold tracking-[0.14em] text-[var(--text-faint)]">WORD LIST</div>
-                <Dialog.Title className="mt-1 truncate text-lg font-semibold tracking-tight text-[var(--text-strong)]">
+                <Dialog.Title className="truncate text-lg font-semibold tracking-tight text-text-strong">
                   {currentDictTitle}
                 </Dialog.Title>
+                <div className="mt-1 flex items-center gap-2 text-sm text-text-muted">
+                  <span>当前章节单词总览</span>
+                  <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-text-main">
+                    {state.chapterData.words?.length ?? 0}
+                  </span>
+                </div>
               </div>
               <Dialog.Close asChild>
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="my-focus-ring inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border-main)] bg-[var(--bg-elevated)] text-[var(--text-muted)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:text-[var(--text-strong)]"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-app-sm border border-border-main bg-bg-elevated text-text-muted transition-colors duration-150 hover:border-accent-primary hover:text-text-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cool/40"
                   title="关闭单词列表"
                 >
                   <IconX className="h-5 w-5" />
                 </button>
               </Dialog.Close>
-            </div>
-
-            <div className="relative border-b border-[var(--border-soft)] px-5 py-3">
-              <div className="flex items-center justify-between gap-4 text-sm text-[var(--text-muted)]">
-                <span>当前章节单词总览</span>
-                <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[var(--text-main)]">
-                  {state.chapterData.words?.length ?? 0}
-                </span>
-              </div>
             </div>
 
             <div className="relative min-h-0 flex-1 overflow-hidden px-3 py-3">

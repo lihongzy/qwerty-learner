@@ -344,7 +344,7 @@ export default function SoundSetting() {
                 className="group inline-flex items-center gap-2 text-sm font-medium text-text-muted transition-colors hover:text-accent-primary disabled:cursor-not-allowed disabled:text-text-faint"
                 title="试听当前按键音"
               >
-                <IconEar className="h-4 w-4 transition-transform group-hover:rotate-[-12deg]" />
+                <IconEar className="h-4 w-4 transition-transform group-hover:-rotate-12" />
                 <span>试听当前按键音</span>
               </button>
             </div>
