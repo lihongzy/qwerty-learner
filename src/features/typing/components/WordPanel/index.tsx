@@ -1,4 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai'
+import clsx from 'clsx'
 import { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { isReviewModeAtom, phoneticConfigAtom, reviewModeInfoAtom } from '@/shared/state'
@@ -147,7 +148,16 @@ export const WordPanel = () => {
 
   return (
     <div className="container flex h-full w-full flex-col items-center justify-center">
-      <div className="container flex h-24 w-full shrink-0 grow-0 justify-between px-12 pt-10">
+      {!state.isTyping && (
+        <div className="rounded-app-lg bg-bg-overlay/80 absolute inset-0 z-20 flex items-center justify-center overflow-hidden backdrop-blur-sm">
+          <div className="px-6 text-center">
+            <p className="text-text-strong text-2xl font-semibold select-none">
+              {state.timerData.time ? '按任意键继续练习' : '按任意键开始练习'}
+            </p>
+          </div>
+        </div>
+      )}
+      <div className="container flex w-full justify-between">
         {isShowPrevAndNextWord && state.isTyping && (
           <>
             <PrevAndNextWord type="prev" />
@@ -156,23 +166,9 @@ export const WordPanel = () => {
         )}
       </div>
 
-      <div className="container flex flex-grow flex-col items-center justify-center">
+      <div className="container flex grow flex-col items-center justify-center">
         {currentWord && (
           <div className="relative flex w-full justify-center">
-            {!state.isTyping && (
-              <div className="absolute inset-0 z-20 flex items-center justify-center overflow-hidden rounded-[var(--radius-lg)] bg-[linear-gradient(180deg,rgba(237,244,245,0.68),rgba(247,251,251,0.82))] backdrop-blur-md dark:bg-[linear-gradient(180deg,rgba(7,18,22,0.72),rgba(11,23,28,0.84))]">
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.1),transparent_42%)]" />
-                <div className="relative flex max-w-xl flex-col items-center gap-2 px-6 text-center">
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--text-muted)]">
-                    {state.timerData.time ? 'PAUSED' : 'READY'}
-                  </span>
-                  <p className="text-3xl font-semibold tracking-[0.03em] text-[var(--text-strong)] select-none">
-                    {state.timerData.time ? '按任意键继续练习' : '按任意键开始练习'}
-                  </p>
-                </div>
-              </div>
-            )}
-
             <div className="relative flex w-full max-w-[min(86vw,56rem)] flex-col items-center">
               <WordComponent word={currentWord} onFinish={onFinish} key={`${state.chapterData.index}-${wordComponentKey}`} />
               {phoneticConfig.isOpen && <Phonetic word={currentWord} />}
@@ -187,7 +183,7 @@ export const WordPanel = () => {
         )}
       </div>
 
-      <Progress className={`mb-8 mt-6 ${state.isTyping ? 'opacity-100' : 'opacity-0'}`} />
+      <Progress className={clsx('mt-6 mb-8', state.isTyping ? 'opacity-100' : 'opacity-0')} />
     </div>
   )
 }
