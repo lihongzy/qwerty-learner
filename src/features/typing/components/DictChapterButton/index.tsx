@@ -8,7 +8,7 @@ import IconCheck from '~icons/tabler/check'
 import IconChevronDown from '~icons/tabler/chevron-down'
 
 const triggerClassName =
-  'flex h-10 min-w-[8rem] items-center justify-between gap-3 rounded-lg px-3 py-1 text-lg text-text-main transition-colors duration-300 ease-in-out outline-none hover:bg-accent-primary hover:text-white dark:text-text-muted dark:hover:text-bg-canvas'
+  'flex h-8 min-w-[8rem] items-center justify-between gap-3 rounded-lg px-3 py-1 text-lg text-text-main transition-colors duration-300 ease-in-out outline-none hover:bg-accent-primary hover:text-white dark:text-text-muted dark:hover:text-bg-canvas'
 
 const contentClassName =
   'z-[100] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-xl border border-border-main bg-bg-panel p-1 shadow-app-soft'

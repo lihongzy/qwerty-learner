@@ -1,6 +1,7 @@
 import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 import { isOpenDarkModeAtom } from '@/app/state/theme'
+import clsx from 'clsx'
 import { useAtom } from 'jotai'
 import { memo, useContext } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -42,7 +43,7 @@ const StaticSwitcherControls = memo(function StaticSwitcherControls() {
       </Tooltip>
       <Tooltip className="h-7 w-7" content="切换深色模式">
         <button
-          className="p-[2px] text-lg text-indigo-500 focus:outline-none"
+          className="rounded-md p-0.5 text-lg text-accent-primary transition-colors hover:bg-accent-primary-soft hover:text-accent-primary-hover focus:outline-none"
           type="button"
           onClick={(e) => {
             changeDarkModeState()
@@ -83,7 +84,10 @@ export function Switcher() {
     <div className="flex items-center justify-center gap-2">
       <Tooltip className="h-7 w-7" content="切换释义显示（Ctrl + Shift + V）">
         <button
-          className={`p-[2px] ${state?.isTransVisible ? 'text-indigo-500' : 'text-gray-500'} text-lg focus:outline-none`}
+          className={clsx(
+            'rounded-md p-0.5 text-lg transition-colors hover:bg-accent-primary-soft focus:outline-none',
+            state?.isTransVisible ? 'text-accent-primary hover:text-accent-primary-hover' : 'text-text-muted hover:text-text-strong',
+          )}
           type="button"
           onClick={(e) => {
             changeTransVisibleState()
