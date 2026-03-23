@@ -25,14 +25,14 @@ export const StartButton = ({ isLoading }: { isLoading: boolean }) => {
 
   const isTyping = state.isTyping
   const shellClassName = isTyping
-    ? 'border-slate-300/80 bg-slate-200/90 shadow-[0_10px_24px_rgba(148,163,184,0.18)] dark:border-slate-600 dark:bg-slate-700/90 dark:shadow-none'
-    : 'border-indigo-300/70 bg-white shadow-[0_14px_32px_rgba(99,102,241,0.22)] dark:border-indigo-500/50 dark:bg-slate-900/90 dark:shadow-[0_12px_28px_rgba(79,70,229,0.24)]'
+    ? 'border-border-main bg-bg-elevated shadow-app-soft'
+    : 'border-accent-primary/30 bg-bg-panel shadow-app-soft'
   const primaryButtonClassName = isTyping
-    ? 'bg-slate-500 text-white hover:bg-slate-600 dark:bg-slate-600 dark:hover:bg-slate-500'
-    : 'bg-indigo-500 text-white hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400'
+    ? 'bg-text-muted text-white hover:bg-text-main'
+    : 'bg-accent-primary text-white hover:bg-accent-primary-hover'
   const restartButtonClassName = isTyping
-    ? 'border-slate-300/70 bg-white/75 text-slate-600 hover:bg-white dark:border-slate-500/50 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
-    : 'border-indigo-200 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:border-indigo-500/40 dark:bg-slate-800 dark:text-indigo-200 dark:hover:bg-slate-700'
+    ? 'border-border-main bg-bg-panel text-text-main hover:bg-bg-panel-strong'
+    : 'border-accent-primary/20 bg-accent-primary-soft text-accent-primary hover:bg-accent-primary/20'
 
   return (
     <div
@@ -42,7 +42,7 @@ export const StartButton = ({ isLoading }: { isLoading: boolean }) => {
     >
       <Tooltip content={`${isTyping ? '暂停' : '开始'}（Enter）`}>
         <button
-          className={`my-btn-primary min-w-[5.5rem] px-5 text-base shadow-none transition-colors duration-200 ${primaryButtonClassName}`}
+          className={`inline-flex min-w-[5.5rem] items-center justify-center rounded-md px-5 py-2 text-base font-semibold shadow-none transition-colors duration-200 ${primaryButtonClassName}`}
           type="button"
           onClick={onToggleIsTyping}
           aria-label={isTyping ? '暂停' : '开始'}
