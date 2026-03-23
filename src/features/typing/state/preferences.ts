@@ -3,7 +3,7 @@ import { atomWithStorage } from 'jotai/utils'
 import type { LoopWordTimesOption, PronunciationType, WordDictationOpenBy, WordDictationType } from '@/shared/types'
 import { atomForConfig } from '@/shared/state/atomForConfig'
 
-export type PhoneticType = 'us' | 'uk' | 'romaji' | 'zh' | 'ja' | 'de' | 'hapin' | 'kk' | 'id'
+
 
 export const loopWordConfigAtom = atomForConfig<{ times: LoopWordTimesOption }>('loopWordConfig', { times: 1 })
 export const isShowPrevAndNextWordAtom = atomWithStorage('isShowPrevAndNextWord', true)

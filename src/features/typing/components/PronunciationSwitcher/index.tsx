@@ -22,19 +22,19 @@ const PRONUNCIATION_PHONETIC_MAP: Partial<Record<PronunciationType, Pronunciatio
 }
 
 const switchRootClassName =
-  'relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border-3 border-transparent bg-gray-300 transition-colors duration-200 ease-in-out focus:outline-none data-[state=checked]:bg-indigo-400'
+  'relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border border-border-main bg-bg-elevated transition-colors duration-200 ease-in-out focus:outline-none data-[state=checked]:bg-accent-primary'
 
 const switchThumbClassName =
-  'pointer-events-none inline-block h-4 w-4 translate-x-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out data-[state=checked]:translate-x-[25px]'
+  'pointer-events-none inline-block h-4 w-4 translate-x-0 rounded-full bg-bg-panel-strong shadow-app-soft ring-0 transition duration-200 ease-in-out data-[state=checked]:translate-x-[25px]'
 
 const selectTriggerClassName =
-  'flex h-10 w-36 items-center justify-between rounded-lg bg-white px-3 text-left text-sm text-gray-900 shadow-md transition-colors focus:outline-none dark:bg-gray-700 dark:text-white dark:text-opacity-80'
+  'flex h-10 w-36 items-center justify-between rounded-lg border border-border-main bg-bg-panel px-3 text-left text-sm text-text-strong shadow-app-soft transition-colors focus:outline-none'
 
-const selectContentClassName = 'z-30 overflow-hidden rounded-md bg-white shadow-lg dark:bg-gray-700'
+const selectContentClassName = 'z-30 overflow-hidden rounded-md border border-border-main bg-bg-panel shadow-app-soft'
 const selectViewportClassName = 'p-1'
 
 const selectItemClassName =
-  'relative flex cursor-pointer select-none items-center rounded-md py-2 pl-9 pr-8 text-sm text-gray-900 outline-none data-[highlighted]:bg-indigo-100 data-[highlighted]:text-indigo-900 dark:text-white dark:text-opacity-80 dark:data-[highlighted]:bg-gray-600'
+  'relative flex cursor-pointer select-none items-center rounded-md py-2 pl-9 pr-8 text-sm text-text-main outline-none data-[highlighted]:bg-accent-primary-soft data-[highlighted]:text-text-strong'
 
 type SettingRowProps = {
   label: string
@@ -47,14 +47,12 @@ type SettingRowProps = {
 function SettingRow({ label, checked, onCheckedChange, checkedText, uncheckedText }: SettingRowProps) {
   return (
     <div className="flex w-full flex-col items-start gap-2">
-      <span className="text-sm font-normal leading-5 text-gray-900 dark:text-white dark:text-opacity-70">{label}</span>
+      <span className="text-text-main text-sm leading-5 font-normal">{label}</span>
       <div className="flex w-full items-center justify-between gap-3">
         <Switch.Root checked={checked} onCheckedChange={onCheckedChange} className={switchRootClassName}>
           <Switch.Thumb className={switchThumbClassName} />
         </Switch.Root>
-        <span className="text-right text-xs font-normal leading-tight text-gray-600 dark:text-white dark:text-opacity-60">
-          {checked ? checkedText : uncheckedText}
-        </span>
+        <span className="text-text-muted text-right text-xs leading-tight font-normal">{checked ? checkedText : uncheckedText}</span>
       </div>
     </div>
   )
@@ -91,44 +89,59 @@ const PronunciationSwitcherComponent = () => {
     }
   }, [pronunciationConfig.type, setPhoneticConfig])
 
-  const onChangePronunciationIsOpen = useCallback((value: boolean) => {
-    setPronunciationConfig((old) => ({
-      ...old,
-      isOpen: value,
-    }))
-  }, [setPronunciationConfig])
-
-  const onChangePronunciationIsTransRead = useCallback((value: boolean) => {
-    setPronunciationConfig((old) => ({
-      ...old,
-      isTransRead: value,
-    }))
-  }, [setPronunciationConfig])
-
-  const onChangePronunciationIsLoop = useCallback((value: boolean) => {
-    setPronunciationConfig((old) => ({
-      ...old,
-      isLoop: value,
-    }))
-  }, [setPronunciationConfig])
-
-  const onChangePhoneticIsOpen = useCallback((value: boolean) => {
-    setPhoneticConfig((old) => ({
-      ...old,
-      isOpen: value,
-    }))
-  }, [setPhoneticConfig])
-
-  const onChangePronunciationType = useCallback((value: string) => {
-    const item = pronunciationList.find((pronunciationItem) => pronunciationItem.pron === value)
-    if (item) {
+  const onChangePronunciationIsOpen = useCallback(
+    (value: boolean) => {
       setPronunciationConfig((old) => ({
         ...old,
-        type: item.pron,
-        name: item.name,
+        isOpen: value,
       }))
-    }
-  }, [pronunciationList, setPronunciationConfig])
+    },
+    [setPronunciationConfig],
+  )
+
+  const onChangePronunciationIsTransRead = useCallback(
+    (value: boolean) => {
+      setPronunciationConfig((old) => ({
+        ...old,
+        isTransRead: value,
+      }))
+    },
+    [setPronunciationConfig],
+  )
+
+  const onChangePronunciationIsLoop = useCallback(
+    (value: boolean) => {
+      setPronunciationConfig((old) => ({
+        ...old,
+        isLoop: value,
+      }))
+    },
+    [setPronunciationConfig],
+  )
+
+  const onChangePhoneticIsOpen = useCallback(
+    (value: boolean) => {
+      setPhoneticConfig((old) => ({
+        ...old,
+        isOpen: value,
+      }))
+    },
+    [setPhoneticConfig],
+  )
+
+  const onChangePronunciationType = useCallback(
+    (value: string) => {
+      const item = pronunciationList.find((pronunciationItem) => pronunciationItem.pron === value)
+      if (item) {
+        setPronunciationConfig((old) => ({
+          ...old,
+          type: item.pron,
+          name: item.name,
+        }))
+      }
+    },
+    [pronunciationList, setPronunciationConfig],
+  )
 
   const currentLabel = useMemo(() => {
     return pronunciationConfig.isOpen ? pronunciationConfig.name : '关闭'
@@ -138,27 +151,38 @@ const PronunciationSwitcherComponent = () => {
 
   return (
     <Popover.Root>
-      <Popover.Trigger asChild>
-        <button
-          type="button"
-          className="flex h-8 min-w-[3rem] cursor-pointer items-center justify-center rounded-md px-2 text-sm transition-colors duration-300 ease-in-out hover:bg-indigo-400 hover:text-white focus:outline-none data-[state=open]:bg-indigo-400 data-[state=open]:text-white dark:text-white dark:text-opacity-60 dark:hover:text-opacity-100"
-          onFocus={(e) => {
-            e.currentTarget.blur()
-          }}
-        >
-          <Tooltip content="发音与音标">{currentLabel}</Tooltip>
-        </button>
-      </Popover.Trigger>
+      <Tooltip content="发音与音标">
+        <Popover.Trigger asChild>
+          <button
+            type="button"
+            className="text-text-muted hover:bg-accent-primary data-[state=open]:bg-accent-primary flex h-8 min-w-[3rem] cursor-pointer items-center justify-center rounded-md px-2 text-sm transition-colors duration-300 ease-in-out hover:text-white focus:outline-none data-[state=open]:text-white"
+          >
+            {currentLabel}
+          </button>
+        </Popover.Trigger>
+      </Tooltip>
 
       <Popover.Portal>
         <Popover.Content
           sideOffset={10}
           align="center"
-          className="z-30 w-72 select-none rounded-2xl bg-white p-4 text-left shadow-[0_-12px_30px_rgba(0,0,0,0.08),0_20px_40px_rgba(0,0,0,0.14)] outline-none dark:bg-gray-800"
+          className="border-border-main bg-bg-panel shadow-app-panel z-30 w-72 rounded-2xl border p-4 text-left outline-none select-none"
         >
           <div className="flex flex-col gap-4">
-            <SettingRow label="音标" checked={phoneticConfig.isOpen} onCheckedChange={onChangePhoneticIsOpen} checkedText="开启" uncheckedText="关闭" />
-            <SettingRow label="单词发音" checked={pronunciationConfig.isOpen} onCheckedChange={onChangePronunciationIsOpen} checkedText="开启" uncheckedText="关闭" />
+            <SettingRow
+              label="音标"
+              checked={phoneticConfig.isOpen}
+              onCheckedChange={onChangePhoneticIsOpen}
+              checkedText="开启"
+              uncheckedText="关闭"
+            />
+            <SettingRow
+              label="单词发音"
+              checked={pronunciationConfig.isOpen}
+              onCheckedChange={onChangePronunciationIsOpen}
+              checkedText="开启"
+              uncheckedText="关闭"
+            />
 
             {canUseSpeechSynthesis && (
               <SettingRow
@@ -171,11 +195,17 @@ const PronunciationSwitcherComponent = () => {
             )}
 
             {pronunciationConfig.isOpen && (
-              <div className="flex flex-col gap-4 rounded-xl border border-indigo-100 bg-indigo-50/60 p-3 dark:border-gray-700 dark:bg-gray-900/70">
-                <SettingRow label="循环发音" checked={pronunciationConfig.isLoop} onCheckedChange={onChangePronunciationIsLoop} checkedText="开启" uncheckedText="关闭" />
+              <div className="border-border-main bg-bg-elevated flex flex-col gap-4 rounded-xl border p-3">
+                <SettingRow
+                  label="循环发音"
+                  checked={pronunciationConfig.isLoop}
+                  onCheckedChange={onChangePronunciationIsLoop}
+                  checkedText="开启"
+                  uncheckedText="关闭"
+                />
 
                 <div className="flex flex-col gap-2">
-                  <span className="text-sm font-normal leading-5 text-gray-900 dark:text-white dark:text-opacity-70">发音类型</span>
+                  <span className="text-text-main text-sm leading-5 font-normal">发音类型</span>
 
                   <Select.Root value={pronunciationConfig.type} onValueChange={onChangePronunciationType}>
                     <Select.Trigger className={selectTriggerClassName} aria-label="发音类型">
@@ -201,8 +231,6 @@ const PronunciationSwitcherComponent = () => {
                     </Select.Portal>
                   </Select.Root>
                 </div>
-
-                <span className="text-center text-xs font-medium text-gray-500 dark:text-white dark:text-opacity-60">快捷键：Ctrl + J</span>
               </div>
             )}
           </div>
@@ -215,4 +243,3 @@ const PronunciationSwitcherComponent = () => {
 export const PronunciationSwitcher = memo(PronunciationSwitcherComponent)
 
 export default PronunciationSwitcher
-

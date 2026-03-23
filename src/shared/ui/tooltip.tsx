@@ -14,7 +14,7 @@ const TooltipContent = ({ className, sideOffset = 4, ...props }: TooltipContentP
   <TooltipPrimitive.Content
     sideOffset={sideOffset}
     className={clsx(
-      'z-50 overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border-main)] bg-[linear-gradient(180deg,var(--bg-panel-strong),var(--bg-panel))] px-2.5 py-1.5 text-[11px] tracking-[0.02em] text-[var(--text-muted)] shadow-[var(--shadow-soft)] backdrop-blur-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+      'z-50 overflow-hidden rounded-app-sm border border-border-main bg-bg-panel-strong px-5 py-1 text-[11px] text-text-muted shadow-app-soft animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1',
       className,
     )}
     {...props}
@@ -26,11 +26,11 @@ type TooltipHintProps = {
   children: React.ReactNode
   content: string
   className?: string
-  placement?: 'top' | 'bottom'
+  placement?: 'top' | 'bottom' | 'left' | 'right'
 }
 
 const TooltipHint = ({ children, content, className, placement = 'top' }: TooltipHintProps) => {
-  const side = placement === 'bottom' ? 'bottom' : 'top'
+  const side = placement
 
   return (
     <TooltipProvider delayDuration={200}>
@@ -38,7 +38,7 @@ const TooltipHint = ({ children, content, className, placement = 'top' }: Toolti
         <TooltipTrigger asChild>
           <span className={clsx('inline-flex', className)}>{children}</span>
         </TooltipTrigger>
-        <TooltipContent side={side} sideOffset={8}>
+        <TooltipContent side={side} sideOffset={5}>
           {content}
         </TooltipContent>
       </Tooltip>
