@@ -24,7 +24,6 @@ export const WordPanel = () => {
 
   const [wordComponentKey, setWordComponentKey] = useState(0)
   const [currentWordExerciseCount, setCurrentWordExerciseCount] = useState(0)
-  const [isShowTranslation, setIsHoveringTranslation] = useState(false)
   const lastFinishedTokenRef = useRef<string | null>(null)
 
   const currentWord = state.chapterData.words[state.chapterData.index]
@@ -120,32 +119,6 @@ export const WordPanel = () => {
     { preventDefault: true },
   )
 
-  const handleShowTranslation = useCallback((checked: boolean) => {
-    setIsHoveringTranslation(checked)
-  }, [])
-
-  useHotkeys(
-    'tab',
-    () => {
-      handleShowTranslation(true)
-    },
-    { enableOnFormTags: true, preventDefault: true },
-    [],
-  )
-
-  useHotkeys(
-    'tab',
-    () => {
-      handleShowTranslation(false)
-    },
-    { enableOnFormTags: true, keyup: true, preventDefault: true },
-    [],
-  )
-
-  const shouldShowTranslation = useMemo(() => {
-    return isShowTranslation || state.isTransVisible
-  }, [isShowTranslation, state.isTransVisible])
-
   return (
     <div className="container flex h-full w-full flex-col items-center justify-center">
       {!state.isTyping && (
@@ -172,12 +145,7 @@ export const WordPanel = () => {
             <div className="relative flex w-full max-w-[min(86vw,56rem)] flex-col items-center">
               <WordComponent word={currentWord} onFinish={onFinish} key={`${state.chapterData.index}-${wordComponentKey}`} />
               {phoneticConfig.isOpen && <Phonetic word={currentWord} />}
-              <Translation
-                trans={currentWord.trans.join('；')}
-                showTrans={shouldShowTranslation}
-                onMouseEnter={() => handleShowTranslation(true)}
-                onMouseLeave={() => handleShowTranslation(false)}
-              />
+              <Translation trans={currentWord.trans.join('；')} showTrans={state.isTransVisible} />
             </div>
           </div>
         )}

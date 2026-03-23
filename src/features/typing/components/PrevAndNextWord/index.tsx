@@ -48,20 +48,20 @@ export const PrevAndNextWord = ({ type }: LastAndNextWordProps) => {
         <Tooltip content={`快捷键：${shortCutKey}`}>
           <div
             onClick={onClickWord}
-            className="flex max-w-xs cursor-pointer select-none items-center text-gray-700 opacity-60 duration-200 ease-in-out hover:opacity-100 dark:text-gray-400"
+            className="flex max-w-xs cursor-pointer select-none items-center text-text-muted opacity-60 transition-opacity duration-200 ease-in-out hover:opacity-100"
           >
             {type === 'prev' && <IconPrev className="mr-4 shrink-0 grow-0 text-2xl" />}
 
-            <div className={`grow-1 flex w-full flex-col ${type === 'next' ? 'items-end text-right' : ''}`}>
+            <div className={`grow flex w-full flex-col ${type === 'next' ? 'items-end text-right' : ''}`}>
               <p
-                className={`font-mono text-2xl font-normal text-gray-700 dark:text-gray-400 ${
+                className={`font-mono text-2xl font-normal text-text-main ${
                   wordDictationConfig.isOpen ? 'tracking-wider' : 'tracking-normal'
                 }`}
               >
                 {headWord}
               </p>
               {state.isTransVisible && (
-                <p className="line-clamp-1 max-w-full text-sm font-normal text-gray-600 dark:text-gray-500">{word.trans.join('；')}</p>
+                <p className="line-clamp-1 max-w-full text-sm font-normal text-text-faint">{word.trans.join('；')}</p>
               )}
             </div>
 

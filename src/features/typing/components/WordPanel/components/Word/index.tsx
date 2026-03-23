@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { useAtomValue } from 'jotai'
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { useImmer } from 'use-immer'
 import { EXPLICIT_SPACE } from '@/shared/constants'
 import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
@@ -38,6 +39,7 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
   const hasCommittedFinishRef = useRef(false)
   const [showTipAlert, setShowTipAlert] = useState(false)
   const [isHoveringWord, setIsHoveringWord] = useState(false)
+  const [isShowingFullWord, setIsShowingFullWord] = useState(false)
   const saveWordRecord = useSaveWordRecord()
   const [playKeySound, playBeepSound, playHintSound] = useKeySounds()
 
@@ -55,6 +57,7 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
     newWordState.startTime = Date.now().toString()
     newWordState.randomLetterVisible = headword.split('').map(() => Math.random() > 0.4)
     hasCommittedFinishRef.current = false
+    setIsShowingFullWord(false)
     setWordState(newWordState)
   }, [setWordState, word])
 
@@ -85,7 +88,7 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
 
   const getLetterVisible = useCallback(
     (index: number) => {
-      if (wordState.letterStates[index] === 'correct' || (isShowAnswerOnHover && isHoveringWord)) {
+      if (wordState.letterStates[index] === 'correct' || isShowingFullWord || (isShowAnswerOnHover && isHoveringWord)) {
         return true
       }
 
@@ -112,6 +115,7 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
     },
     [
       isHoveringWord,
+      isShowingFullWord,
       isShowAnswerOnHover,
       wordDictationConfig.isOpen,
       wordDictationConfig.type,
@@ -126,6 +130,37 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
       wordPronunciationIconRef.current?.play?.()
     }
   }, [state.isTyping, wordState.inputWord.length])
+
+  useHotkeys(
+    'tab',
+    (event) => {
+      event.preventDefault()
+      setIsShowingFullWord(true)
+    },
+    { enableOnFormTags: true, preventDefault: true },
+    [],
+  )
+
+  useHotkeys(
+    'tab',
+    () => {
+      setIsShowingFullWord(false)
+    },
+    { enableOnFormTags: true, keyup: true, preventDefault: true },
+    [],
+  )
+
+  useHotkeys(
+    'ctrl+j',
+    (event) => {
+      event.preventDefault()
+      if (pronunciationIsOpen) {
+        wordPronunciationIconRef.current?.play?.()
+      }
+    },
+    { preventDefault: true, enableOnFormTags: true },
+    [pronunciationIsOpen],
+  )
 
   useEffect(() => {
     const inputLength = wordState.inputWord.length
@@ -258,13 +293,12 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
       <InputHandler updateInput={updateInput} />
       <div
         lang={currentLanguageCategory !== 'code' ? currentLanguageCategory : 'en'}
-        className="flex flex-col items-center justify-center gap-2 pb-1 pt-3"
+        className="flex flex-col items-center justify-center gap-2 pt-3 pb-1"
       >
         {['romaji', 'hapin'].includes(currentLanguage) && word.notation && <Notation notation={word.notation} />}
         <div
           className={clsx(
-            'relative flex min-h-[7.75rem] min-w-[min(70vw,40rem)] max-w-[min(84vw,48rem)] flex-col items-center justify-center overflow-hidden px-6 py-4',
-            wordDictationConfig.isOpen && 'my-tooltip',
+            'relative flex min-h-[7.75rem] max-w-[min(84vw,48rem)] min-w-[min(70vw,40rem)] flex-col items-center justify-center overflow-hidden px-6 py-4',
           )}
           data-tip="按 Tab 快捷键显示完整单词"
         >
@@ -277,36 +311,35 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
               wordState.hasWrong && 'my-word-wrong',
             )}
           >
-            {pronunciationIsOpen && (
-              <div className="absolute -right-8 top-0 h-7 w-7 sm:-right-9">
+            <div className="flex items-center justify-center gap-3">
+              <div className="flex flex-wrap items-center justify-center">
+                {wordState.displayWord.split('').map((char, index) => (
+                  <Letter key={`${index}-${char}`} letter={char} visible={getLetterVisible(index)} state={wordState.letterStates[index]} />
+                ))}
+              </div>
+              {pronunciationIsOpen && (
                 <Tooltip content="快捷键：Ctrl + J">
                   <WordPronunciationIcon
                     word={word}
                     lang={currentLanguage}
                     ref={wordPronunciationIconRef}
-                    className="my-focus-ring h-7 w-7 rounded-full"
-                    iconClassName="h-4.5 w-4.5"
+                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-text-faint transition-colors duration-150 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cool/40"
+                    iconClassName="h-4 w-4"
                   />
                 </Tooltip>
-              </div>
-            )}
-            {wordState.displayWord.split('').map((char, index) => (
-              <Letter key={`${index}-${char}`} letter={char} visible={getLetterVisible(index)} state={wordState.letterStates[index]} />
-            ))}
+              )}
+            </div>
           </div>
-          <div className="relative mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-[var(--text-muted)]">
-            {wordDictationConfig.isOpen ? (
+          <div className="relative mt-2 text-xs text-text-faint">
+            {wordDictationConfig.isOpen && (
               <span>
-                按 <span className="font-mono text-[var(--text-main)]">Tab</span> 查看完整拼写
+                按 <span className="text-text-main font-mono">Tab</span> 查看完整拼写
               </span>
-            ) : (
-              <span>当前为完整拼写展示</span>
             )}
-            {pronunciationIsOpen && <span>发音快捷键 <span className="font-mono text-[var(--text-main)]">Ctrl + J</span></span>}
           </div>
         </div>
       </div>
-      <TipAlert className="fixed bottom-10 right-3" show={showTipAlert} setShow={setShowTipAlert} />
+      <TipAlert className="fixed right-3 bottom-10" show={showTipAlert} setShow={setShowTipAlert} />
     </>
   )
 }

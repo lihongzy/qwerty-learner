@@ -13,7 +13,7 @@ export const Phonetic = ({ word }: PhoneticProps) => {
 
   return (
     <div
-      className={clsx('mt-1 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 text-center text-xs font-medium tracking-[0.08em] text-[var(--text-muted)] transition-colors duration-300', {
+      className={clsx('mt-1 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 text-center text-xs font-medium tracking-[0.08em] text-text-muted transition-colors duration-300', {
         'select-all': isTextSelectable,
       })}
     >
