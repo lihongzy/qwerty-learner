@@ -8,13 +8,13 @@ import { useCallback, useState } from 'react'
 function ProgressBar({ value }: { value: number }) {
   return (
     <div className="flex h-3 w-full items-center justify-start px-5">
-      <Progress.Root className="translate-z-0 relative h-2 w-11/12 transform overflow-hidden rounded-full bg-gray-200" value={value}>
+      <Progress.Root className="relative h-2 w-11/12 overflow-hidden rounded-full bg-bg-elevated" value={value}>
         <Progress.Indicator
-          className="h-full w-full bg-indigo-400 transition-transform duration-500 ease-out"
+          className="h-full w-full bg-accent-primary transition-transform duration-500 ease-out"
           style={{ transform: `translateX(-${100 - value}%)` }}
         />
       </Progress.Root>
-      <span className="ml-4 w-10 text-xs font-normal text-gray-600">{`${value}%`}</span>
+      <span className="ml-4 w-10 text-xs font-normal text-text-muted">{`${value}%`}</span>
     </div>
   )
 }
@@ -39,17 +39,17 @@ function Section({
   onClick: () => void
 }) {
   return (
-    <section className="flex w-full flex-col items-start gap-5 rounded-2xl border border-stone-200 bg-white/80 px-6 py-6 shadow-sm dark:border-gray-700 dark:bg-gray-800/80">
+    <section className="flex w-full flex-col items-start gap-5 rounded-app-md border border-border-main bg-bg-panel px-6 py-6 shadow-app-soft">
       <div className="flex w-full flex-col items-start gap-3">
-        <span className="text-left text-xl font-semibold text-gray-800 dark:text-gray-100">{title}</span>
-        <span className="text-left text-sm leading-7 text-gray-600 dark:text-gray-300">{description}</span>
-        <span className="text-left text-sm font-bold leading-6 text-red-500">{warning}</span>
+        <span className="text-left text-xl font-semibold text-text-strong">{title}</span>
+        <span className="text-left text-sm leading-7 text-text-muted">{description}</span>
+        <span className="text-left text-sm font-semibold leading-6 text-state-error">{warning}</span>
       </div>
 
       <ProgressBar value={progress} />
 
       <button
-        className="my-btn-primary ml-1 disabled:bg-gray-300 dark:disabled:bg-gray-600"
+        className="ml-1 inline-flex items-center justify-center rounded-md bg-accent-primary px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-primary-hover disabled:cursor-not-allowed disabled:bg-bg-elevated disabled:text-text-faint"
         type="button"
         onClick={onClick}
         disabled={isLoading}

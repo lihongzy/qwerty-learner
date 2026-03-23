@@ -21,8 +21,8 @@ function FontSizeBlock({
   onValueChange: (value: [number]) => void
 }) {
   return (
-    <div className="flex w-full flex-col items-start gap-4 rounded-xl border border-stone-200 bg-stone-50/80 px-5 py-5 dark:border-gray-700 dark:bg-gray-900/70">
-      <span className="text-left text-base font-medium text-gray-700 dark:text-gray-200">{label}</span>
+    <div className="flex w-full flex-col items-start gap-4 rounded-app-md border border-border-main bg-bg-elevated px-5 py-5">
+      <span className="text-left text-base font-medium text-text-main">{label}</span>
       <div className="flex h-5 w-full items-center justify-between">
         <Slider.Root value={[value]} min={min} max={max} step={step} className="my-slider" onValueChange={onValueChange}>
           <Slider.Track>
@@ -30,7 +30,7 @@ function FontSizeBlock({
           </Slider.Track>
           <Slider.Thumb />
         </Slider.Root>
-        <span className="ml-4 w-12 text-xs font-normal text-gray-600 dark:text-gray-300">{value}px</span>
+        <span className="ml-4 w-12 text-xs font-normal text-text-muted">{value}px</span>
       </div>
     </div>
   )
@@ -67,12 +67,12 @@ export default function ViewSetting() {
   }, [setFontsizeConfig])
 
   return (
-    <ScrollArea.Root className="flex-1 select-none overflow-y-auto ">
+    <ScrollArea.Root className="flex-1 select-none overflow-y-auto">
       <ScrollArea.Viewport className="h-full w-full px-3">
         {/* 显示设置内容放在滚动区域内，避免面板高度不够时被截断。 */}
         <div className="flex w-full flex-col items-start gap-10 overflow-y-auto px-3 pb-20 pt-8">
-          <section className="flex w-full flex-col items-start gap-6 rounded-2xl border border-stone-200 bg-white/80 px-6 py-6 shadow-sm dark:border-gray-700 dark:bg-gray-800/80">
-            <span className="text-left text-xl font-semibold text-gray-800 dark:text-gray-100">字体设置</span>
+          <section className="flex w-full flex-col items-start gap-6 rounded-app-md border border-border-main bg-bg-panel px-6 py-6 shadow-app-soft">
+            <span className="text-left text-xl font-semibold text-text-strong">字体设置</span>
 
             {/* 滑块值直接绑定到全局字号配置，拖动时实时更新界面。 */}
             <FontSizeBlock
@@ -96,7 +96,7 @@ export default function ViewSetting() {
           </section>
 
           <button
-            className="my-btn-primary ml-1 disabled:bg-gray-300 dark:disabled:bg-gray-600"
+            className="ml-1 inline-flex items-center justify-center rounded-md bg-accent-primary px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-primary-hover disabled:cursor-not-allowed disabled:bg-bg-elevated disabled:text-text-faint"
             type="button"
             onClick={onResetFontSize}
             title="重置字体设置"
@@ -105,7 +105,7 @@ export default function ViewSetting() {
           </button>
         </div>
       </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar className="flex touch-none select-none bg-transparent " orientation="vertical"></ScrollArea.Scrollbar>
+      <ScrollArea.Scrollbar className="flex touch-none select-none bg-transparent" orientation="vertical" />
     </ScrollArea.Root>
   )
 }

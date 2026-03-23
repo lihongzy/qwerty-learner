@@ -49,7 +49,6 @@ const StaticSwitcherControls = memo(function StaticSwitcherControls() {
             changeDarkModeState()
             e.currentTarget.blur()
           }}
-          aria-label="切换深色模式"
         >
           {isOpenDarkMode ? <IconMoon className="my-icon" /> : <IconSun className="my-icon" />}
         </button>

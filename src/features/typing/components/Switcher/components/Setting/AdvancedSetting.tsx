@@ -19,17 +19,17 @@ function SettingSwitchRow({
   statusLabel: string
 }) {
   return (
-    <section className="flex w-full flex-col items-start gap-5 rounded-2xl border border-stone-200 bg-white/80 px-6 py-6 shadow-sm dark:border-gray-700 dark:bg-gray-800/80">
+    <section className="flex w-full flex-col items-start gap-5 rounded-app-md border border-border-main bg-bg-panel px-6 py-6 shadow-app-soft">
       <div className="flex w-full flex-col items-start gap-3">
-        <span className="text-left text-xl font-semibold text-gray-800 dark:text-gray-100">{title}</span>
-        <span className="text-left text-sm leading-7 text-gray-600 dark:text-gray-300">{description}</span>
+        <span className="text-left text-xl font-semibold text-text-strong">{title}</span>
+        <span className="text-left text-sm leading-7 text-text-muted">{description}</span>
       </div>
 
       <div className="flex w-full items-center justify-between gap-4">
         <Switch.Root checked={checked} onCheckedChange={onCheckedChange} className="my-switch-root">
           <Switch.Thumb aria-hidden="true" className="my-switch-thumb" />
         </Switch.Root>
-        <span className="text-right text-xs font-normal leading-tight text-gray-600 dark:text-gray-300">{statusLabel}</span>
+        <span className="text-right text-xs font-normal leading-tight text-text-muted">{statusLabel}</span>
       </div>
     </section>
   )

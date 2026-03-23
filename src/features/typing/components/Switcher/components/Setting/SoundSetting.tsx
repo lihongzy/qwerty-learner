@@ -1,7 +1,7 @@
 import { KEY_SOUND_URL_PREFIX, keySoundResources } from '@/shared/resources/soundResource'
 import type { SoundResource } from '@/shared/resources/soundResource'
 import { hintSoundsConfigAtom, keySoundsConfigAtom, pronunciationConfigAtom } from '@/features/typing/state'
-import { Howl, Howler } from 'howler'
+import { Howl } from 'howler'
 import { useAtom } from 'jotai'
 import { ScrollArea, Select, Slider, Switch } from 'radix-ui'
 import type { ReactNode } from 'react'
@@ -14,22 +14,38 @@ function toFixedNumber(number: number, fractionDigits: number) {
   return Number((number ?? 0).toFixed(fractionDigits))
 }
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}
+
+function getSliderPercentValue(value: number[] | undefined) {
+  return clamp((value?.[0] ?? 0) / 100, 0, 1)
+}
+
+let previewKeySound: Howl | null = null
+
 function playKeySoundResource(soundResource: SoundResource, volume = 1) {
-  const path = KEY_SOUND_URL_PREFIX + soundResource.filename
-  const sound = new Howl({
-    src: path,
+  // 试听时始终只保留一个实例，避免连续点击产生多份未释放的声音对象。
+  previewKeySound?.stop()
+  previewKeySound?.unload()
+
+  previewKeySound = new Howl({
+    src: [KEY_SOUND_URL_PREFIX + soundResource.filename],
     format: ['wav'],
     volume,
+    onend: () => {
+      previewKeySound?.unload()
+      previewKeySound = null
+    },
   })
 
-  Howler.volume(1)
-  sound.play()
+  previewKeySound.play()
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="flex w-full flex-col items-start gap-5 rounded-2xl border border-stone-200 bg-white/85 px-6 py-6 shadow-sm dark:border-gray-700 dark:bg-gray-800/85">
-      <span className="text-left text-xl font-semibold text-gray-800 dark:text-gray-100">{title}</span>
+    <section className="flex w-full flex-col items-start gap-5 rounded-app-md border border-border-main bg-bg-panel px-6 py-6 shadow-app-soft">
+      <span className="text-left text-xl font-semibold text-text-strong">{title}</span>
       {children}
     </section>
   )
@@ -49,7 +65,7 @@ function SettingSwitchRow({
       <Switch.Root checked={checked} onCheckedChange={onCheckedChange} className="my-switch-root">
         <Switch.Thumb aria-hidden="true" className="my-switch-thumb" />
       </Switch.Root>
-      <span className="text-right text-xs font-normal leading-tight text-gray-600 dark:text-gray-300">{statusLabel}</span>
+      <span className="text-right text-xs font-normal leading-tight text-text-muted">{statusLabel}</span>
     </div>
   )
 }
@@ -74,8 +90,8 @@ function SliderBlock({
   onValueChange: (value: number[]) => void
 }) {
   return (
-    <div className="flex w-full flex-col items-start gap-4 rounded-xl border border-stone-200 bg-stone-50/80 px-5 py-5 dark:border-gray-700 dark:bg-gray-900/70">
-      <span className="text-left text-base font-medium text-gray-700 dark:text-gray-200">{label}</span>
+    <div className="flex w-full flex-col items-start gap-4 rounded-app-md border border-border-main bg-bg-elevated px-5 py-5">
+      <span className="text-left text-base font-medium text-text-main">{label}</span>
       <div className="flex h-5 w-full items-center justify-between">
         <Slider.Root value={[value]} min={min} max={max} step={step} className="my-slider" onValueChange={onValueChange} disabled={disabled}>
           <Slider.Track>
@@ -83,20 +99,20 @@ function SliderBlock({
           </Slider.Track>
           <Slider.Thumb />
         </Slider.Root>
-        <span className="ml-4 w-12 text-xs font-normal text-gray-600 dark:text-gray-300">{valueText}</span>
+        <span className="ml-4 w-12 text-xs font-normal text-text-muted">{valueText}</span>
       </div>
     </div>
   )
 }
 
 const soundSelectTriggerClassName =
-  'flex h-12 w-72 items-center justify-between rounded-xl border border-stone-200 bg-white px-4 text-left text-base font-medium text-slate-800 shadow-[0_10px_28px_rgba(15,23,42,0.08)] outline-none transition-colors hover:border-indigo-300 focus:border-indigo-400 disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white/90 dark:disabled:bg-gray-800 dark:disabled:text-gray-500'
+  'flex h-12 w-72 items-center justify-between rounded-app-md border border-border-main bg-bg-panel px-4 text-left text-base font-medium text-text-main shadow-app-soft outline-none transition-colors hover:border-accent-primary focus:border-accent-primary disabled:cursor-not-allowed disabled:bg-bg-elevated disabled:text-text-faint'
 
 const soundSelectContentClassName =
-  'z-[200] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-xl border border-stone-200 bg-white p-2 shadow-[0_18px_40px_rgba(15,23,42,0.14)] dark:border-gray-600 dark:bg-gray-700'
+  'z-[200] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-app-md border border-border-main bg-bg-panel p-2 shadow-app-panel'
 
 const soundSelectItemClassName =
-  'relative grid cursor-pointer grid-cols-[20px_1fr] items-center gap-3 rounded-lg px-4 py-3 text-base text-slate-800 outline-none transition-colors data-[highlighted]:bg-indigo-100 data-[highlighted]:text-indigo-900 dark:text-white/90 dark:data-[highlighted]:bg-gray-600'
+  'relative grid cursor-pointer grid-cols-[20px_1fr] items-center gap-3 rounded-md px-4 py-3 text-base text-text-main outline-none transition-colors data-[highlighted]:bg-accent-primary-soft data-[highlighted]:text-text-strong'
 
 export default function SoundSetting() {
   const [pronunciationConfig, setPronunciationConfig] = useAtom(pronunciationConfigAtom)
@@ -127,7 +143,7 @@ export default function SoundSetting() {
     (value: number[]) => {
       setPronunciationConfig((prev) => ({
         ...prev,
-        volume: (value[0] ?? 0) / 100,
+        volume: getSliderPercentValue(value),
       }))
     },
     [setPronunciationConfig],
@@ -137,7 +153,7 @@ export default function SoundSetting() {
     (value: number[]) => {
       setPronunciationConfig((prev) => ({
         ...prev,
-        transVolume: (value[0] ?? 0) / 100,
+        transVolume: getSliderPercentValue(value),
       }))
     },
     [setPronunciationConfig],
@@ -147,7 +163,7 @@ export default function SoundSetting() {
     (value: number[]) => {
       setPronunciationConfig((prev) => ({
         ...prev,
-        rate: value[0] ?? 1,
+        rate: clamp(value[0] ?? 1, 0.5, 4),
       }))
     },
     [setPronunciationConfig],
@@ -167,7 +183,7 @@ export default function SoundSetting() {
     (value: number[]) => {
       setKeySoundsConfig((prev) => ({
         ...prev,
-        volume: (value[0] ?? 0) / 100,
+        volume: getSliderPercentValue(value),
       }))
     },
     [setKeySoundsConfig],
@@ -206,7 +222,7 @@ export default function SoundSetting() {
     (value: number[]) => {
       setHintSoundsConfig((prev) => ({
         ...prev,
-        volume: (value[0] ?? 0) / 100,
+        volume: getSliderPercentValue(value),
       }))
     },
     [setHintSoundsConfig],
@@ -285,8 +301,8 @@ export default function SoundSetting() {
               valueText={`${Math.floor(keySoundsConfig.volume * 100)}%`}
             />
 
-            <div className="flex w-full flex-col items-start gap-4 rounded-xl border border-stone-200 bg-stone-50/80 px-5 py-5 dark:border-gray-700 dark:bg-gray-900/70">
-              <span className="text-left text-base font-medium text-gray-700 dark:text-gray-200">按键音效</span>
+            <div className="flex w-full flex-col items-start gap-4 rounded-app-md border border-border-main bg-bg-elevated px-5 py-5">
+              <span className="text-left text-base font-medium text-text-main">按键音效</span>
 
               <Select.Root value={keySoundsConfig.resource.key} onValueChange={onChangeKeySoundsResource} disabled={!keySoundsConfig.isOpen}>
                 <Select.Trigger className={soundSelectTriggerClassName} aria-label="选择按键音效">
@@ -308,7 +324,7 @@ export default function SoundSetting() {
                     <Select.Viewport className="max-h-72 p-1">
                       {keySoundResources.map((keySoundResource) => (
                         <Select.Item key={keySoundResource.key} value={keySoundResource.key} className={soundSelectItemClassName}>
-                          <span className="inline-flex h-5 w-5 items-center justify-center text-indigo-500">
+                          <span className="inline-flex h-5 w-5 items-center justify-center text-accent-primary">
                             <Select.ItemIndicator>
                               <IconCheck className="h-4 w-4" />
                             </Select.ItemIndicator>
@@ -325,7 +341,7 @@ export default function SoundSetting() {
                 type="button"
                 onClick={onPlayKeySound}
                 disabled={!keySoundsConfig.isOpen}
-                className="group inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-indigo-500 disabled:cursor-not-allowed disabled:text-gray-400 dark:text-gray-300 dark:hover:text-indigo-300 dark:disabled:text-gray-500"
+                className="group inline-flex items-center gap-2 text-sm font-medium text-text-muted transition-colors hover:text-accent-primary disabled:cursor-not-allowed disabled:text-text-faint"
                 title="试听当前按键音"
               >
                 <IconEar className="h-4 w-4 transition-transform group-hover:rotate-[-12deg]" />
