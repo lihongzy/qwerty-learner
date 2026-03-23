@@ -32,7 +32,7 @@ const StaticSwitcherControls = memo(function StaticSwitcherControls() {
       <Tooltip className="h-7 w-7" content="设置单词重复次数">
         <LoopWordSwitcher />
       </Tooltip>
-      <Tooltip className="h-7 w-7" content="切换听写模式（Ctrl + V）">
+      <Tooltip className="h-7 w-7" content="切换听写模式（Ctrl + Shift + D）">
         <WordDictationSwitcher />
       </Tooltip>
       <Tooltip content="错题本">
