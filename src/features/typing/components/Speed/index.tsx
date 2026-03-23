@@ -12,9 +12,9 @@ export default function Speed() {
 
   return (
     <div className="pointer-events-none mb-4 w-full max-w-5xl px-4">
-      <div className="relative border-t border-[var(--border-soft)] pt-2">
-        <div className="mb-2 flex items-center justify-between gap-4 text-[11px] font-medium text-[var(--text-muted)]">
-          <div className="tracking-[0.18em] text-[var(--text-faint)]">LIVE METRICS</div>
+      <div className="relative border-t border-border-soft pt-2">
+        <div className="mb-2 flex items-center justify-between gap-4 text-[11px] font-medium text-text-muted">
+          <div className="tracking-[0.18em] text-text-faint">LIVE METRICS</div>
           <div className="hidden sm:inline-flex">实时更新</div>
         </div>
 
