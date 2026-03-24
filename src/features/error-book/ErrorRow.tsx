@@ -5,16 +5,16 @@ import type { groupedWordRecords } from './type'
 import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
 import { idDictionaryMap } from '@/shared/resources/dictionary'
 import { useSetAtom } from 'jotai'
-import type { FC } from 'react'
+import { memo, type FC } from 'react'
 import { useCallback } from 'react'
 import DeleteIcon from '~icons/weui/delete-filled'
 
 type IErrorRowProps = {
   record: groupedWordRecords
-  onDelete: () => void
+  onDelete: (word: string, dict: string) => void | Promise<void>
 }
 
-const ErrorRow: FC<IErrorRowProps> = ({ record, onDelete }) => {
+const ErrorRowComponent: FC<IErrorRowProps> = ({ record, onDelete }) => {
   const setCurrentRowDetail = useSetAtom(currentRowDetailAtom)
   const dictInfo = idDictionaryMap[record.dict]
   const { word, isLoading, hasError } = useGetWord(record.word, dictInfo)
@@ -40,7 +40,7 @@ const ErrorRow: FC<IErrorRowProps> = ({ record, onDelete }) => {
         className="justify-self-end"
         onClick={(e) => {
           e.stopPropagation()
-          onDelete()
+          void onDelete(record.word, record.dict)
         }}
       >
         <Tooltip content="删除记录">
@@ -55,5 +55,15 @@ const ErrorRow: FC<IErrorRowProps> = ({ record, onDelete }) => {
     </li>
   )
 }
+
+const ErrorRow = memo(
+  ErrorRowComponent,
+  (prevProps, nextProps) =>
+    prevProps.record.word === nextProps.record.word
+    && prevProps.record.dict === nextProps.record.dict
+    && prevProps.record.wrongCount === nextProps.record.wrongCount
+    && prevProps.record.records.length === nextProps.record.records.length
+    && prevProps.onDelete === nextProps.onDelete,
+)
 
 export default ErrorRow

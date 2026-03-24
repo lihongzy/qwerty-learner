@@ -20,11 +20,10 @@ type SummaryCardProps = {
 }
 
 const SummaryCard = ({ label, value }: SummaryCardProps) => (
-  <section className="my-panel relative overflow-hidden px-4 py-3">
-    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.1),transparent_28%)]" />
-    <div className="relative flex items-end justify-between gap-3">
-      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[var(--text-faint)]">{label}</div>
-      <div className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[1.45rem] font-semibold leading-none tracking-tight text-[var(--text-strong)]">
+  <section className="my-panel px-4 py-3">
+    <div className="flex items-end justify-between gap-3">
+      <div className="text-text-faint text-xs font-medium">{label}</div>
+      <div className="text-text-strong font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[1.25rem] font-semibold leading-none tracking-tight">
         {value}
       </div>
     </div>
@@ -39,7 +38,6 @@ export function ErrorBook() {
   const navigate = useNavigate()
   const currentRowDetail = useAtomValue(currentRowDetailAtom)
   const { deleteWordRecord } = useDeleteWordRecord()
-  const [reload, setReload] = useState(false)
 
   const onBack = useCallback(() => {
     navigate('/')
@@ -94,28 +92,42 @@ export function ErrorBook() {
       .above(0)
       .toArray()
       .then((records) => {
-        const groups: groupedWordRecords[] = []
+        const groupMap = new Map<string, groupedWordRecords>()
 
         records.forEach((record) => {
-          let group = groups.find((item) => item.word === record.word && item.dict === record.dict)
-          if (!group) {
-            group = { word: record.word, dict: record.dict, records: [], wrongCount: 0 }
-            groups.push(group)
+          const key = `${record.dict}::${record.word}`
+          const existingGroup = groupMap.get(key)
+
+          if (existingGroup) {
+            existingGroup.records.push(record as WordRecord)
+            existingGroup.wrongCount += record.wrongCount
+            return
           }
-          group.records.push(record as WordRecord)
+
+          groupMap.set(key, {
+            word: record.word,
+            dict: record.dict,
+            records: [record as WordRecord],
+            wrongCount: record.wrongCount,
+          })
         })
 
-        groups.forEach((group) => {
-          group.wrongCount = group.records.reduce((acc, cur) => acc + cur.wrongCount, 0)
-        })
-
-        setGroupedRecords(groups)
+        setGroupedRecords(Array.from(groupMap.values()))
       })
-  }, [reload])
+  }, [])
 
   const handleDelete = async (word: string, dict: string) => {
-    await deleteWordRecord(word, dict)
-    setReload((prev) => !prev)
+    const deletedCount = await deleteWordRecord(word, dict)
+    if (!deletedCount) return
+
+    setGroupedRecords((prev) => {
+      const nextRecords = prev.filter((item) => !(item.word === word && item.dict === dict))
+      const nextTotalPages = Math.max(1, Math.ceil(nextRecords.length / ITEM_PER_PAGE))
+
+      setCurrentPage((prevPage) => Math.min(prevPage, nextTotalPages))
+
+      return nextRecords
+    })
   }
 
   return (
@@ -124,12 +136,9 @@ export function ErrorBook() {
         <div className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col">
           <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div className="flex flex-col gap-2">
-              <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[0.72rem] font-medium uppercase tracking-[0.28em] text-[var(--text-faint)]">
-                Mistake Review
-              </span>
               <div>
-                <h1 className="text-[1.75rem] font-semibold tracking-tight text-[var(--text-strong)] sm:text-[2rem]">错题本</h1>
-                <p className="mt-1 max-w-2xl text-sm leading-6 text-[var(--text-muted)]">
+                <h1 className="text-text-strong text-[1.75rem] font-semibold tracking-tight sm:text-[2rem]">错题本</h1>
+                <p className="text-text-muted mt-1 max-w-2xl text-sm leading-6">
                   查看高频错误单词、按错误次数排序并导出记录，优先清理最容易反复出错的词条。
                 </p>
               </div>
@@ -148,18 +157,16 @@ export function ErrorBook() {
             <SummaryCard label="当前页" value={`${currentPage}/${Math.max(totalPages, 1)}`} />
           </div>
 
-          <section className="my-panel relative flex min-h-0 flex-1 flex-col overflow-hidden px-3 py-3 sm:px-4 sm:py-4">
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_18%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.08),transparent_24%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_16%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.06),transparent_24%)]" />
-            <div className="relative flex min-h-0 flex-1 flex-col">
+          <section className="my-panel flex min-h-0 flex-1 flex-col overflow-hidden px-3 py-3 sm:px-4 sm:py-4">
+            <div className="flex min-h-0 flex-1 flex-col">
               <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[var(--text-faint)]">Error Records</div>
-                  <div className="mt-1 text-base font-semibold tracking-tight text-[var(--text-strong)]">按单词与词典聚合的错误记录</div>
+                  <div className="text-text-strong text-base font-semibold tracking-tight">按单词与词典聚合的错误记录</div>
                 </div>
-                <div className="text-xs text-[var(--text-muted)] sm:text-sm">点击任意行查看详细统计与发音信息</div>
+                <div className="text-text-muted text-xs sm:text-sm">点击任意行查看详细统计与发音信息</div>
               </div>
 
-              <div className="sticky top-0 z-10 mb-2 grid grid-cols-[1.3fr_2.8fr_0.9fr_1.1fr_auto] items-center gap-3 rounded-[var(--radius-md)] border border-[var(--border-main)] bg-[linear-gradient(180deg,var(--bg-panel-strong),var(--bg-panel))] px-4 py-3 text-sm font-medium text-[var(--text-main)] shadow-[var(--shadow-soft)] backdrop-blur-md">
+              <div className="border-border-main bg-bg-panel text-text-main sticky top-0 z-10 mb-2 grid grid-cols-[1.3fr_2.8fr_0.9fr_1.1fr_auto] items-center gap-3 rounded-app-md border px-4 py-2.5 text-sm font-medium">
                 <span>单词</span>
                 <span>释义</span>
                 <HeadWrongNumber className="justify-self-start" sortType={sortType} setSortType={setSort} />
@@ -171,7 +178,7 @@ export function ErrorBook() {
                 <ScrollArea.Viewport className="h-full min-h-0">
                   <div className="flex flex-col gap-2 pb-1">
                     {renderRecords.map((record) => (
-                      <ErrorRow key={`${record.dict}-${record.word}`} record={record} onDelete={() => handleDelete(record.word, record.dict)} />
+                      <ErrorRow key={`${record.dict}-${record.word}`} record={record} onDelete={handleDelete} />
                     ))}
                   </div>
                 </ScrollArea.Viewport>
