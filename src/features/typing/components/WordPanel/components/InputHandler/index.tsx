@@ -1,6 +1,8 @@
 import { currentDictInfoAtom } from '@/shared/state'
 import { useAtomValue } from 'jotai'
 import { type ChangeEvent, useMemo } from 'react'
+import { getInputProfile } from '../../input-profile'
+import { IMECompositionHandler } from '../IMECompositionHandler'
 import { KeyEventHandler } from '../KeyEventHandler'
 
 export type WordAddAction = {
@@ -23,15 +25,19 @@ export type WordUpdateAction = WordAddAction | WordDeleteAction | WordComposeAct
 
 export const InputHandler = ({ updateInput }: { updateInput: (updateObj: WordUpdateAction) => void }) => {
   const dictInfo = useAtomValue(currentDictInfoAtom)
+  const inputProfile = useMemo(() => getInputProfile(dictInfo), [dictInfo])
 
   const handler = useMemo(() => {
-    switch (dictInfo.language) {
-      case 'en':
-        return <KeyEventHandler updateInput={updateInput} />
+    switch (inputProfile.mode) {
+      case 'keyboard-direct':
+      case 'keyboard-transliteration':
+        return <KeyEventHandler updateInput={updateInput} warnIME={inputProfile.warnIME} />
+      case 'ime-composition':
+        return <IMECompositionHandler updateInput={updateInput} />
       default:
         return null
     }
-  }, [dictInfo.language, updateInput])
+  }, [inputProfile, updateInput])
 
   return <>{handler}</>
 }

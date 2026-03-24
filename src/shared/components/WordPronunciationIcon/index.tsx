@@ -18,6 +18,10 @@ type Props = {
 
 export const WordPronunciationIcon = ({ word, lang, className, iconClassName, ref }: Props) => {
   const currentWord = useMemo(() => {
+    if (lang === 'romaji') {
+      return word.notation || word.name
+    }
+
     if (lang === 'hapin') {
       if (/[\u0400-\u04FF]/.test(word.notation || '')) {
         return word.notation || ''

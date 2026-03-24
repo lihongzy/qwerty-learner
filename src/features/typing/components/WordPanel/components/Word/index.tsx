@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { useAtomValue } from 'jotai'
-import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useImmer } from 'use-immer'
 import { EXPLICIT_SPACE } from '@/shared/constants'
@@ -14,6 +14,7 @@ import { getUTCUnixTimestamp } from '@/shared/utils'
 import useKeySounds from '@/features/typing/hooks/useKeySounds'
 import { TypingContext, TypingStateActionType } from '@/features/typing/store'
 import { InputHandler, type WordUpdateAction } from '../InputHandler'
+import { getTypingTarget } from '../../input-profile'
 import { Notation } from './Notation'
 import { TipAlert } from './TipAlert'
 import { Letter } from '@/shared/components/word-display'
@@ -42,11 +43,12 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
   const [isShowingFullWord, setIsShowingFullWord] = useState(false)
   const saveWordRecord = useSaveWordRecord()
   const [playKeySound, playBeepSound, playHintSound] = useKeySounds()
+  const typingTarget = useMemo(() => getTypingTarget(word, currentDictInfo), [currentDictInfo, word])
 
   useEffect(() => {
     let headword = ''
     try {
-      headword = word.name.replace(/ /g, EXPLICIT_SPACE).replace(/’/g, '..')
+      headword = typingTarget.replace(/ /g, EXPLICIT_SPACE).replace(/’/g, '..')
     } catch {
       headword = ''
     }
@@ -59,10 +61,32 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
     hasCommittedFinishRef.current = false
     setIsShowingFullWord(false)
     setWordState(newWordState)
-  }, [setWordState, word])
+  }, [setWordState, typingTarget, word])
 
   const updateInput = useCallback(
     (updateAction: WordUpdateAction) => {
+      if (updateAction.type === 'delete') {
+        if (wordState.hasWrong || updateAction.length <= 0) {
+          return
+        }
+
+        setWordState((draft) => {
+          draft.inputWord = draft.inputWord.slice(0, Math.max(0, draft.inputWord.length - updateAction.length))
+        })
+        return
+      }
+
+      if (updateAction.type === 'compose') {
+        if (wordState.hasWrong || updateAction.value.length === 0) {
+          return
+        }
+
+        setWordState((draft) => {
+          draft.inputWord += updateAction.value
+        })
+        return
+      }
+
       if (updateAction.type !== 'add') {
         return
       }

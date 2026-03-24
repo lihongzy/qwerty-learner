@@ -3,7 +3,13 @@ import { TypingContext } from '@/features/typing/store'
 import type { WordUpdateAction } from '../InputHandler'
 import { isChineseSymbol, isLegal } from '@/shared/utils'
 
-export const KeyEventHandler = ({ updateInput }: { updateInput: (updateObj: WordUpdateAction) => void }) => {
+export const KeyEventHandler = ({
+  updateInput,
+  warnIME,
+}: {
+  updateInput: (updateObj: WordUpdateAction) => void
+  warnIME?: boolean
+}) => {
   const { state } = useContext(TypingContext)!
   const pressedKeysRef = useRef<Set<string>>(new Set())
 
@@ -21,7 +27,7 @@ export const KeyEventHandler = ({ updateInput }: { updateInput: (updateObj: Word
 
       const char = e.key
 
-      if (isChineseSymbol(char)) {
+      if (warnIME && isChineseSymbol(char)) {
         alert('您正在使用输入法，请关闭输入法。')
         return
       }
@@ -43,7 +49,7 @@ export const KeyEventHandler = ({ updateInput }: { updateInput: (updateObj: Word
         event: e,
       })
     },
-    [updateInput],
+    [updateInput, warnIME],
   )
 
   const onKeyup = useCallback(

@@ -20,6 +20,7 @@ export function generateWordSoundSrc(word: string, pronunciation: Exclude<Pronun
       return `https://dict.youdao.com/dictvoice?audio=${word}&type=2`
     case 'zh':
       return `https://dict.youdao.com/dictvoice?audio=${word}&le=zh`
+    case 'romaji':
     case 'ja':
       return `https://dict.youdao.com/dictvoice?audio=${word}&le=jap`
     case 'de':
