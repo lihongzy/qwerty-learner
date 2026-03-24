@@ -32,6 +32,7 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
       return (
         <button
           type="button"
+          tabIndex={-1}
           className={sortButtonClassName}
           aria-label={getSortLabel('单词', sorting)}
           onClick={() => column.toggleSorting(sorting === 'asc')}
@@ -56,6 +57,7 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
       return (
         <button
           type="button"
+          tabIndex={-1}
           className={sortButtonClassName}
           aria-label={getSortLabel('错误次数', sorting)}
           onClick={() => column.toggleSorting(sorting === 'asc')}
@@ -101,6 +103,7 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
         <Tooltip content="删除记录">
           <button
             type="button"
+            tabIndex={-1}
             aria-label={`删除 ${row.original.word} 的错词记录`}
             className="my-focus-ring border-border-soft bg-bg-ghost text-text-muted hover:border-state-error hover:text-state-error inline-flex h-8 w-8 items-center justify-center rounded-md border transition-colors duration-150"
             onClick={() => void onDelete(row.original.word)}

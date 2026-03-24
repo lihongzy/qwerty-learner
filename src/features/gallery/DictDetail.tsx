@@ -5,9 +5,10 @@ import range from '@/shared/utils/range'
 import * as ScrollArea from '@radix-ui/react-scroll-area'
 import clsx from 'clsx'
 import { useAtom, useSetAtom } from 'jotai'
+import type { ComponentType, KeyboardEvent } from 'react'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Tabs, ToggleGroup } from 'radix-ui'
+import { Tabs } from 'radix-ui'
 import IcOutlineCollectionsBookmark from '~icons/ic/outline-collections-bookmark'
 import MajesticonsPaperFoldTextLine from '~icons/majesticons/paper-fold-text-line'
 import PajamasReviewList from '~icons/pajamas/review-list'
@@ -21,6 +22,12 @@ enum Tab {
   Chapters = 'chapters',
   Errors = 'errors',
   Review = 'review',
+}
+
+type TabItem = {
+  value: Tab
+  label: string
+  Icon: ComponentType<{ className?: string }>
 }
 
 const tabButtonClassName =
@@ -39,6 +46,7 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
   const chapter = useMemo(() => (dict.id === currentDictId ? currentChapter : 0), [currentChapter, currentDictId, dict.id])
   const { errorWordData, isLoading, error } = useErrorWordData(dict, reload)
   const tableData = useMemo(() => getRowsFromErrorWordData(errorWordData), [errorWordData])
+  const tabTriggerRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   const statCards = useMemo(
     () => [
@@ -104,8 +112,41 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
     [curTab],
   )
 
+  const tabItems = useMemo<TabItem[]>(
+    () => [
+      { value: Tab.Chapters, label: '章节', Icon: MajesticonsPaperFoldTextLine },
+      ...(errorWordData.length > 0
+        ? [
+            { value: Tab.Errors, label: '错词', Icon: IcOutlineCollectionsBookmark },
+            { value: Tab.Review, label: '复习', Icon: PajamasReviewList },
+          ]
+        : []),
+    ],
+    [errorWordData.length],
+  )
+
+  const onTabTriggerKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+      if (event.key !== 'Tab' || event.shiftKey) {
+        return
+      }
+
+      const nextTrigger = tabTriggerRefs.current[index + 1] ?? tabTriggerRefs.current[0]
+      if (nextTrigger) {
+        event.preventDefault()
+        nextTrigger.focus()
+      }
+    },
+    [],
+  )
+
   return (
-    <div className="text-text-main flex h-full min-h-0 flex-col overflow-hidden">
+    <Tabs.Root
+      value={curTab}
+      onValueChange={handleTabChange}
+      activationMode="manual"
+      className="text-text-main flex h-full min-h-0 flex-col overflow-hidden"
+    >
       <div className="border-border-main flex flex-col gap-1.5 border-b px-4 pb-2 pt-2.5 sm:px-5">
         <div className="grid gap-2 xl:grid-cols-[minmax(0,1fr)_20rem]">
           <div className="my-panel px-4 py-2.5">
@@ -136,64 +177,60 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
         </div>
 
         <div className="my-control-shell flex flex-wrap items-center justify-end gap-1.5 px-1.5 py-1.5">
-          <ToggleGroup.Root type="single" value={curTab} onValueChange={handleTabChange} className="flex flex-wrap gap-1.5">
-            <ToggleGroup.Item value={Tab.Chapters} disabled={curTab === Tab.Chapters} className={getTabClassName(Tab.Chapters)}>
-              <MajesticonsPaperFoldTextLine className="mr-1.5" />
-              章节
-            </ToggleGroup.Item>
-            {errorWordData.length > 0 && (
-              <>
-                <ToggleGroup.Item value={Tab.Errors} disabled={curTab === Tab.Errors} className={getTabClassName(Tab.Errors)}>
-                  <IcOutlineCollectionsBookmark className="mr-1.5" />
-                  错词
-                </ToggleGroup.Item>
-                <ToggleGroup.Item value={Tab.Review} disabled={curTab === Tab.Review} className={getTabClassName(Tab.Review)}>
-                  <PajamasReviewList className="mr-1.5" />
-                  复习
-                </ToggleGroup.Item>
-              </>
-            )}
-          </ToggleGroup.Root>
+          <Tabs.List className="flex flex-wrap gap-1.5" aria-label="词库详情分区">
+            {tabItems.map(({ value, label, Icon }, index) => (
+              <Tabs.Trigger
+                key={value}
+                value={value}
+                className={getTabClassName(value)}
+                ref={(node) => {
+                  tabTriggerRefs.current[index] = node
+                }}
+                onKeyDown={(event) => onTabTriggerKeyDown(event, index)}
+              >
+                <Icon className="mr-1.5" />
+                {label}
+              </Tabs.Trigger>
+            ))}
+          </Tabs.List>
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-hidden px-4 pb-4 pt-3 sm:px-5">
-        <Tabs.Root value={curTab} className="flex h-full min-h-0 w-full flex-col overflow-hidden">
-          <Tabs.Content value={Tab.Chapters} className="flex h-0 min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
-            <div className="my-panel flex h-0 min-h-0 flex-1 flex-col p-2">
-              <ScrollArea.Root className="h-full min-h-0 flex-1 overflow-hidden">
-                <ScrollArea.Viewport ref={chapterScrollViewportRef} className="h-full min-h-0 w-full pr-1">
-                  <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-                    {range(0, dict.chapterCount, 1).map((index) => (
-                      <Chapter
-                        key={`${dict.id}-${index}`}
-                        index={index}
-                        checked={chapter === index}
-                        dictID={dict.id}
-                        onChange={onChangeChapter}
-                        scrollContainerRef={chapterScrollViewportRef}
-                      />
-                    ))}
-                  </div>
-                </ScrollArea.Viewport>
-                <ScrollArea.Scrollbar className="flex w-2 touch-none select-none" orientation="vertical">
-                  <ScrollArea.Thumb className="bg-border-main relative flex-1 rounded-full" />
-                </ScrollArea.Scrollbar>
-              </ScrollArea.Root>
-            </div>
-          </Tabs.Content>
-          <Tabs.Content value={Tab.Errors} className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
-            <div className="my-panel min-h-0 flex-1 overflow-hidden p-2.5">
-              <ErrorTable data={tableData} isLoading={isLoading} error={error} onDelete={onDelete} />
-            </div>
-          </Tabs.Content>
-          <Tabs.Content value={Tab.Review} className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
-            <div className="my-panel min-h-0 flex-1 overflow-hidden">
-              <ReviewDetail errorData={errorWordData} dict={dict} />
-            </div>
-          </Tabs.Content>
-        </Tabs.Root>
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-4 pb-4 pt-3 sm:px-5">
+        <Tabs.Content value={Tab.Chapters} tabIndex={-1} className="flex h-0 min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
+          <div className="my-panel flex h-0 min-h-0 flex-1 flex-col p-2">
+            <ScrollArea.Root className="h-full min-h-0 flex-1 overflow-hidden">
+              <ScrollArea.Viewport ref={chapterScrollViewportRef} className="h-full min-h-0 w-full pr-1">
+                <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                  {range(0, dict.chapterCount, 1).map((index) => (
+                    <Chapter
+                      key={`${dict.id}-${index}`}
+                      index={index}
+                      checked={chapter === index}
+                      dictID={dict.id}
+                      onChange={onChangeChapter}
+                      scrollContainerRef={chapterScrollViewportRef}
+                    />
+                  ))}
+                </div>
+              </ScrollArea.Viewport>
+              <ScrollArea.Scrollbar className="flex w-2 touch-none select-none" orientation="vertical">
+                <ScrollArea.Thumb className="bg-border-main relative flex-1 rounded-full" />
+              </ScrollArea.Scrollbar>
+            </ScrollArea.Root>
+          </div>
+        </Tabs.Content>
+        <Tabs.Content value={Tab.Errors} tabIndex={-1} className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
+          <div className="my-panel min-h-0 flex-1 overflow-hidden p-2.5">
+            <ErrorTable data={tableData} isLoading={isLoading} error={error} onDelete={onDelete} />
+          </div>
+        </Tabs.Content>
+        <Tabs.Content value={Tab.Review} tabIndex={-1} className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
+          <div className="my-panel min-h-0 flex-1 overflow-hidden">
+            <ReviewDetail errorData={errorWordData} dict={dict} />
+          </div>
+        </Tabs.Content>
       </div>
-    </div>
+    </Tabs.Root>
   )
 }

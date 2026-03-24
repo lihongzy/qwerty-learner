@@ -30,7 +30,8 @@ export default function DictionaryComponent({ dictionary }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div
+        <button
+          type="button"
           ref={ref}
           className={clsx(
             'my-focus-ring group relative flex min-h-[12rem] cursor-pointer overflow-hidden rounded-app-md border p-5 text-left shadow-app-soft transition-colors duration-200',
@@ -38,7 +39,6 @@ export default function DictionaryComponent({ dictionary }: Props) {
               ? 'border-accent-primary bg-accent-primary-soft'
               : 'border-border-main bg-bg-panel hover:border-accent-primary',
           )}
-          role="button"
         >
           <div className="relative flex h-full w-full flex-col">
             <div className="flex items-start justify-between gap-4">
@@ -76,9 +76,9 @@ export default function DictionaryComponent({ dictionary }: Props) {
               </Progress.Root>
             </div>
           </div>
-        </div>
+        </button>
       </DialogTrigger>
-      <DialogContent className="h-[min(92vh,56rem)] w-[56rem] max-w-none p-0">
+      <DialogContent className="h-[min(92vh,56rem)] w-[56rem] max-w-none p-0" showCloseButton={false}>
         <DictDetail dictionary={dictionary} />
       </DialogContent>
     </Dialog>

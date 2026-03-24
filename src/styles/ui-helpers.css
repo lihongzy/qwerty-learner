@@ -5,7 +5,7 @@
   }
 
   .my-focus-ring:focus-visible {
-    outline: 2px solid color-mix(in srgb, var(--accent-cool) 42%, transparent 58%);
+    outline: 2px solid var(--accent-cool);
     outline-offset: 2px;
     box-shadow: none;
   }

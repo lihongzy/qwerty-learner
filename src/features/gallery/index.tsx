@@ -59,7 +59,7 @@ const GalleryPage = () => {
     navigate('/')
   }, [navigate])
 
-  useHotkeys('enter,esc', onBack, { preventDefault: true })
+  useHotkeys('esc', onBack, { preventDefault: true })
 
   const { groupedByCategoryAndTag, currentLanguageDicts } = useMemo(() => {
     const currentLanguageCategoryDicts = dictionaries.filter((dict) => dict.languageCategory === galleryState.currentLanguageTab)

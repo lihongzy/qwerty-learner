@@ -41,6 +41,7 @@ export default function Chapter({
   return (
     <button
       type="button"
+      tabIndex={-1}
       ref={(node) => {
         ref.current = node
         intersectionRef(node)
