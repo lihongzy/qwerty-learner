@@ -1,5 +1,6 @@
 import { SoundIcon } from './SoundIcon'
 import { usePronunciationSound } from '@/features/typing/hooks/usePronunciation.ts'
+import { getPronunciationTarget } from '@/shared/lib/pronunciation'
 import type { Word } from '@/shared/types'
 import clsx from 'clsx'
 import { useCallback, useImperativeHandle, useMemo } from 'react'
@@ -17,21 +18,7 @@ type Props = {
 }
 
 export const WordPronunciationIcon = ({ word, lang, className, iconClassName, ref }: Props) => {
-  const currentWord = useMemo(() => {
-    if (lang === 'romaji') {
-      return word.notation || word.name
-    }
-
-    if (lang === 'hapin') {
-      if (/[\u0400-\u04FF]/.test(word.notation || '')) {
-        return word.notation || ''
-      }
-
-      return word.trans[2]
-    }
-
-    return word.name
-  }, [lang, word.name, word.notation, word.trans])
+  const currentWord = useMemo(() => getPronunciationTarget(word, lang), [lang, word])
 
   const { play, stop, isPlaying } = usePronunciationSound(currentWord)
 
@@ -57,4 +44,3 @@ export const WordPronunciationIcon = ({ word, lang, className, iconClassName, re
     />
   )
 }
- 

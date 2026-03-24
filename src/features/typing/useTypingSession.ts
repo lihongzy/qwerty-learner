@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useImmerReducer } from 'use-immer'
 import { isReviewModeAtom, reviewModeInfoAtom } from '@/shared/state'
 import { randomConfigAtom } from '@/features/typing/state'
@@ -12,6 +12,7 @@ import { initialState, TypingStateActionType, typingReducer } from './store'
 export function useTypingSession() {
   const [state, dispatch] = useImmerReducer(typingReducer, structuredClone(initialState))
   const [isLoading, setIsLoading] = useState(true)
+  const hasSavedChapterRecordRef = useRef(false)
 
   const { words } = useWordList()
   const randomConfig = useAtomValue(randomConfigAtom)
@@ -89,8 +90,14 @@ export function useTypingSession() {
   }, [dispatch, isLoading, state.isTyping])
 
   useEffect(() => {
+    if (!state.isFinished) {
+      hasSavedChapterRecordRef.current = false
+      return
+    }
+
     // 章节完成且单词记录已落库后，再统一保存本章结果。
-    if (state.isFinished && !state.isSavingRecord) {
+    if (!state.isSavingRecord && !hasSavedChapterRecordRef.current) {
+      hasSavedChapterRecordRef.current = true
       saveChapterRecord(state)
     }
   }, [saveChapterRecord, state])

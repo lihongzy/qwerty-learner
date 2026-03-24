@@ -1,6 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { useCallback, useContext, useEffect, useMemo } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useNavigate } from 'react-router'
 import IconCoffee from '~icons/mdi/coffee'
@@ -32,6 +32,7 @@ import {
 export const ResultScreen = () => {
   const { state, dispatch } = useContext(TypingContext)!
   const navigate = useNavigate()
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
 
   // Global atoms provide the current practice scope and whether the screen is being shown
   // as a normal chapter result or as a review-session result.
@@ -209,7 +210,7 @@ export const ResultScreen = () => {
         {
           key: 'share',
           title: RESULT_SCREEN_COPY.shareTitle,
-          icon: <ShareButton />,
+          icon: <ShareButton onOpenChange={setIsShareDialogOpen} />,
         },
         {
           key: 'export',
@@ -247,24 +248,24 @@ export const ResultScreen = () => {
   }, [dispatch])
 
   // Keep result-screen hotkeys local to the overlay so repeat/next actions remain available after finishing a chapter.
-  useHotkeys('enter', () => { nextButtonHandler() }, { preventDefault: true })
-  useHotkeys('space', (event) => { event.stopPropagation(); repeatButtonHandler() }, { preventDefault: true })
-  useHotkeys('shift+enter', () => { dictationButtonHandler() }, { preventDefault: true })
+  const areResultHotkeysEnabled = state.isFinished && !isShareDialogOpen
+
+  useHotkeys('enter', () => { nextButtonHandler() }, { preventDefault: true, enabled: areResultHotkeysEnabled })
+  useHotkeys('space', (event) => { event.stopPropagation(); repeatButtonHandler() }, { preventDefault: true, enabled: areResultHotkeysEnabled })
+  useHotkeys('shift+enter', () => { dictationButtonHandler() }, { preventDefault: true, enabled: areResultHotkeysEnabled })
 
   return (
     <Dialog.Root open={state.isFinished} onOpenChange={handleResultScreenOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-30 bg-slate-950/26 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 dark:bg-slate-950/74" />
+        <Dialog.Overlay className="bg-mask fixed inset-0 z-30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
 
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-40 flex h-[min(700px,calc(100vh-1.25rem))] w-[min(1060px,calc(100vw-1.25rem))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[1.8rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(245,248,251,0.97))] shadow-[0_34px_96px_rgba(15,23,42,0.18)] outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 dark:border-slate-800 dark:bg-[linear-gradient(180deg,rgba(2,8,17,0.98),rgba(9,16,28,0.98))] dark:shadow-[0_38px_120px_rgba(0,0,0,0.5)]">
-          {/* Decorative light wash stays outside the content layout so it never affects sizing. */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.12),transparent_18%),radial-gradient(circle_at_top_left,rgba(59,130,246,0.08),transparent_18%),linear-gradient(180deg,rgba(255,255,255,0.42),transparent_16%)] dark:bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.16),transparent_18%),radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_18%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_16%)]" />
+        <Dialog.Content className="bg-bg-panel shadow-app-panel border-border-main fixed left-1/2 top-1/2 z-40 flex h-[min(620px,calc(100vh-1.25rem))] w-[min(920px,calc(100vw-1.25rem))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[1.45rem] border outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
 
           <ResultScreenHeader chapterTitle={chapterTitle} utilityButtons={utilityButtons} />
 
           {/* Main body is intentionally split into a narrow metric rail and a single flexible review panel. */}
-          <div className="relative min-h-0 flex-1 overflow-hidden px-5 py-3.5 sm:px-6 lg:px-7">
-            <div className="grid h-full gap-3 lg:grid-cols-[152px_minmax(0,1fr)]">
+          <div className="relative min-h-0 flex-1 overflow-hidden px-3.5 py-2.5 sm:px-4 lg:px-5">
+            <div className="grid h-full gap-2 lg:grid-cols-[128px_minmax(0,1fr)]">
               <ResultScreenStatsRail accuracy={state.timerData.accuracy} timeString={timeString} wpm={state.timerData.wpm} />
               <ResultScreenReviewPanel wrongWords={wrongWords} mistakeLevel={mistakeLevel} />
             </div>
