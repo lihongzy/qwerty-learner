@@ -10,8 +10,7 @@ const overlayClassName =
   'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0'
 
 const contentClassName =
-  'fixed left-1/2 top-1/2 z-50 flex w-[calc(100%-1.5rem)] max-w-xl ' +
-  'max-h-[90vh] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden ' +
+  'fixed left-1/2 top-1/2 z-50 flex max-h-[90vh] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden ' +
   'rounded-app-lg border border-border-main bg-bg-panel-strong p-5 shadow-app-soft ' +
   'duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] focus:outline-none ' +
   'data-[state=open]:animate-in data-[state=closed]:animate-out ' +

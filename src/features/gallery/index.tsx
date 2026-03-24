@@ -98,13 +98,8 @@ const GalleryPage = () => {
             </div>
 
             <section className="rounded-app-md border-border-main bg-bg-panel shadow-app-soft relative border px-3 py-3 sm:px-4 sm:py-4">
-              <div className="relative mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <div className="text-text-faint text-[0.68rem] font-semibold tracking-[0.24em] uppercase">Current Language</div>
-                  <div className="text-text-strong mt-1 text-base font-semibold tracking-tight">
-                    共 {currentLanguageDicts.length} 个词库，按分类与标签分组展示
-                  </div>
-                </div>
+              <div className="text-text-strong relative mb-3 text-base font-semibold tracking-tight">
+                共 {currentLanguageDicts.length} 个词库
               </div>
 
               <div className="relative flex flex-col gap-10 pb-4">

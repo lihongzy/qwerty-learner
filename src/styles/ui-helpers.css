@@ -5,7 +5,9 @@
   }
 
   .my-focus-ring:focus-visible {
-    box-shadow: var(--focus-ring);
+    outline: 2px solid color-mix(in srgb, var(--accent-cool) 42%, transparent 58%);
+    outline-offset: 2px;
+    box-shadow: none;
   }
 
   .my-panel {
@@ -67,7 +69,9 @@
   }
 
   .my-btn-primary:focus-visible {
-    box-shadow: var(--focus-ring);
+    outline: 2px solid color-mix(in srgb, var(--accent-cool) 42%, transparent 58%);
+    outline-offset: 2px;
+    box-shadow: none;
   }
 
   html.dark .my-btn-primary {
@@ -106,7 +110,9 @@
   }
 
   .my-btn-secondary:focus-visible {
-    box-shadow: var(--focus-ring);
+    outline: 2px solid color-mix(in srgb, var(--accent-cool) 42%, transparent 58%);
+    outline-offset: 2px;
+    box-shadow: none;
   }
 
   .my-tooltip {

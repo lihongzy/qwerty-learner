@@ -1,5 +1,5 @@
 import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
-import type { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef, SortDirection } from '@tanstack/react-table'
 import DeleteIcon from '~icons/weui/delete-filled'
 import PhArrowsDownUpFill from '~icons/ph/arrows-down-up-fill'
 import type { TErrorWordData } from '../hooks/useErrorWords'
@@ -12,15 +12,30 @@ export type ErrorColumn = {
 }
 
 const sortButtonClassName =
-  'my-focus-ring inline-flex items-center rounded-[var(--radius-sm)] px-1 py-1 text-sm font-medium text-[var(--text-main)] transition-colors duration-150 hover:text-[var(--accent-primary)]'
+  'my-focus-ring text-text-main hover:text-accent-primary inline-flex items-center rounded-md px-1 py-1 text-sm font-medium transition-colors duration-150'
+
+function getSortLabel(label: string, sorting: false | SortDirection) {
+  if (!sorting) {
+    return `${label}，当前未排序`
+  }
+
+  return sorting === 'desc' ? `${label}，当前降序` : `${label}，当前升序`
+}
 
 export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnDef<ErrorColumn>[] => [
   {
     accessorKey: 'word',
     size: 120,
     header: ({ column }) => {
+      const sorting = column.getIsSorted()
+
       return (
-        <button type="button" className={sortButtonClassName} onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        <button
+          type="button"
+          className={sortButtonClassName}
+          aria-label={getSortLabel('单词', sorting)}
+          onClick={() => column.toggleSorting(sorting === 'asc')}
+        >
           单词
           <PhArrowsDownUpFill className="ml-1.5 h-4 w-4" />
         </button>
@@ -36,8 +51,15 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
     accessorKey: 'errorCount',
     size: 90,
     header: ({ column }) => {
+      const sorting = column.getIsSorted()
+
       return (
-        <button type="button" className={sortButtonClassName} onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        <button
+          type="button"
+          className={sortButtonClassName}
+          aria-label={getSortLabel('错误次数', sorting)}
+          onClick={() => column.toggleSorting(sorting === 'asc')}
+        >
           错误次数
           <PhArrowsDownUpFill className="ml-1.5 h-4 w-4" />
         </button>
@@ -45,7 +67,7 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
     },
     cell: ({ row }) => {
       return (
-        <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] font-semibold text-[var(--accent-warn)]">
+        <span className="text-accent-warn font-['IBM_Plex_Mono','JetBrains_Mono',monospace] font-semibold">
           {row.original.errorCount}
         </span>
       )
@@ -60,7 +82,7 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
         <div className="flex flex-wrap gap-1.5">
           {(row.getValue('errorChar') as string[]).map((char, index) => (
             <kbd
-              className="inline-flex min-w-6 items-center justify-center rounded-[10px] border border-[var(--border-main)] bg-[var(--bg-ghost)] px-2 py-0.5 text-xs text-[var(--text-main)]"
+              className="border-border-main bg-bg-ghost text-text-main inline-flex min-w-6 items-center justify-center rounded-md border px-2 py-0.5 text-xs"
               key={`${char}-${index}`}
             >
               {char}
@@ -79,7 +101,8 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
         <Tooltip content="删除记录">
           <button
             type="button"
-            className="my-focus-ring inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border-soft)] bg-[var(--bg-ghost)] text-[var(--text-muted)] transition-colors duration-150 hover:border-[color:var(--state-error)] hover:text-[var(--state-error)]"
+            aria-label={`删除 ${row.original.word} 的错词记录`}
+            className="my-focus-ring border-border-soft bg-bg-ghost text-text-muted hover:border-state-error hover:text-state-error inline-flex h-8 w-8 items-center justify-center rounded-md border transition-colors duration-150"
             onClick={() => void onDelete(row.original.word)}
           >
             <DeleteIcon />
@@ -94,7 +117,7 @@ export function getRowsFromErrorWordData(data: TErrorWordData[]): ErrorColumn[] 
   return data.map((item) => {
     return {
       word: item.word,
-      trans: item.originData.trans.join('; ') ?? '',
+      trans: item.originData.trans.join('; '),
       errorCount: item.errorCount,
       errorChar: item.errorChar,
     }

@@ -28,18 +28,31 @@ export function ErrorTable({ data, isLoading, error, onDelete }: DataTableProps)
     autoResetPageIndex: true,
   })
 
+  const getAriaSort = (sortingState: false | 'asc' | 'desc') => {
+    if (sortingState === 'asc') {
+      return 'ascending'
+    }
+
+    if (sortingState === 'desc') {
+      return 'descending'
+    }
+
+    return 'none'
+  }
+
   return (
     <div className="my-control-shell h-full w-full overflow-hidden">
       <div className="h-full w-full overflow-auto">
         <table className="min-w-full border-collapse">
-          <thead className="sticky top-0 z-10 bg-[linear-gradient(180deg,var(--bg-panel-strong),var(--bg-panel))]">
+          <thead className="bg-bg-panel sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border-b border-[var(--border-main)]">
+              <tr key={headerGroup.id} className="border-border-main border-b">
                 {headerGroup.headers.map((header) => {
                   return (
                     <th
                       key={header.id}
-                      className="px-3 py-3 text-left text-sm font-medium text-[var(--text-main)]"
+                      className="text-text-main px-3 py-2.5 text-left text-sm font-medium"
+                      aria-sort={header.column.getCanSort() ? getAriaSort(header.column.getIsSorted()) : undefined}
                       {...{
                         colSpan: header.colSpan,
                         style: {
@@ -60,13 +73,13 @@ export function ErrorTable({ data, isLoading, error, onDelete }: DataTableProps)
                 <tr
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className="border-b border-[var(--border-soft)] text-sm text-[var(--text-muted)] last:border-b-0"
+                  className="border-border-soft text-text-muted border-b text-sm last:border-b-0"
                 >
                   {row.getVisibleCells().map((cell) => {
                     return (
                       <td
                         key={cell.id}
-                        className="px-3 py-3 align-top"
+                        className="px-3 py-2.5 align-top"
                         {...{
                           style: {
                             width: cell.column.getSize(),
@@ -81,7 +94,7 @@ export function ErrorTable({ data, isLoading, error, onDelete }: DataTableProps)
               ))
             ) : (
               <tr>
-                <td colSpan={table.getAllColumns().length} className="h-[22rem] text-center align-middle text-[var(--text-muted)]">
+                <td colSpan={table.getAllColumns().length} className="text-text-muted min-h-full py-10 text-center align-middle">
                   {isLoading ? <LoadingUI /> : error ? '加载失败，请稍后再试。' : '暂时还没有错词记录，先练一轮再来看看。'}
                 </td>
               </tr>
