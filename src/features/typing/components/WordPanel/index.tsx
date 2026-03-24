@@ -2,6 +2,7 @@ import { useAtomValue, useSetAtom } from 'jotai'
 import clsx from 'clsx'
 import { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { putWordReviewRecord } from '@/shared/lib/db/review-record'
 import { isReviewModeAtom, phoneticConfigAtom, reviewModeInfoAtom } from '@/shared/state'
 import { isShowPrevAndNextWordAtom, loopWordConfigAtom } from '@/features/typing/state'
 import type { Word } from '@/shared/types'
@@ -62,17 +63,38 @@ export const WordPanel = () => {
       } else {
         setCurrentWordExerciseCount(0)
         if (isReviewMode) {
-          setReviewModeInfo((old) => ({
-            ...old,
-            reviewRecord: old.reviewRecord ? { ...old.reviewRecord, index: targetNextIndex } : undefined,
-          }))
+          setReviewModeInfo((old) => {
+            if (!old.reviewRecord) {
+              return old
+            }
+
+            const updatedReviewRecord = { ...old.reviewRecord, index: targetNextIndex }
+            void putWordReviewRecord(updatedReviewRecord)
+
+            return {
+              ...old,
+              reviewRecord: updatedReviewRecord,
+            }
+          })
         }
         dispatch({ type: TypingStateActionType.SKIP_2_WORD_INDEX, newIndex: targetNextIndex })
       }
     } else {
       dispatch({ type: TypingStateActionType.FINISH_CHAPTER })
       if (isReviewMode) {
-        setReviewModeInfo((old) => ({ ...old, reviewRecord: old.reviewRecord ? { ...old.reviewRecord, isFinished: true } : undefined }))
+        setReviewModeInfo((old) => {
+          if (!old.reviewRecord) {
+            return old
+          }
+
+          const updatedReviewRecord = { ...old.reviewRecord, isFinished: true }
+          void putWordReviewRecord(updatedReviewRecord)
+
+          return {
+            ...old,
+            reviewRecord: updatedReviewRecord,
+          }
+        })
       }
     }
   }, [

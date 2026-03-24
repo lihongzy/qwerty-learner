@@ -1,8 +1,9 @@
 import { currentChapterAtom, currentDictIdAtom, reviewModeInfoAtom } from '@/shared/state'
-import { generateNewWordReviewRecord, useGetLatestReviewRecord } from '@/shared/lib/db/review-record'
+import { generateNewWordReviewRecord, putWordReviewRecord, useGetLatestReviewRecord } from '@/shared/lib/db/review-record'
 import type { Dictionary } from '@/shared/types/resource'
 import * as Progress from '@radix-ui/react-progress'
 import { useSetAtom } from 'jotai'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import MdiRobotAngry from '~icons/mdi/robot-angry'
 import type { TErrorWordData } from './hooks/useErrorWords'
@@ -17,18 +18,32 @@ export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[];
   const setCurrentDictId = useSetAtom(currentDictIdAtom)
   const navigate = useNavigate()
   const setCurrentChapter = useSetAtom(currentChapterAtom)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const startReview = async () => {
+    if (isSubmitting) {
+      return
+    }
+
+    setIsSubmitting(true)
     setCurrentDictId(dict.id)
     setCurrentChapter(-1)
 
-    const record = await generateNewWordReviewRecord(dict.id, errorData)
-    setReviewModeInfo({ isReviewMode: true, reviewRecord: record })
-    navigate('/')
+    try {
+      if (latestReviewRecord && !latestReviewRecord.isFinished) {
+        await putWordReviewRecord({ ...latestReviewRecord, isFinished: true })
+      }
+
+      const record = await generateNewWordReviewRecord(dict.id, errorData)
+      setReviewModeInfo({ isReviewMode: true, reviewRecord: record })
+      navigate('/')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const continueReview = () => {
-    if (!latestReviewRecord) {
+    if (!latestReviewRecord || isSubmitting) {
       return
     }
 
@@ -56,13 +71,13 @@ export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[];
               <div className="text-text-muted mb-2 flex items-center justify-between text-xs">
                 <span>上次复习进度</span>
                 <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace]">
-                  {latestReviewRecord.index + 1}/{latestReviewRecord.words.length}
+                  {latestReviewRecord.index}/{latestReviewRecord.words.length}
                 </span>
               </div>
-              <Progress.Root value={latestReviewRecord.index + 1} max={latestReviewRecord.words.length} className="bg-bg-ghost h-1.5 w-full overflow-hidden rounded-full">
+              <Progress.Root value={latestReviewRecord.index} max={latestReviewRecord.words.length} className="bg-bg-ghost h-1.5 w-full overflow-hidden rounded-full">
                 <Progress.Indicator
                   className="bg-accent-primary h-full rounded-full"
-                  style={{ width: `${((latestReviewRecord.index + 1) / latestReviewRecord.words.length) * 100}%` }}
+                  style={{ width: `${(latestReviewRecord.index / latestReviewRecord.words.length) * 100}%` }}
                 />
               </Progress.Root>
               <div className="text-text-muted mt-2 text-sm">创建于 {timeStamp2String(latestReviewRecord.createTime)}</div>
@@ -74,11 +89,11 @@ export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[];
 
         <div className="mt-5 flex gap-3">
           {latestReviewRecord && (
-            <button type="button" className="my-btn-secondary my-focus-ring" onClick={continueReview}>
+            <button type="button" className="my-btn-secondary my-focus-ring" onClick={continueReview} disabled={isSubmitting}>
               继续复习
             </button>
           )}
-          <button type="button" className="my-btn-primary my-focus-ring" onClick={() => void startReview()} disabled={errorData.length === 0}>
+          <button type="button" className="my-btn-primary my-focus-ring" onClick={() => void startReview()} disabled={errorData.length === 0 || isSubmitting}>
             {latestReviewRecord ? '重新开始' : '开始复习'}
           </button>
         </div>
