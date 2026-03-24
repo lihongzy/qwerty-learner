@@ -6,7 +6,7 @@ import * as ScrollArea from '@radix-ui/react-scroll-area'
 import clsx from 'clsx'
 import { useAtom, useSetAtom } from 'jotai'
 import type { ComponentType, KeyboardEvent } from 'react'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Tabs } from 'radix-ui'
 import IcOutlineCollectionsBookmark from '~icons/ic/outline-collections-bookmark'
@@ -15,7 +15,7 @@ import PajamasReviewList from '~icons/pajamas/review-list'
 import Chapter from './Chapter'
 import { ErrorTable } from './ErrorTable'
 import { getRowsFromErrorWordData } from './ErrorTable/columns'
-import useErrorWordData from './hooks/useErrorWords'
+import useErrorWordData, { type TErrorWordData } from './hooks/useErrorWords'
 import { ReviewDetail } from './ReviewDetail'
 
 enum Tab {
@@ -40,13 +40,17 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
   const setReviewModeInfo = useSetAtom(reviewModeInfoAtom)
   const navigate = useNavigate()
   const { deleteWordRecord } = useDeleteWordRecord()
-  const [reload, setReload] = useState(false)
+  const [localErrorWordData, setLocalErrorWordData] = useState<TErrorWordData[]>([])
   const chapterScrollViewportRef = useRef<HTMLDivElement>(null)
 
   const chapter = useMemo(() => (dict.id === currentDictId ? currentChapter : 0), [currentChapter, currentDictId, dict.id])
-  const { errorWordData, isLoading, error } = useErrorWordData(dict, reload)
-  const tableData = useMemo(() => getRowsFromErrorWordData(errorWordData), [errorWordData])
+  const { errorWordData, isLoading, error } = useErrorWordData(dict, false)
+  const tableData = useMemo(() => getRowsFromErrorWordData(localErrorWordData), [localErrorWordData])
   const tabTriggerRefs = useRef<Array<HTMLButtonElement | null>>([])
+
+  useEffect(() => {
+    setLocalErrorWordData(errorWordData)
+  }, [errorWordData])
 
   const statCards = useMemo(
     () => [
@@ -62,8 +66,8 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
       },
       {
         label: '错词',
-        value: errorWordData.length,
-        tone: errorWordData.length > 0 ? 'text-accent-warn' : 'text-text-strong',
+        value: localErrorWordData.length,
+        tone: localErrorWordData.length > 0 ? 'text-accent-warn' : 'text-text-strong',
       },
       {
         label: '当前章节',
@@ -71,13 +75,15 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
         tone: dict.id === currentDictId && chapter >= 0 ? 'text-accent-primary' : 'text-text-strong',
       },
     ],
-    [chapter, currentDictId, dict.chapterCount, dict.id, dict.length, errorWordData.length],
+    [chapter, currentDictId, dict.chapterCount, dict.id, dict.length, localErrorWordData.length],
   )
 
   const onDelete = useCallback(
     async (word: string) => {
-      await deleteWordRecord(word, dict.id)
-      setReload((old) => !old)
+      const deletedCount = await deleteWordRecord(word, dict.id)
+      if (!deletedCount) return
+
+      setLocalErrorWordData((prev) => prev.filter((item) => item.word !== word))
     },
     [deleteWordRecord, dict.id],
   )
@@ -115,14 +121,14 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
   const tabItems = useMemo<TabItem[]>(
     () => [
       { value: Tab.Chapters, label: '章节', Icon: MajesticonsPaperFoldTextLine },
-      ...(errorWordData.length > 0
+      ...(localErrorWordData.length > 0
         ? [
             { value: Tab.Errors, label: '错词', Icon: IcOutlineCollectionsBookmark },
             { value: Tab.Review, label: '复习', Icon: PajamasReviewList },
           ]
         : []),
     ],
-    [errorWordData.length],
+    [localErrorWordData.length],
   )
 
   const onTabTriggerKeyDown = useCallback(
@@ -227,7 +233,7 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
         </Tabs.Content>
         <Tabs.Content value={Tab.Review} tabIndex={-1} className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
           <div className="my-panel min-h-0 flex-1 overflow-hidden">
-            <ReviewDetail errorData={errorWordData} dict={dict} />
+            <ReviewDetail errorData={localErrorWordData} dict={dict} />
           </div>
         </Tabs.Content>
       </div>
