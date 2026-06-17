@@ -2,7 +2,8 @@ import { flip, offset, shift, useFloating, useHover, useInteractions, useRole } 
 import clsx from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
 import type { ElementType, ReactNode, SVGAttributes } from 'react';
-import { Avatar } from 'radix-ui';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import IconExclamationTriangle from '~icons/heroicons/exclamation-triangle-solid';
 import IconHandThumbUp from '~icons/heroicons/hand-thumb-up-solid';
 import IconHeart from '~icons/heroicons/heart-solid';
@@ -11,7 +12,6 @@ import { selectCurrentDictInfo, usePracticeSessionStore } from '@/shared/stores'
 import { getPronunciationTarget } from '@/shared/lib/pronunciation';
 import type { WordWithIndex } from '@/shared/types';
 import clamp from '@/shared/utils';
-import { TooltipHint as Tooltip } from '@/shared/ui/tooltip';
 import { usePronunciationSound } from '../../../hooks/usePronunciation';
 
 export type ConclusionBarProps = {
@@ -42,7 +42,7 @@ type ConclusionConfig = {
 };
 
 const resultScreenIconButtonClassName =
-  'border-border-main bg-bg-elevated text-text-muted hover:border-accent-primary hover:text-text-strong inline-flex h-9 w-9 items-center justify-center rounded-full border transition-colors';
+  'inline-flex h-9 w-9 items-center justify-center rounded-full border transition-colors';
 
 const conclusionConfig: ConclusionConfig[] = [
   {
@@ -77,16 +77,19 @@ export function AuthorButton() {
   }, []);
 
   return (
-    <Tooltip content="查看作者主页和更多项目">
-      <button type="button" className="rounded-full" onClick={handleOpenAuthorPage}>
-        <Avatar.Root className="relative flex h-7.5 w-7.5 shrink-0 overflow-hidden rounded-full shadow-md">
-          <Avatar.Image className="aspect-square h-full w-full" src={laity} alt="Laity Homepage" />
-          <Avatar.Fallback className="bg-bg-elevated text-text-strong flex h-full w-full items-center justify-center rounded-full text-xs font-medium">
-            Laity
-          </Avatar.Fallback>
-        </Avatar.Root>
-      </button>
-    </Tooltip>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button type="button" className="rounded-full" onClick={handleOpenAuthorPage}>
+            <Avatar className="h-7.5 w-7.5 shadow-md">
+              <AvatarImage src={laity} alt="Laity Homepage" />
+              <AvatarFallback>L</AvatarFallback>
+            </Avatar>
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>查看作者主页和更多项目</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
@@ -140,20 +143,35 @@ export function RemarkRing({ remark, caption, percentage = null }: RemarkRingPro
 export function ResultScreenIconButton({ title, icon, className = '', onClick, href }: ResultScreenIconButtonProps) {
   if (href) {
     return (
-      <Tooltip content={title}>
-        <a href={href} target="_blank" rel="noreferrer" className={`${resultScreenIconButtonClassName} ${className}`}>
-          {icon}
-        </a>
-      </Tooltip>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <a
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className={`${resultScreenIconButtonClassName} ${className}`}
+            >
+              {icon}
+            </a>
+          </TooltipTrigger>
+          <TooltipContent>{title}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   }
 
   return (
-    <Tooltip content={title}>
-      <button type="button" className={`${resultScreenIconButtonClassName} ${className}`} onClick={onClick}>
-        {icon}
-      </button>
-    </Tooltip>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button type="button" className={`${resultScreenIconButtonClassName} ${className}`} onClick={onClick}>
+            {icon}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>{title}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 

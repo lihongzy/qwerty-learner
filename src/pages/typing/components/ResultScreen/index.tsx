@@ -1,4 +1,3 @@
-import * as Dialog from '@radix-ui/react-dialog';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useNavigate } from 'react-router';
@@ -9,6 +8,7 @@ import { TypingContext, TypingStateActionType } from '@/pages/typing/store';
 import { useTypingPreferencesStore } from '@/pages/typing/stores';
 import { selectCurrentDictInfo, usePracticeSessionStore } from '@/shared/stores';
 import { DonateDialog } from '@/shared/components/DonateDialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { RESULT_SCREEN_COPY } from './copy';
 import { ResultScreenFooter } from './components/ResultScreenFooter';
 import { ResultScreenHeader } from './components/ResultScreenHeader';
@@ -162,8 +162,6 @@ export const ResultScreen = () => {
         label: RESULT_SCREEN_COPY.chapterDictation,
         title: RESULT_SCREEN_COPY.chapterDictation,
         tooltip: RESULT_SCREEN_COPY.chapterDictationTooltip,
-        className:
-          'border border-slate-300 bg-white/90 text-slate-700 hover:border-cyan-400 hover:bg-cyan-50 hover:text-cyan-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-cyan-500 dark:hover:bg-slate-800',
         onClick: dictationButtonHandler,
       },
       {
@@ -171,8 +169,6 @@ export const ResultScreen = () => {
         label: RESULT_SCREEN_COPY.repeatChapter,
         title: RESULT_SCREEN_COPY.repeatChapter,
         tooltip: RESULT_SCREEN_COPY.repeatChapterTooltip,
-        className:
-          'border border-slate-300 bg-white/90 text-slate-700 hover:border-cyan-400 hover:bg-cyan-50 hover:text-cyan-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-cyan-500 dark:hover:bg-slate-800',
         onClick: repeatButtonHandler,
       },
     ];
@@ -278,29 +274,25 @@ export const ResultScreen = () => {
   return (
     <>
       <DonateDialog open={isDonateDialogOpen} onOpenChange={setIsDonateDialogOpen} />
-      <Dialog.Root open={state.isFinished} onOpenChange={handleResultScreenOpenChange}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="bg-mask data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 fixed inset-0 z-30 backdrop-blur-sm" />
+      <Dialog open={true} onOpenChange={handleResultScreenOpenChange}>
+        <DialogContent className="overflow-hidden p-0 sm:max-w-4xl">
+          <ResultScreenHeader chapterTitle={chapterTitle} utilityButtons={utilityButtons} />
 
-          <Dialog.Content className="bg-bg-panel shadow-app-panel border-border-main data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 fixed top-1/2 left-1/2 z-40 flex h-[min(620px,calc(100vh-1.25rem))] w-[min(920px,calc(100vw-1.25rem))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[1.45rem] border outline-none">
-            <ResultScreenHeader chapterTitle={chapterTitle} utilityButtons={utilityButtons} />
-
-            {/* Main body is intentionally split into a narrow metric rail and a single flexible review panel. */}
-            <div className="relative min-h-0 flex-1 overflow-hidden px-3.5 py-2.5 sm:px-4 lg:px-5">
-              <div className="grid h-full gap-2 lg:grid-cols-[128px_minmax(0,1fr)]">
-                <ResultScreenStatsRail
-                  accuracy={state.timerData.accuracy}
-                  timeString={timeString}
-                  wpm={state.timerData.wpm}
-                />
-                <ResultScreenReviewPanel wrongWords={wrongWords} mistakeLevel={mistakeLevel} />
-              </div>
+          {/* Main body is intentionally split into a narrow metric rail and a single flexible review panel. */}
+          <div className="relative min-h-0 flex-1 overflow-hidden px-3.5 py-2.5 sm:px-4 lg:px-5">
+            <div className="grid h-full gap-2 lg:grid-cols-[128px_minmax(0,1fr)]">
+              <ResultScreenStatsRail
+                accuracy={state.timerData.accuracy}
+                timeString={timeString}
+                wpm={state.timerData.wpm}
+              />
+              <ResultScreenReviewPanel wrongWords={wrongWords} mistakeLevel={mistakeLevel} />
             </div>
+          </div>
 
-            <ResultScreenFooter actionButtons={actionButtons} />
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+          <ResultScreenFooter actionButtons={actionButtons} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
