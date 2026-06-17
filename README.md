@@ -100,8 +100,8 @@ npm run tauri dev
 ```text
 src/
 ├─ app/        # 应用入口、路由、布局、provider、应用级状态
-├─ features/   # 按业务域组织的功能模块
-├─ shared/     # 跨 feature 共享的类型、状态、资源、db、UI
+├─ pages/      # 按页面组织的业务模块
+├─ shared/     # 跨页面共享的类型、stores、资源、db、UI
 ├─ assets/     # 静态资源
 ├─ App.css     # 全局样式与 token
 └─ main.tsx    # 启动入口
@@ -124,8 +124,8 @@ src/
 
 ## 开发建议
 
-- 新增功能时优先放进对应的 `feature`
-- 只有跨 `feature` 复用时再放到 `shared`
+- 新增页面功能时优先放进对应的 `pages/*`
+- 只有跨页面复用时再放到 `shared`
 - 新 UI 优先使用 Tailwind + Radix
 - 对持久化配置新增字段时优先复用 `atomForConfig`
 - 修改 IndexedDB 结构时同步考虑 Dexie version migration

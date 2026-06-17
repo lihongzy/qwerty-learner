@@ -1,57 +1,60 @@
-import { currentChapterAtom, currentDictIdAtom, reviewModeInfoAtom } from '@/shared/state'
-import { generateNewWordReviewRecord, putWordReviewRecord, useGetLatestReviewRecord } from '@/shared/lib/db/review-record'
-import type { Dictionary } from '@/shared/types/resource'
-import * as Progress from '@radix-ui/react-progress'
-import { useSetAtom } from 'jotai'
-import { useState } from 'react'
-import { useNavigate } from 'react-router'
-import MdiRobotAngry from '~icons/mdi/robot-angry'
-import type { TErrorWordData } from './hooks/useErrorWords'
+import { usePracticeSessionStore } from '@/shared/stores';
+import {
+  generateNewWordReviewRecord,
+  putWordReviewRecord,
+  useGetLatestReviewRecord,
+} from '@/shared/lib/db/review-record';
+import type { Dictionary } from '@/shared/types/resource';
+import * as Progress from '@radix-ui/react-progress';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import MdiRobotAngry from '~icons/mdi/robot-angry';
+import type { TErrorWordData } from './hooks/useErrorWords';
 
 function timeStamp2String(timeStamp: number) {
-  return new Date(timeStamp * 1000).toLocaleString('zh-CN', { hour12: false })
+  return new Date(timeStamp * 1000).toLocaleString('zh-CN', { hour12: false });
 }
 
 export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[]; dict: Dictionary }) {
-  const latestReviewRecord = useGetLatestReviewRecord(dict.id)
-  const setReviewModeInfo = useSetAtom(reviewModeInfoAtom)
-  const setCurrentDictId = useSetAtom(currentDictIdAtom)
-  const navigate = useNavigate()
-  const setCurrentChapter = useSetAtom(currentChapterAtom)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const latestReviewRecord = useGetLatestReviewRecord(dict.id);
+  const setReviewModeInfo = usePracticeSessionStore((state) => state.setReviewModeInfo);
+  const setCurrentDictId = usePracticeSessionStore((state) => state.setCurrentDictId);
+  const navigate = useNavigate();
+  const setCurrentChapter = usePracticeSessionStore((state) => state.setCurrentChapter);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const startReview = async () => {
     if (isSubmitting) {
-      return
+      return;
     }
 
-    setIsSubmitting(true)
-    setCurrentDictId(dict.id)
-    setCurrentChapter(-1)
+    setIsSubmitting(true);
+    setCurrentDictId(dict.id);
+    setCurrentChapter(-1);
 
     try {
       if (latestReviewRecord && !latestReviewRecord.isFinished) {
-        await putWordReviewRecord({ ...latestReviewRecord, isFinished: true })
+        await putWordReviewRecord({ ...latestReviewRecord, isFinished: true });
       }
 
-      const record = await generateNewWordReviewRecord(dict.id, errorData)
-      setReviewModeInfo({ isReviewMode: true, reviewRecord: record })
-      navigate('/')
+      const record = await generateNewWordReviewRecord(dict.id, errorData);
+      setReviewModeInfo({ isReviewMode: true, reviewRecord: record });
+      navigate('/');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const continueReview = () => {
     if (!latestReviewRecord || isSubmitting) {
-      return
+      return;
     }
 
-    setCurrentDictId(dict.id)
-    setCurrentChapter(-1)
-    setReviewModeInfo({ isReviewMode: true, reviewRecord: latestReviewRecord })
-    navigate('/')
-  }
+    setCurrentDictId(dict.id);
+    setCurrentChapter(-1);
+    setReviewModeInfo({ isReviewMode: true, reviewRecord: latestReviewRecord });
+    navigate('/');
+  };
 
   return (
     <div className="flex h-full flex-col items-center justify-center px-6 py-6 md:px-12">
@@ -67,20 +70,26 @@ export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[];
       <div className="mt-8 flex w-full max-w-2xl flex-col items-center">
         {latestReviewRecord ? (
           <>
-            <div className="w-full rounded-app-md border border-border-main bg-bg-elevated px-4 py-4">
+            <div className="rounded-app-md border-border-main bg-bg-elevated w-full border px-4 py-4">
               <div className="text-text-muted mb-2 flex items-center justify-between text-xs">
                 <span>上次复习进度</span>
                 <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace]">
                   {latestReviewRecord.index}/{latestReviewRecord.words.length}
                 </span>
               </div>
-              <Progress.Root value={latestReviewRecord.index} max={latestReviewRecord.words.length} className="bg-bg-ghost h-1.5 w-full overflow-hidden rounded-full">
+              <Progress.Root
+                value={latestReviewRecord.index}
+                max={latestReviewRecord.words.length}
+                className="bg-bg-ghost h-1.5 w-full overflow-hidden rounded-full"
+              >
                 <Progress.Indicator
                   className="bg-accent-primary h-full rounded-full"
                   style={{ width: `${(latestReviewRecord.index / latestReviewRecord.words.length) * 100}%` }}
                 />
               </Progress.Root>
-              <div className="text-text-muted mt-2 text-sm">创建于 {timeStamp2String(latestReviewRecord.createTime)}</div>
+              <div className="text-text-muted mt-2 text-sm">
+                创建于 {timeStamp2String(latestReviewRecord.createTime)}
+              </div>
             </div>
           </>
         ) : (
@@ -89,15 +98,25 @@ export function ReviewDetail({ errorData, dict }: { errorData: TErrorWordData[];
 
         <div className="mt-5 flex gap-3">
           {latestReviewRecord && (
-            <button type="button" className="my-btn-secondary my-focus-ring" onClick={continueReview} disabled={isSubmitting}>
+            <button
+              type="button"
+              className="my-btn-secondary my-focus-ring"
+              onClick={continueReview}
+              disabled={isSubmitting}
+            >
               继续复习
             </button>
           )}
-          <button type="button" className="my-btn-primary my-focus-ring" onClick={() => void startReview()} disabled={errorData.length === 0 || isSubmitting}>
+          <button
+            type="button"
+            className="my-btn-primary my-focus-ring"
+            onClick={() => void startReview()}
+            disabled={errorData.length === 0 || isSubmitting}
+          >
             {latestReviewRecord ? '重新开始' : '开始复习'}
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

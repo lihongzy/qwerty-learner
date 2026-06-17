@@ -1,71 +1,73 @@
-import { currentRowDetailAtom } from '../store'
-import type { groupedWordRecords } from '../type'
-import { useAtom } from 'jotai'
-import type { FC } from 'react'
-import { useCallback, useMemo } from 'react'
-import { useHotkeys } from 'react-hotkeys-hook'
-import NextIcon from '~icons/ooui/next-ltr'
-import PrevIcon from '~icons/ooui/next-rtl'
+import { useErrorBookStore } from '../store';
+import type { groupedWordRecords } from '../type';
+import type { FC } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import NextIcon from '~icons/ooui/next-ltr';
+import PrevIcon from '~icons/ooui/next-rtl';
 
 type IRowPaginationProps = {
-  className?: string
-  allRecords: groupedWordRecords[]
-}
+  className?: string;
+  allRecords: groupedWordRecords[];
+};
 
 const navButtonClassName =
-  'my-focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-main)] bg-[var(--bg-ghost)] text-[var(--text-main)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'
+  'my-focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-main)] bg-[var(--bg-ghost)] text-[var(--text-main)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]';
 
 const RowPagination: FC<IRowPaginationProps> = ({ className, allRecords }) => {
-  const [currentRowDetail, setCurrentRowDetail] = useAtom(currentRowDetailAtom)
+  const currentRowDetail = useErrorBookStore((state) => state.currentRowDetail);
+  const setCurrentRowDetail = useErrorBookStore((state) => state.setCurrentRowDetail);
   const currentIndex = useMemo(() => {
-    if (!currentRowDetail) return -1
-    return allRecords.findIndex((record) => record.word === currentRowDetail.word && record.dict === currentRowDetail.dict)
-  }, [currentRowDetail, allRecords])
+    if (!currentRowDetail) return -1;
+    return allRecords.findIndex(
+      (record) => record.word === currentRowDetail.word && record.dict === currentRowDetail.dict,
+    );
+  }, [currentRowDetail, allRecords]);
 
   const nextRowDetail = useCallback(() => {
-    if (!currentRowDetail) return
+    if (!currentRowDetail) return;
 
-    const index = currentIndex
-    if (index === -1) return
-    const nextIndex = index + 1
-    if (nextIndex >= allRecords.length) return
-    setCurrentRowDetail(allRecords[nextIndex])
-  }, [currentRowDetail, currentIndex, allRecords, setCurrentRowDetail])
+    const index = currentIndex;
+    if (index === -1) return;
+    const nextIndex = index + 1;
+    if (nextIndex >= allRecords.length) return;
+    setCurrentRowDetail(allRecords[nextIndex]);
+  }, [currentRowDetail, currentIndex, allRecords, setCurrentRowDetail]);
 
   const prevRowDetail = useCallback(() => {
-    if (!currentRowDetail) return
+    if (!currentRowDetail) return;
 
-    const index = currentIndex
-    if (index === -1) return
-    const prevIndex = index - 1
-    if (prevIndex < 0) return
-    setCurrentRowDetail(allRecords[prevIndex])
-  }, [currentRowDetail, currentIndex, setCurrentRowDetail, allRecords])
+    const index = currentIndex;
+    if (index === -1) return;
+    const prevIndex = index - 1;
+    if (prevIndex < 0) return;
+    setCurrentRowDetail(allRecords[prevIndex]);
+  }, [currentRowDetail, currentIndex, setCurrentRowDetail, allRecords]);
 
   useHotkeys(
     'left',
     (e) => {
-      prevRowDetail()
-      e.stopPropagation()
+      prevRowDetail();
+      e.stopPropagation();
     },
     {
       preventDefault: true,
     },
-  )
+  );
 
   useHotkeys(
     'right',
     (e) => {
-      nextRowDetail()
-      e.stopPropagation()
+      nextRowDetail();
+      e.stopPropagation();
     },
     {
       preventDefault: true,
     },
-  )
+  );
 
   return (
-    <div className={`flex select-none items-center gap-2 ${className ?? ''}`}>
+    <div className={`flex items-center gap-2 select-none ${className ?? ''}`}>
       <button className={navButtonClassName} onClick={prevRowDetail} disabled={currentIndex <= 0}>
         <PrevIcon />
       </button>
@@ -74,7 +76,7 @@ const RowPagination: FC<IRowPaginationProps> = ({ className, allRecords }) => {
         <NextIcon />
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default RowPagination
+export default RowPagination;

@@ -1,38 +1,37 @@
-import { useAtomValue } from 'jotai'
-import { useCallback, useContext, useState } from 'react'
-import { useHotkeys } from 'react-hotkeys-hook'
-import IconRotate from '~icons/tabler/rotate-clockwise-2'
-import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
-import { randomConfigAtom } from '@/pages/typing/state'
-import { TypingContext, TypingStateActionType } from '@/pages/typing/store'
+import { useCallback, useContext, useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import IconRotate from '~icons/tabler/rotate-clockwise-2';
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip';
+import { useTypingPreferencesStore } from '@/pages/typing/stores';
+import { TypingContext, TypingStateActionType } from '@/pages/typing/store';
 
 export const StartButton = ({ isLoading }: { isLoading: boolean }) => {
-  const { state, dispatch } = useContext(TypingContext)!
-  const randomConfig = useAtomValue(randomConfigAtom)
-  const [isRestartVisible, setIsRestartVisible] = useState(false)
+  const { state, dispatch } = useContext(TypingContext)!;
+  const randomConfig = useTypingPreferencesStore((state) => state.randomConfig);
+  const [isRestartVisible, setIsRestartVisible] = useState(false);
 
   const onToggleIsTyping = useCallback(() => {
     if (!isLoading) {
-      dispatch({ type: TypingStateActionType.TOGGLE_IS_TYPING })
+      dispatch({ type: TypingStateActionType.TOGGLE_IS_TYPING });
     }
-  }, [dispatch, isLoading])
+  }, [dispatch, isLoading]);
 
   const onClickRestart = useCallback(() => {
-    dispatch({ type: TypingStateActionType.REPEAT_CHAPTER, shouldShuffle: randomConfig.isOpen })
-  }, [dispatch, randomConfig.isOpen])
+    dispatch({ type: TypingStateActionType.REPEAT_CHAPTER, shouldShuffle: randomConfig.isOpen });
+  }, [dispatch, randomConfig.isOpen]);
 
-  useHotkeys('enter', onToggleIsTyping, { enableOnFormTags: true, preventDefault: true }, [onToggleIsTyping])
+  useHotkeys('enter', onToggleIsTyping, { enableOnFormTags: true, preventDefault: true }, [onToggleIsTyping]);
 
-  const isTyping = state.isTyping
+  const isTyping = state.isTyping;
   const shellClassName = isTyping
     ? 'border-border-main bg-bg-elevated shadow-app-soft'
-    : 'border-accent-primary/30 bg-bg-panel shadow-app-soft'
+    : 'border-accent-primary/30 bg-bg-panel shadow-app-soft';
   const primaryButtonClassName = isTyping
     ? 'bg-text-muted text-white hover:bg-text-main'
-    : 'bg-accent-primary text-white hover:bg-accent-primary-hover'
+    : 'bg-accent-primary text-white hover:bg-accent-primary-hover';
   const restartButtonClassName = isTyping
     ? 'border-border-main bg-bg-panel text-text-main hover:bg-bg-panel-strong'
-    : 'border-accent-primary/20 bg-accent-primary-soft text-accent-primary hover:bg-accent-primary/20'
+    : 'border-accent-primary/20 bg-accent-primary-soft text-accent-primary hover:bg-accent-primary/20';
 
   return (
     <div
@@ -68,5 +67,5 @@ export const StartButton = ({ isLoading }: { isLoading: boolean }) => {
         </Tooltip>
       </div>
     </div>
-  )
-}
+  );
+};

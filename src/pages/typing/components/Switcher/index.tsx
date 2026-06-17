@@ -1,28 +1,28 @@
-import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
-import { TypingContext, TypingStateActionType } from '@/pages/typing/store'
-import { isOpenDarkModeAtom } from '@/app/state/theme'
-import clsx from 'clsx'
-import { useAtom } from 'jotai'
-import { memo, useContext } from 'react'
-import { useHotkeys } from 'react-hotkeys-hook'
-import IconMoon from '~icons/heroicons/moon-solid'
-import IconSun from '~icons/heroicons/sun-solid'
-import IconLanguage from '~icons/tabler/language'
-import IconLanguageOff from '~icons/tabler/language-off'
-import AnalysisButton from '@/pages/typing/components/Switcher/components/AnalysisButton'
-import ErrorBookButton from '@/pages/typing/components/Switcher/components/ErrorBookButton'
-import HandPositionIllustration from '@/pages/typing/components/Switcher/components/HandPositionIllustration'
-import LoopWordSwitcher from '@/pages/typing/components/Switcher/components/LoopWordSwitcher'
-import Setting from '@/pages/typing/components/Switcher/components/Setting'
-import SoundSwitcher from '@/pages/typing/components/Switcher/components/SoundSwitcher'
-import WordDictationSwitcher from '@/pages/typing/components/Switcher/components/WordDictationSwitcher'
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip';
+import { TypingContext, TypingStateActionType } from '@/pages/typing/store';
+import { useThemeStore } from '@/app/stores/theme';
+import clsx from 'clsx';
+import { memo, useContext } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import IconMoon from '~icons/heroicons/moon-solid';
+import IconSun from '~icons/heroicons/sun-solid';
+import IconLanguage from '~icons/tabler/language';
+import IconLanguageOff from '~icons/tabler/language-off';
+import AnalysisButton from '@/pages/typing/components/Switcher/components/AnalysisButton';
+import ErrorBookButton from '@/pages/typing/components/Switcher/components/ErrorBookButton';
+import HandPositionIllustration from '@/pages/typing/components/Switcher/components/HandPositionIllustration';
+import LoopWordSwitcher from '@/pages/typing/components/Switcher/components/LoopWordSwitcher';
+import Setting from '@/pages/typing/components/Switcher/components/Setting';
+import SoundSwitcher from '@/pages/typing/components/Switcher/components/SoundSwitcher';
+import WordDictationSwitcher from '@/pages/typing/components/Switcher/components/WordDictationSwitcher';
 
 const StaticSwitcherControls = memo(function StaticSwitcherControls() {
-  const [isOpenDarkMode, setIsOpenDarkMode] = useAtom(isOpenDarkModeAtom)
+  const isOpenDarkMode = useThemeStore((state) => state.isOpenDarkMode);
+  const setIsOpenDarkMode = useThemeStore((state) => state.setIsOpenDarkMode);
 
   const changeDarkModeState = () => {
-    setIsOpenDarkMode((old) => !old)
-  }
+    setIsOpenDarkMode((old) => !old);
+  };
 
   return (
     <>
@@ -43,11 +43,11 @@ const StaticSwitcherControls = memo(function StaticSwitcherControls() {
       </Tooltip>
       <Tooltip className="h-7 w-7" content="切换深色模式">
         <button
-          className="rounded-md p-0.5 text-lg text-accent-primary transition-colors hover:bg-accent-primary-soft hover:text-accent-primary-hover focus:outline-none"
+          className="text-accent-primary hover:bg-accent-primary-soft hover:text-accent-primary-hover rounded-md p-0.5 text-lg transition-colors focus:outline-none"
           type="button"
           onClick={(e) => {
-            changeDarkModeState()
-            e.currentTarget.blur()
+            changeDarkModeState();
+            e.currentTarget.blur();
           }}
         >
           {isOpenDarkMode ? <IconMoon className="my-icon" /> : <IconSun className="my-icon" />}
@@ -60,37 +60,39 @@ const StaticSwitcherControls = memo(function StaticSwitcherControls() {
         <Setting />
       </Tooltip>
     </>
-  )
-})
+  );
+});
 
 export function Switcher() {
-  const { state, dispatch } = useContext(TypingContext)!
+  const { state, dispatch } = useContext(TypingContext)!;
 
   const changeTransVisibleState = () => {
-    dispatch?.({ type: TypingStateActionType.TOGGLE_TRANS_VISIBLE })
-  }
+    dispatch?.({ type: TypingStateActionType.TOGGLE_TRANS_VISIBLE });
+  };
 
   useHotkeys(
     'ctrl+shift+v',
     () => {
-      changeTransVisibleState()
+      changeTransVisibleState();
     },
     { enableOnFormTags: true, preventDefault: true },
     [],
-  )
+  );
 
   return (
     <div className="flex items-center justify-center gap-2">
       <Tooltip className="h-7 w-7" content="切换释义显示（Ctrl + Shift + V）">
         <button
           className={clsx(
-            'rounded-md p-0.5 text-lg transition-colors hover:bg-accent-primary-soft focus:outline-none',
-            state?.isTransVisible ? 'text-accent-primary hover:text-accent-primary-hover' : 'text-text-muted hover:text-text-strong',
+            'hover:bg-accent-primary-soft rounded-md p-0.5 text-lg transition-colors focus:outline-none',
+            state?.isTransVisible
+              ? 'text-accent-primary hover:text-accent-primary-hover'
+              : 'text-text-muted hover:text-text-strong',
           )}
           type="button"
           onClick={(e) => {
-            changeTransVisibleState()
-            e.currentTarget.blur()
+            changeTransVisibleState();
+            e.currentTarget.blur();
           }}
           aria-label="切换释义显示（Ctrl + Shift + V）"
         >
@@ -100,6 +102,5 @@ export function Switcher() {
 
       <StaticSwitcherControls />
     </div>
-  )
+  );
 }
-

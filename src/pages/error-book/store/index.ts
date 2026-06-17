@@ -1,4 +1,12 @@
-import type { groupedWordRecords } from '../type'
-import { atom } from 'jotai'
+import { create } from 'zustand';
+import type { groupedWordRecords } from '../type';
 
-export const currentRowDetailAtom = atom<groupedWordRecords | null>(null)
+type ErrorBookStore = {
+  currentRowDetail: groupedWordRecords | null;
+  setCurrentRowDetail: (currentRowDetail: groupedWordRecords | null) => void;
+};
+
+export const useErrorBookStore = create<ErrorBookStore>((set) => ({
+  currentRowDetail: null,
+  setCurrentRowDetail: (currentRowDetail) => set({ currentRowDetail }),
+}));

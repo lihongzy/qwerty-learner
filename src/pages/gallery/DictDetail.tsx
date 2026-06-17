@@ -1,22 +1,21 @@
-import { currentChapterAtom, currentDictIdAtom, reviewModeInfoAtom } from '@/shared/state'
-import { useDeleteWordRecord } from '@/shared/lib/db'
-import type { Dictionary } from '@/shared/types/resource'
-import range from '@/shared/utils/range'
-import * as ScrollArea from '@radix-ui/react-scroll-area'
-import clsx from 'clsx'
-import { useAtom, useSetAtom } from 'jotai'
-import type { ComponentType, KeyboardEvent } from 'react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router'
-import { Tabs } from 'radix-ui'
-import IcOutlineCollectionsBookmark from '~icons/ic/outline-collections-bookmark'
-import MajesticonsPaperFoldTextLine from '~icons/majesticons/paper-fold-text-line'
-import PajamasReviewList from '~icons/pajamas/review-list'
-import Chapter from './Chapter'
-import { ErrorTable } from './ErrorTable'
-import { getRowsFromErrorWordData } from './ErrorTable/columns'
-import useErrorWordData, { type TErrorWordData } from './hooks/useErrorWords'
-import { ReviewDetail } from './ReviewDetail'
+import { usePracticeSessionStore } from '@/shared/stores';
+import { useDeleteWordRecord } from '@/shared/lib/db';
+import type { Dictionary } from '@/shared/types/resource';
+import range from '@/shared/utils/range';
+import * as ScrollArea from '@radix-ui/react-scroll-area';
+import clsx from 'clsx';
+import type { ComponentType, KeyboardEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { Tabs } from 'radix-ui';
+import IcOutlineCollectionsBookmark from '~icons/ic/outline-collections-bookmark';
+import MajesticonsPaperFoldTextLine from '~icons/majesticons/paper-fold-text-line';
+import PajamasReviewList from '~icons/pajamas/review-list';
+import Chapter from './Chapter';
+import { ErrorTable } from './ErrorTable';
+import { getRowsFromErrorWordData } from './ErrorTable/columns';
+import useErrorWordData, { type TErrorWordData } from './hooks/useErrorWords';
+import { ReviewDetail } from './ReviewDetail';
 
 enum Tab {
   Chapters = 'chapters',
@@ -25,32 +24,37 @@ enum Tab {
 }
 
 type TabItem = {
-  value: Tab
-  label: string
-  Icon: ComponentType<{ className?: string }>
-}
+  value: Tab;
+  label: string;
+  Icon: ComponentType<{ className?: string }>;
+};
 
 const tabButtonClassName =
-  'my-focus-ring inline-flex items-center rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors duration-150 disabled:cursor-default disabled:opacity-100'
+  'my-focus-ring inline-flex items-center rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors duration-150 disabled:cursor-default disabled:opacity-100';
 
 export default function DictDetail({ dictionary: dict }: { dictionary: Dictionary }) {
-  const [currentChapter, setCurrentChapter] = useAtom(currentChapterAtom)
-  const [currentDictId, setCurrentDictId] = useAtom(currentDictIdAtom)
-  const [curTab, setCurTab] = useState<Tab>(Tab.Chapters)
-  const setReviewModeInfo = useSetAtom(reviewModeInfoAtom)
-  const navigate = useNavigate()
-  const { deleteWordRecord } = useDeleteWordRecord()
-  const [localErrorWordData, setLocalErrorWordData] = useState<TErrorWordData[]>([])
-  const chapterScrollViewportRef = useRef<HTMLDivElement>(null)
+  const currentChapter = usePracticeSessionStore((state) => state.currentChapter);
+  const currentDictId = usePracticeSessionStore((state) => state.currentDictId);
+  const setCurrentChapter = usePracticeSessionStore((state) => state.setCurrentChapter);
+  const setCurrentDictId = usePracticeSessionStore((state) => state.setCurrentDictId);
+  const [curTab, setCurTab] = useState<Tab>(Tab.Chapters);
+  const setReviewModeInfo = usePracticeSessionStore((state) => state.setReviewModeInfo);
+  const navigate = useNavigate();
+  const { deleteWordRecord } = useDeleteWordRecord();
+  const [localErrorWordData, setLocalErrorWordData] = useState<TErrorWordData[]>([]);
+  const chapterScrollViewportRef = useRef<HTMLDivElement>(null);
 
-  const chapter = useMemo(() => (dict.id === currentDictId ? currentChapter : 0), [currentChapter, currentDictId, dict.id])
-  const { errorWordData, isLoading, error } = useErrorWordData(dict, false)
-  const tableData = useMemo(() => getRowsFromErrorWordData(localErrorWordData), [localErrorWordData])
-  const tabTriggerRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const chapter = useMemo(
+    () => (dict.id === currentDictId ? currentChapter : 0),
+    [currentChapter, currentDictId, dict.id],
+  );
+  const { errorWordData, isLoading, error } = useErrorWordData(dict, false);
+  const tableData = useMemo(() => getRowsFromErrorWordData(localErrorWordData), [localErrorWordData]);
+  const tabTriggerRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   useEffect(() => {
-    setLocalErrorWordData(errorWordData)
-  }, [errorWordData])
+    setLocalErrorWordData(errorWordData);
+  }, [errorWordData]);
 
   const statCards = useMemo(
     () => [
@@ -76,36 +80,36 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
       },
     ],
     [chapter, currentDictId, dict.chapterCount, dict.id, dict.length, localErrorWordData.length],
-  )
+  );
 
   const onDelete = useCallback(
     async (word: string) => {
-      const deletedCount = await deleteWordRecord(word, dict.id)
-      if (!deletedCount) return
+      const deletedCount = await deleteWordRecord(word, dict.id);
+      if (!deletedCount) return;
 
-      setLocalErrorWordData((prev) => prev.filter((item) => item.word !== word))
+      setLocalErrorWordData((prev) => prev.filter((item) => item.word !== word));
     },
     [deleteWordRecord, dict.id],
-  )
+  );
 
   const onChangeChapter = useCallback(
     (index: number) => {
-      setCurrentDictId(dict.id)
-      setCurrentChapter(index)
-      setReviewModeInfo((old) => ({ ...old, isReviewMode: false }))
-      navigate('/')
+      setCurrentDictId(dict.id);
+      setCurrentChapter(index);
+      setReviewModeInfo((old) => ({ ...old, isReviewMode: false }));
+      navigate('/');
     },
     [dict.id, navigate, setCurrentChapter, setCurrentDictId, setReviewModeInfo],
-  )
+  );
 
   const handleTabChange = useCallback((value: string) => {
     if (value === '') {
-      return
+      return;
     }
 
-    const nextTab = value as Tab
-    setCurTab((old) => (old === nextTab ? old : nextTab))
-  }, [])
+    const nextTab = value as Tab;
+    setCurTab((old) => (old === nextTab ? old : nextTab));
+  }, []);
 
   const getTabClassName = useCallback(
     (tab: Tab) =>
@@ -116,7 +120,7 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
           : 'border-border-main bg-bg-panel text-text-muted hover:border-accent-primary hover:text-text-main',
       ),
     [curTab],
-  )
+  );
 
   const tabItems = useMemo<TabItem[]>(
     () => [
@@ -129,22 +133,19 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
         : []),
     ],
     [localErrorWordData.length],
-  )
+  );
 
-  const onTabTriggerKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
-      if (event.key !== 'Tab' || event.shiftKey) {
-        return
-      }
+  const onTabTriggerKeyDown = useCallback((event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    if (event.key !== 'Tab' || event.shiftKey) {
+      return;
+    }
 
-      const nextTrigger = tabTriggerRefs.current[index + 1] ?? tabTriggerRefs.current[0]
-      if (nextTrigger) {
-        event.preventDefault()
-        nextTrigger.focus()
-      }
-    },
-    [],
-  )
+    const nextTrigger = tabTriggerRefs.current[index + 1] ?? tabTriggerRefs.current[0];
+    if (nextTrigger) {
+      event.preventDefault();
+      nextTrigger.focus();
+    }
+  }, []);
 
   return (
     <Tabs.Root
@@ -153,13 +154,11 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
       activationMode="manual"
       className="text-text-main flex h-full min-h-0 flex-col overflow-hidden"
     >
-      <div className="border-border-main flex flex-col gap-1.5 border-b px-4 pb-2 pt-2.5 sm:px-5">
+      <div className="border-border-main flex flex-col gap-1.5 border-b px-4 pt-2.5 pb-2 sm:px-5">
         <div className="grid gap-2 xl:grid-cols-[minmax(0,1fr)_20rem]">
           <div className="my-panel px-4 py-2.5">
             <div className="flex h-full flex-col gap-1">
-              {dict.id === currentDictId && (
-                <div className="text-accent-primary text-xs font-medium">当前练习词库</div>
-              )}
+              {dict.id === currentDictId && <div className="text-accent-primary text-xs font-medium">当前练习词库</div>}
 
               <div className="space-y-0.5">
                 <h3 className="text-text-strong max-w-3xl text-[1.28rem] font-semibold tracking-tight sm:text-[1.45rem]">
@@ -172,9 +171,11 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
 
           <div className="grid grid-cols-2 gap-2 xl:grid-cols-2">
             {statCards.map((item) => (
-              <div key={item.label} className="rounded-app-md border border-border-main bg-bg-elevated px-3 py-1.5">
+              <div key={item.label} className="rounded-app-md border-border-main bg-bg-elevated border px-3 py-1.5">
                 <div className="text-text-faint text-xs">{item.label}</div>
-                <div className={`mt-0.5 font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-sm font-semibold ${item.tone}`}>
+                <div
+                  className={`mt-0.5 font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-sm font-semibold ${item.tone}`}
+                >
                   {item.value}
                 </div>
               </div>
@@ -190,7 +191,7 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
                 value={value}
                 className={getTabClassName(value)}
                 ref={(node) => {
-                  tabTriggerRefs.current[index] = node
+                  tabTriggerRefs.current[index] = node;
                 }}
                 onKeyDown={(event) => onTabTriggerKeyDown(event, index)}
               >
@@ -202,8 +203,12 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-4 pb-4 pt-3 sm:px-5">
-        <Tabs.Content value={Tab.Chapters} tabIndex={-1} className="flex h-0 min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-4 pt-3 pb-4 sm:px-5">
+        <Tabs.Content
+          value={Tab.Chapters}
+          tabIndex={-1}
+          className="flex h-0 min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden"
+        >
           <div className="my-panel flex h-0 min-h-0 flex-1 flex-col p-2">
             <ScrollArea.Root className="h-full min-h-0 flex-1 overflow-hidden">
               <ScrollArea.Viewport ref={chapterScrollViewportRef} className="h-full min-h-0 w-full pr-1">
@@ -226,17 +231,25 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
             </ScrollArea.Root>
           </div>
         </Tabs.Content>
-        <Tabs.Content value={Tab.Errors} tabIndex={-1} className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
+        <Tabs.Content
+          value={Tab.Errors}
+          tabIndex={-1}
+          className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden"
+        >
           <div className="my-panel min-h-0 flex-1 overflow-hidden p-2.5">
             <ErrorTable data={tableData} isLoading={isLoading} error={error} onDelete={onDelete} />
           </div>
         </Tabs.Content>
-        <Tabs.Content value={Tab.Review} tabIndex={-1} className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden">
+        <Tabs.Content
+          value={Tab.Review}
+          tabIndex={-1}
+          className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden"
+        >
           <div className="my-panel min-h-0 flex-1 overflow-hidden">
             <ReviewDetail errorData={localErrorWordData} dict={dict} />
           </div>
         </Tabs.Content>
       </div>
     </Tabs.Root>
-  )
+  );
 }

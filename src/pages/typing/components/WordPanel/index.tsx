@@ -1,100 +1,99 @@
-import { useAtomValue, useSetAtom } from 'jotai'
-import clsx from 'clsx'
-import { useCallback, useContext, useMemo, useRef, useState } from 'react'
-import { useHotkeys } from 'react-hotkeys-hook'
-import { putWordReviewRecord } from '@/shared/lib/db/review-record'
-import { isReviewModeAtom, phoneticConfigAtom, reviewModeInfoAtom } from '@/shared/state'
-import { isShowPrevAndNextWordAtom, loopWordConfigAtom } from '@/pages/typing/state'
-import type { Word } from '@/shared/types'
-import { usePrefetchPronunciationSound } from '../../hooks/usePronunciation'
-import { TypingContext, TypingStateActionType } from '@/pages/typing/store'
+import clsx from 'clsx';
+import { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { putWordReviewRecord } from '@/shared/lib/db/review-record';
+import { usePracticeSessionStore, useSharedPreferencesStore } from '@/shared/stores';
+import { useTypingPreferencesStore } from '@/pages/typing/stores';
+import type { Word } from '@/shared/types';
+import { usePrefetchPronunciationSound } from '../../hooks/usePronunciation';
+import { TypingContext, TypingStateActionType } from '@/pages/typing/store';
 
-import { PrevAndNextWord } from '../PrevAndNextWord'
-import { Progress } from '../Progress'
-import { Phonetic } from '@/shared/components/word-display'
-import { Translation } from './components/Translation'
-import { WordComponent } from './components/Word'
+import { PrevAndNextWord } from '../PrevAndNextWord';
+import { Progress } from '../Progress';
+import { Phonetic } from '@/shared/components/word-display';
+import { Translation } from './components/Translation';
+import { WordComponent } from './components/Word';
 
 export const WordPanel = () => {
-  const { state, dispatch } = useContext(TypingContext)!
-  const phoneticConfig = useAtomValue(phoneticConfigAtom)
-  const isShowPrevAndNextWord = useAtomValue(isShowPrevAndNextWordAtom)
-  const { times: loopWordTimes } = useAtomValue(loopWordConfigAtom)
-  const isReviewMode = useAtomValue(isReviewModeAtom)
-  const setReviewModeInfo = useSetAtom(reviewModeInfoAtom)
+  const { state, dispatch } = useContext(TypingContext)!;
+  const phoneticConfig = useSharedPreferencesStore((state) => state.phoneticConfig);
+  const isShowPrevAndNextWord = useTypingPreferencesStore((state) => state.isShowPrevAndNextWord);
+  const loopWordTimes = useTypingPreferencesStore((state) => state.loopWordConfig.times);
+  const isReviewMode = usePracticeSessionStore((state) => state.reviewModeInfo.isReviewMode);
+  const setReviewModeInfo = usePracticeSessionStore((state) => state.setReviewModeInfo);
 
-  const [wordComponentKey, setWordComponentKey] = useState(0)
-  const [currentWordExerciseCount, setCurrentWordExerciseCount] = useState(0)
-  const lastFinishedTokenRef = useRef<string | null>(null)
+  const [wordComponentKey, setWordComponentKey] = useState(0);
+  const [currentWordExerciseCount, setCurrentWordExerciseCount] = useState(0);
+  const lastFinishedTokenRef = useRef<string | null>(null);
 
-  const currentWord = state.chapterData.words[state.chapterData.index]
-  const nextWord = state.chapterData.words[state.chapterData.index + 1] as Word | undefined
-  const currentFinishToken = `${state.chapterData.index}:${wordComponentKey}:${currentWordExerciseCount}`
-  const targetNextIndex = state.chapterData.index + 1
+  const currentWord = state.chapterData.words[state.chapterData.index];
+  const nextWord = state.chapterData.words[state.chapterData.index + 1] as Word | undefined;
+  const currentFinishToken = `${state.chapterData.index}:${wordComponentKey}:${currentWordExerciseCount}`;
+  const targetNextIndex = state.chapterData.index + 1;
 
   const prevIndex = useMemo(() => {
-    const newIndex = state.chapterData.index - 1
-    return newIndex < 0 ? 0 : newIndex
-  }, [state.chapterData.index])
+    const newIndex = state.chapterData.index - 1;
+    return newIndex < 0 ? 0 : newIndex;
+  }, [state.chapterData.index]);
 
   const nextIndex = useMemo(() => {
-    const newIndex = state.chapterData.index + 1
-    return newIndex > state.chapterData.words.length - 1 ? state.chapterData.words.length - 1 : newIndex
-  }, [state.chapterData.index, state.chapterData.words.length])
+    const newIndex = state.chapterData.index + 1;
+    return newIndex > state.chapterData.words.length - 1 ? state.chapterData.words.length - 1 : newIndex;
+  }, [state.chapterData.index, state.chapterData.words.length]);
 
-  usePrefetchPronunciationSound(nextWord?.name)
+  usePrefetchPronunciationSound(nextWord?.name);
 
   const reloadCurrentWordComponent = useCallback(() => {
-    setWordComponentKey((old) => old + 1)
-  }, [])
+    setWordComponentKey((old) => old + 1);
+  }, []);
 
   const onFinish = useCallback(() => {
     if (lastFinishedTokenRef.current === currentFinishToken) {
-      return
+      return;
     }
 
-    lastFinishedTokenRef.current = currentFinishToken
+    lastFinishedTokenRef.current = currentFinishToken;
 
     if (state.chapterData.index < state.chapterData.words.length - 1 || currentWordExerciseCount < loopWordTimes - 1) {
       if (currentWordExerciseCount < loopWordTimes - 1) {
-        setCurrentWordExerciseCount((old) => old + 1)
-        dispatch({ type: TypingStateActionType.LOOP_CURRENT_WORD })
-        reloadCurrentWordComponent()
+        setCurrentWordExerciseCount((old) => old + 1);
+        dispatch({ type: TypingStateActionType.LOOP_CURRENT_WORD });
+        reloadCurrentWordComponent();
       } else {
-        setCurrentWordExerciseCount(0)
+        setCurrentWordExerciseCount(0);
         if (isReviewMode) {
           setReviewModeInfo((old) => {
             if (!old.reviewRecord) {
-              return old
+              return old;
             }
 
-            const updatedReviewRecord = { ...old.reviewRecord, index: targetNextIndex }
-            void putWordReviewRecord(updatedReviewRecord)
+            const updatedReviewRecord = { ...old.reviewRecord, index: targetNextIndex };
+            void putWordReviewRecord(updatedReviewRecord);
 
             return {
               ...old,
               reviewRecord: updatedReviewRecord,
-            }
-          })
+            };
+          });
         }
-        dispatch({ type: TypingStateActionType.SKIP_2_WORD_INDEX, newIndex: targetNextIndex })
+        dispatch({ type: TypingStateActionType.SKIP_2_WORD_INDEX, newIndex: targetNextIndex });
       }
     } else {
-      dispatch({ type: TypingStateActionType.FINISH_CHAPTER })
+      dispatch({ type: TypingStateActionType.FINISH_CHAPTER });
       if (isReviewMode) {
         setReviewModeInfo((old) => {
           if (!old.reviewRecord) {
-            return old
+            return old;
           }
 
-          const updatedReviewRecord = { ...old.reviewRecord, isFinished: true }
-          void putWordReviewRecord(updatedReviewRecord)
+          const updatedReviewRecord = { ...old.reviewRecord, isFinished: true };
+          void putWordReviewRecord(updatedReviewRecord);
 
           return {
             ...old,
             reviewRecord: updatedReviewRecord,
-          }
-        })
+          };
+        });
       }
     }
   }, [
@@ -108,38 +107,38 @@ export const WordPanel = () => {
     isReviewMode,
     setReviewModeInfo,
     targetNextIndex,
-  ])
+  ]);
 
   const onSkipWord = useCallback(
     (type: 'prev' | 'next') => {
       if (type === 'prev') {
-        dispatch({ type: TypingStateActionType.SKIP_2_WORD_INDEX, newIndex: prevIndex })
+        dispatch({ type: TypingStateActionType.SKIP_2_WORD_INDEX, newIndex: prevIndex });
       }
 
       if (type === 'next') {
-        dispatch({ type: TypingStateActionType.SKIP_2_WORD_INDEX, newIndex: nextIndex })
+        dispatch({ type: TypingStateActionType.SKIP_2_WORD_INDEX, newIndex: nextIndex });
       }
     },
     [dispatch, prevIndex, nextIndex],
-  )
+  );
 
   useHotkeys(
     'ctrl+shift+arrowleft',
     (e) => {
-      e.preventDefault()
-      onSkipWord('prev')
+      e.preventDefault();
+      onSkipWord('prev');
     },
     { preventDefault: true },
-  )
+  );
 
   useHotkeys(
     'ctrl+shift+arrowright',
     (e) => {
-      e.preventDefault()
-      onSkipWord('next')
+      e.preventDefault();
+      onSkipWord('next');
     },
     { preventDefault: true },
-  )
+  );
 
   return (
     <div className="container flex h-full w-full flex-col items-center justify-center">
@@ -165,7 +164,11 @@ export const WordPanel = () => {
         {currentWord && (
           <div className="relative flex w-full justify-center">
             <div className="relative flex w-full max-w-[min(86vw,56rem)] flex-col items-center">
-              <WordComponent word={currentWord} onFinish={onFinish} key={`${state.chapterData.index}-${wordComponentKey}`} />
+              <WordComponent
+                word={currentWord}
+                onFinish={onFinish}
+                key={`${state.chapterData.index}-${wordComponentKey}`}
+              />
               {phoneticConfig.isOpen && <Phonetic word={currentWord} />}
               <Translation trans={currentWord.trans.join('；')} showTrans={state.isTransVisible} />
             </div>
@@ -175,5 +178,5 @@ export const WordPanel = () => {
 
       <Progress className={clsx('mt-6 mb-8', state.isTyping ? 'opacity-100' : 'opacity-0')} />
     </div>
-  )
-}
+  );
+};

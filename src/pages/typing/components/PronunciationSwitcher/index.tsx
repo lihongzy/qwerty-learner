@@ -1,13 +1,12 @@
-import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
-import { LANG_PRON_MAP } from '@/shared/resources/soundResource'
-import { currentDictInfoAtom, phoneticConfigAtom } from '@/shared/state'
-import { pronunciationConfigAtom } from '@/pages/typing/state'
-import type { PronunciationType } from '@/shared/types'
-import { useAtom, useAtomValue } from 'jotai'
-import { Popover, Select, Switch } from 'radix-ui'
-import { memo, useCallback, useEffect, useMemo } from 'react'
-import IconCheck from '~icons/tabler/check'
-import IconChevronDown from '~icons/tabler/chevron-down'
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip';
+import { LANG_PRON_MAP } from '@/shared/resources/soundResource';
+import { selectCurrentDictInfo, usePracticeSessionStore, useSharedPreferencesStore } from '@/shared/stores';
+import { useTypingPreferencesStore } from '@/pages/typing/stores';
+import type { PronunciationType } from '@/shared/types';
+import { Popover, Select, Switch } from 'radix-ui';
+import { memo, useCallback, useEffect, useMemo } from 'react';
+import IconCheck from '~icons/tabler/check';
+import IconChevronDown from '~icons/tabler/chevron-down';
 
 const PRONUNCIATION_PHONETIC_MAP: Partial<Record<PronunciationType, PronunciationType>> = {
   us: 'us',
@@ -19,30 +18,30 @@ const PRONUNCIATION_PHONETIC_MAP: Partial<Record<PronunciationType, Pronunciatio
   hapin: 'hapin',
   kk: 'kk',
   id: 'id',
-}
+};
 
 const switchRootClassName =
-  'relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border border-border-main bg-bg-elevated transition-colors duration-200 ease-in-out focus:outline-none data-[state=checked]:bg-accent-primary'
+  'relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border border-border-main bg-bg-elevated transition-colors duration-200 ease-in-out focus:outline-none data-[state=checked]:bg-accent-primary';
 
 const switchThumbClassName =
-  'pointer-events-none inline-block h-4 w-4 translate-x-0 rounded-full bg-bg-panel-strong shadow-app-soft ring-0 transition duration-200 ease-in-out data-[state=checked]:translate-x-[25px]'
+  'pointer-events-none inline-block h-4 w-4 translate-x-0 rounded-full bg-bg-panel-strong shadow-app-soft ring-0 transition duration-200 ease-in-out data-[state=checked]:translate-x-[25px]';
 
 const selectTriggerClassName =
-  'flex h-10 w-36 items-center justify-between rounded-lg border border-border-main bg-bg-panel px-3 text-left text-sm text-text-strong shadow-app-soft transition-colors focus:outline-none'
+  'flex h-10 w-36 items-center justify-between rounded-lg border border-border-main bg-bg-panel px-3 text-left text-sm text-text-strong shadow-app-soft transition-colors focus:outline-none';
 
-const selectContentClassName = 'z-30 overflow-hidden rounded-md border border-border-main bg-bg-panel shadow-app-soft'
-const selectViewportClassName = 'p-1'
+const selectContentClassName = 'z-30 overflow-hidden rounded-md border border-border-main bg-bg-panel shadow-app-soft';
+const selectViewportClassName = 'p-1';
 
 const selectItemClassName =
-  'relative flex cursor-pointer select-none items-center rounded-md py-2 pl-9 pr-8 text-sm text-text-main outline-none data-[highlighted]:bg-accent-primary-soft data-[highlighted]:text-text-strong'
+  'relative flex cursor-pointer select-none items-center rounded-md py-2 pl-9 pr-8 text-sm text-text-main outline-none data-[highlighted]:bg-accent-primary-soft data-[highlighted]:text-text-strong';
 
 type SettingRowProps = {
-  label: string
-  checked: boolean
-  onCheckedChange: (value: boolean) => void
-  checkedText: string
-  uncheckedText: string
-}
+  label: string;
+  checked: boolean;
+  onCheckedChange: (value: boolean) => void;
+  checkedText: string;
+  uncheckedText: string;
+};
 
 function SettingRow({ label, checked, onCheckedChange, checkedText, uncheckedText }: SettingRowProps) {
   return (
@@ -52,102 +51,117 @@ function SettingRow({ label, checked, onCheckedChange, checkedText, uncheckedTex
         <Switch.Root checked={checked} onCheckedChange={onCheckedChange} className={switchRootClassName}>
           <Switch.Thumb className={switchThumbClassName} />
         </Switch.Root>
-        <span className="text-text-muted text-right text-xs leading-tight font-normal">{checked ? checkedText : uncheckedText}</span>
+        <span className="text-text-muted text-right text-xs leading-tight font-normal">
+          {checked ? checkedText : uncheckedText}
+        </span>
       </div>
     </div>
-  )
+  );
 }
 
 const PronunciationSwitcherComponent = () => {
-  const currentDictInfo = useAtomValue(currentDictInfoAtom)
-  const [pronunciationConfig, setPronunciationConfig] = useAtom(pronunciationConfigAtom)
-  const [phoneticConfig, setPhoneticConfig] = useAtom(phoneticConfigAtom)
+  const currentDictId = usePracticeSessionStore((state) => state.currentDictId);
+  const currentDictInfo = useMemo(() => selectCurrentDictInfo(currentDictId), [currentDictId]);
+  const pronunciationConfig = useTypingPreferencesStore((state) => state.pronunciationConfig);
+  const setPronunciationConfig = useTypingPreferencesStore((state) => state.setPronunciationConfig);
+  const phoneticConfig = useSharedPreferencesStore((state) => state.phoneticConfig);
+  const setPhoneticConfig = useSharedPreferencesStore((state) => state.setPhoneticConfig);
 
-  const pronunciationList = useMemo(() => LANG_PRON_MAP[currentDictInfo.language].pronunciation, [currentDictInfo.language])
+  const pronunciationList = useMemo(
+    () => LANG_PRON_MAP[currentDictInfo.language].pronunciation,
+    [currentDictInfo.language],
+  );
 
   useEffect(() => {
-    const defaultPronIndex = currentDictInfo.defaultPronIndex ?? LANG_PRON_MAP[currentDictInfo.language].defaultPronIndex
-    const defaultPron = pronunciationList[defaultPronIndex]
-    const currentPronIndex = pronunciationList.findIndex((item) => item.pron === pronunciationConfig.type)
+    const defaultPronIndex =
+      currentDictInfo.defaultPronIndex ?? LANG_PRON_MAP[currentDictInfo.language].defaultPronIndex;
+    const defaultPron = pronunciationList[defaultPronIndex];
+    const currentPronIndex = pronunciationList.findIndex((item) => item.pron === pronunciationConfig.type);
 
     if (currentPronIndex === -1 && defaultPron) {
       setPronunciationConfig((old) => ({
         ...old,
         type: defaultPron.pron,
         name: defaultPron.name,
-      }))
+      }));
     }
-  }, [currentDictInfo.defaultPronIndex, currentDictInfo.language, pronunciationConfig.type, pronunciationList, setPronunciationConfig])
+  }, [
+    currentDictInfo.defaultPronIndex,
+    currentDictInfo.language,
+    pronunciationConfig.type,
+    pronunciationList,
+    setPronunciationConfig,
+  ]);
 
   useEffect(() => {
-    const phoneticType = PRONUNCIATION_PHONETIC_MAP[pronunciationConfig.type]
+    const phoneticType = PRONUNCIATION_PHONETIC_MAP[pronunciationConfig.type];
     if (phoneticType) {
       setPhoneticConfig((old) => ({
         ...old,
         type: phoneticType,
-      }))
+      }));
     }
-  }, [pronunciationConfig.type, setPhoneticConfig])
+  }, [pronunciationConfig.type, setPhoneticConfig]);
 
   const onChangePronunciationIsOpen = useCallback(
     (value: boolean) => {
       setPronunciationConfig((old) => ({
         ...old,
         isOpen: value,
-      }))
+      }));
     },
     [setPronunciationConfig],
-  )
+  );
 
   const onChangePronunciationIsTransRead = useCallback(
     (value: boolean) => {
       setPronunciationConfig((old) => ({
         ...old,
         isTransRead: value,
-      }))
+      }));
     },
     [setPronunciationConfig],
-  )
+  );
 
   const onChangePronunciationIsLoop = useCallback(
     (value: boolean) => {
       setPronunciationConfig((old) => ({
         ...old,
         isLoop: value,
-      }))
+      }));
     },
     [setPronunciationConfig],
-  )
+  );
 
   const onChangePhoneticIsOpen = useCallback(
     (value: boolean) => {
       setPhoneticConfig((old) => ({
         ...old,
         isOpen: value,
-      }))
+      }));
     },
     [setPhoneticConfig],
-  )
+  );
 
   const onChangePronunciationType = useCallback(
     (value: string) => {
-      const item = pronunciationList.find((pronunciationItem) => pronunciationItem.pron === value)
+      const item = pronunciationList.find((pronunciationItem) => pronunciationItem.pron === value);
       if (item) {
         setPronunciationConfig((old) => ({
           ...old,
           type: item.pron,
           name: item.name,
-        }))
+        }));
       }
     },
     [pronunciationList, setPronunciationConfig],
-  )
+  );
 
   const currentLabel = useMemo(() => {
-    return pronunciationConfig.isOpen ? pronunciationConfig.name : '关闭'
-  }, [pronunciationConfig.isOpen, pronunciationConfig.name])
+    return pronunciationConfig.isOpen ? pronunciationConfig.name : '关闭';
+  }, [pronunciationConfig.isOpen, pronunciationConfig.name]);
 
-  const canUseSpeechSynthesis = typeof window !== 'undefined' && 'speechSynthesis' in window
+  const canUseSpeechSynthesis = typeof window !== 'undefined' && 'speechSynthesis' in window;
 
   return (
     <Popover.Root>
@@ -237,9 +251,9 @@ const PronunciationSwitcherComponent = () => {
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
-  )
-}
+  );
+};
 
-export const PronunciationSwitcher = memo(PronunciationSwitcherComponent)
+export const PronunciationSwitcher = memo(PronunciationSwitcherComponent);
 
-export default PronunciationSwitcher
+export default PronunciationSwitcher;

@@ -1,52 +1,53 @@
-import { useEffect, useMemo } from 'react'
-import { useAtom, useAtomValue } from 'jotai'
-import useSWR from 'swr'
+import { useEffect, useMemo } from 'react';
+import useSWR from 'swr';
 
-import { currentChapterAtom, currentDictInfoAtom, reviewModeInfoAtom } from '@/shared/state'
-import { wordListFetcher } from '@/shared/utils/wordListFetcher'
-import { Word, WordWithIndex } from '@/shared/types'
-import { CHAPTER_LENGTH } from '@/shared/constants'
+import { selectCurrentDictInfo, usePracticeSessionStore } from '@/shared/stores';
+import { wordListFetcher } from '@/shared/utils/wordListFetcher';
+import { Word, WordWithIndex } from '@/shared/types';
+import { CHAPTER_LENGTH } from '@/shared/constants';
 
 /** 获取词列表的结果类型 */
 export type UseWordListResult = {
-  words: WordWithIndex[]
-  isLoading: boolean
-  error: Error | undefined
-}
+  words: WordWithIndex[];
+  isLoading: boolean;
+  error: Error | undefined;
+};
 
 /**
  * 获取当前选中的词典的词列表
  * 根据当前章节、复习模式等条件返回对应的单词数据
  */
 export const useWordList = (): UseWordListResult => {
-  const currentDictInfo = useAtomValue(currentDictInfoAtom)
-  const [currentChapter, setCurrentChapter] = useAtom(currentChapterAtom)
-  const { isReviewMode, reviewRecord } = useAtomValue(reviewModeInfoAtom)
+  const currentDictId = usePracticeSessionStore((state) => state.currentDictId);
+  const currentDictInfo = useMemo(() => selectCurrentDictInfo(currentDictId), [currentDictId]);
+  const currentChapter = usePracticeSessionStore((state) => state.currentChapter);
+  const setCurrentChapter = usePracticeSessionStore((state) => state.setCurrentChapter);
+  const { isReviewMode, reviewRecord } = usePracticeSessionStore((state) => state.reviewModeInfo);
 
   // 当 currentChapter 超出章节总数时，重置为 0
   useEffect(() => {
     if (currentChapter >= currentDictInfo.chapterCount) {
-      setCurrentChapter(0)
+      setCurrentChapter(0);
     }
-  }, [currentChapter, currentDictInfo.chapterCount, setCurrentChapter])
+  }, [currentChapter, currentDictInfo.chapterCount, setCurrentChapter]);
 
-  const { data: wordList, error, isLoading } = useSWR(currentDictInfo.url, wordListFetcher)
+  const { data: wordList, error, isLoading } = useSWR(currentDictInfo.url, wordListFetcher);
 
   const words: WordWithIndex[] = useMemo(() => {
     const newWords: Word[] = isReviewMode
       ? (reviewRecord?.words ?? [])
       : wordList
         ? wordList.slice(currentChapter * CHAPTER_LENGTH, (currentChapter + 1) * CHAPTER_LENGTH)
-        : []
+        : [];
 
     return newWords.map((word, index) => ({
       ...word,
       index,
       trans: normalizeTrans(word.trans),
-    }))
-  }, [isReviewMode, wordList, reviewRecord?.words, currentChapter])
-  return { words, isLoading, error }
-}
+    }));
+  }, [isReviewMode, wordList, reviewRecord?.words, currentChapter]);
+  return { words, isLoading, error };
+};
 
 /**
  * 规范化翻译字段 trans
@@ -54,10 +55,10 @@ export const useWordList = (): UseWordListResult => {
  */
 const normalizeTrans = (trans: Word['trans']): string[] => {
   if (Array.isArray(trans)) {
-    return trans.filter((item): item is string => typeof item === 'string')
+    return trans.filter((item): item is string => typeof item === 'string');
   }
   if (trans === null || trans === undefined || typeof trans === 'object') {
-    return []
+    return [];
   }
-  return [String(trans)]
-}
+  return [String(trans)];
+};

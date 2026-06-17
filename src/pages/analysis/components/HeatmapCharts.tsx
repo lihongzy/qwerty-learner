@@ -1,26 +1,25 @@
-import { isOpenDarkModeAtom } from '@/app/state/theme'
-import { useAtomValue } from 'jotai'
-import { useMemo } from 'react'
-import type { Activity, DayName } from 'react-activity-calendar'
-import { ActivityCalendar } from 'react-activity-calendar'
-import { useWindowSize } from 'usehooks-ts'
+import { useThemeStore } from '@/app/stores/theme';
+import { useMemo } from 'react';
+import type { Activity, DayName } from 'react-activity-calendar';
+import { ActivityCalendar } from 'react-activity-calendar';
+import { useWindowSize } from 'usehooks-ts';
 
 interface HeatmapChartsProps {
-  title: string
-  data: Activity[]
+  title: string;
+  data: Activity[];
 }
 
 type CalendarConfig = {
-  blockSize: number
-  blockRadius: number
-  fontSize: number
-  padding: string
-  showWeekdayLabels: boolean | DayName[]
-}
+  blockSize: number;
+  blockRadius: number;
+  fontSize: number;
+  padding: string;
+  showWeekdayLabels: boolean | DayName[];
+};
 
 export default function HeatmapCharts({ data, title }: HeatmapChartsProps) {
-  const isOpenDarkMode = useAtomValue(isOpenDarkModeAtom)
-  const { width = 0 } = useWindowSize()
+  const isOpenDarkMode = useThemeStore((state) => state.isOpenDarkMode);
+  const { width = 0 } = useWindowSize();
 
   const calendarConfig = useMemo<CalendarConfig>(() => {
     if (width < 768) {
@@ -30,7 +29,7 @@ export default function HeatmapCharts({ data, title }: HeatmapChartsProps) {
         fontSize: 11,
         padding: '16px 8px 8px 8px',
         showWeekdayLabels: false,
-      }
+      };
     }
 
     if (width < 1280) {
@@ -40,7 +39,7 @@ export default function HeatmapCharts({ data, title }: HeatmapChartsProps) {
         fontSize: 13,
         padding: '20px 12px 12px 12px',
         showWeekdayLabels: ['mon', 'wed', 'fri'],
-      }
+      };
     }
 
     return {
@@ -49,14 +48,16 @@ export default function HeatmapCharts({ data, title }: HeatmapChartsProps) {
       fontSize: 14,
       padding: '24px 16px 12px 16px',
       showWeekdayLabels: true,
-    }
-  }, [width])
+    };
+  }, [width]);
 
   return (
     <div className="flex w-full flex-col items-center justify-center overflow-hidden">
       <div className="mb-4 flex w-full items-start justify-between gap-4">
         <div>
-          <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[var(--text-faint)]">Heatmap</div>
+          <div className="text-[0.68rem] font-semibold tracking-[0.24em] text-[var(--text-faint)] uppercase">
+            Heatmap
+          </div>
           <div className="mt-1 text-xl font-semibold tracking-tight text-[var(--text-strong)]">{title}</div>
         </div>
       </div>
@@ -94,5 +95,5 @@ export default function HeatmapCharts({ data, title }: HeatmapChartsProps) {
         />
       </div>
     </div>
-  )
+  );
 }

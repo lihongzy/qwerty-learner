@@ -2,9 +2,9 @@ import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { WordPronunciationIcon } from '@/shared/components/WordPronunciationIcon';
-import { currentDictInfoAtom } from '@/shared/state';
+import { selectCurrentDictInfo, usePracticeSessionStore } from '@/shared/stores';
 import type { Word } from '@/shared/types';
-import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
 
 type WordCardProps = {
   word: Word;
@@ -12,7 +12,8 @@ type WordCardProps = {
 };
 
 export const WordCard = ({ word, isActive }: WordCardProps) => {
-  const currentLanguage = useAtomValue(currentDictInfoAtom).language;
+  const currentDictId = usePracticeSessionStore((state) => state.currentDictId);
+  const currentLanguage = useMemo(() => selectCurrentDictInfo(currentDictId).language, [currentDictId]);
 
   return (
     <Card

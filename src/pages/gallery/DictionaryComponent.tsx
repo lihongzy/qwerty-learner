@@ -1,31 +1,30 @@
-import * as Progress from '@radix-ui/react-progress'
-import clsx from 'clsx'
-import { useAtomValue } from 'jotai'
-import { useMemo } from 'react'
-import { useIntersectionObserver } from 'usehooks-ts'
-import bookCover from '@/assets/book-cover.png'
-import { currentDictIdAtom } from '@/shared/state'
-import type { Dictionary } from '@/shared/types/resource'
-import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
-import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
-import { calcChapterCount } from '@/shared/utils'
-import DictDetail from './DictDetail'
-import { useDictStats } from './hooks/useDictStats'
+import * as Progress from '@radix-ui/react-progress';
+import clsx from 'clsx';
+import { useMemo } from 'react';
+import { useIntersectionObserver } from 'usehooks-ts';
+import bookCover from '@/assets/book-cover.png';
+import { usePracticeSessionStore } from '@/shared/stores';
+import type { Dictionary } from '@/shared/types/resource';
+import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog';
+import { TooltipHint as Tooltip } from '@/shared/ui/tooltip';
+import { calcChapterCount } from '@/shared/utils';
+import DictDetail from './DictDetail';
+import { useDictStats } from './hooks/useDictStats';
 
 interface Props {
-  dictionary: Dictionary
+  dictionary: Dictionary;
 }
 
 export default function DictionaryComponent({ dictionary }: Props) {
-  const currentDictID = useAtomValue(currentDictIdAtom)
-  const { ref, isIntersecting } = useIntersectionObserver({ freezeOnceVisible: true })
-  const dictStats = useDictStats(dictionary.id, isIntersecting)
-  const chapterCount = useMemo(() => calcChapterCount(dictionary.length), [dictionary.length])
-  const isSelected = currentDictID === dictionary.id
+  const currentDictID = usePracticeSessionStore((state) => state.currentDictId);
+  const { ref, isIntersecting } = useIntersectionObserver({ freezeOnceVisible: true });
+  const dictStats = useDictStats(dictionary.id, isIntersecting);
+  const chapterCount = useMemo(() => calcChapterCount(dictionary.length), [dictionary.length]);
+  const isSelected = currentDictID === dictionary.id;
   const progress = useMemo(
     () => (dictStats ? Math.ceil((dictStats.exercisedChapterCount / chapterCount) * 100) : 0),
     [chapterCount, dictStats],
-  )
+  );
 
   return (
     <Dialog>
@@ -34,7 +33,7 @@ export default function DictionaryComponent({ dictionary }: Props) {
           type="button"
           ref={ref}
           className={clsx(
-            'my-focus-ring group relative flex min-h-[12rem] cursor-pointer overflow-hidden rounded-app-md border p-5 text-left shadow-app-soft transition-colors duration-200',
+            'my-focus-ring group rounded-app-md shadow-app-soft relative flex min-h-[12rem] cursor-pointer overflow-hidden border p-5 text-left transition-colors duration-200',
             isSelected
               ? 'border-accent-primary bg-accent-primary-soft'
               : 'border-border-main bg-bg-panel hover:border-accent-primary',
@@ -52,13 +51,13 @@ export default function DictionaryComponent({ dictionary }: Props) {
             </div>
 
             <div className="mt-5 grid grid-cols-2 gap-3">
-              <div className="rounded-app-md border border-border-main bg-bg-elevated px-3 py-2">
+              <div className="rounded-app-md border-border-main bg-bg-elevated border px-3 py-2">
                 <div className="text-text-faint text-xs">词数</div>
                 <div className="text-text-strong mt-1 font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-base font-semibold">
                   {dictionary.length}
                 </div>
               </div>
-              <div className="rounded-app-md border border-border-main bg-bg-elevated px-3 py-2">
+              <div className="rounded-app-md border-border-main bg-bg-elevated border px-3 py-2">
                 <div className="text-text-faint text-xs">章节</div>
                 <div className="text-text-strong mt-1 font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-base font-semibold">
                   {chapterCount}
@@ -71,8 +70,15 @@ export default function DictionaryComponent({ dictionary }: Props) {
                 <span>进度</span>
                 <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace]">{progress}%</span>
               </div>
-              <Progress.Root value={progress} max={100} className="bg-bg-ghost h-1.5 w-full overflow-hidden rounded-full">
-                <Progress.Indicator className="bg-accent-primary h-full rounded-full" style={{ width: `${progress}%` }} />
+              <Progress.Root
+                value={progress}
+                max={100}
+                className="bg-bg-ghost h-1.5 w-full overflow-hidden rounded-full"
+              >
+                <Progress.Indicator
+                  className="bg-accent-primary h-full rounded-full"
+                  style={{ width: `${progress}%` }}
+                />
               </Progress.Root>
             </div>
           </div>
@@ -82,5 +88,5 @@ export default function DictionaryComponent({ dictionary }: Props) {
         <DictDetail dictionary={dictionary} />
       </DialogContent>
     </Dialog>
-  )
+  );
 }

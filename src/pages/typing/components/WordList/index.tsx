@@ -4,8 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { TypingContext, TypingStateActionType } from '@/pages/typing/store';
-import { currentChapterAtom, currentDictInfoAtom, isReviewModeAtom } from '@/shared/state';
-import { useAtomValue } from 'jotai';
+import { selectCurrentDictInfo, usePracticeSessionStore } from '@/shared/stores';
 import { useContext, useMemo, useState } from 'react';
 import ListIcon from '~icons/tabler/list';
 import IconX from '~icons/tabler/x';
@@ -17,9 +16,10 @@ const sheetContentClassName =
 export const WordList = () => {
   const { state, dispatch } = useContext(TypingContext)!;
   const [isOpen, setIsOpen] = useState(false);
-  const currentDictInfo = useAtomValue(currentDictInfoAtom);
-  const currentChapter = useAtomValue(currentChapterAtom);
-  const isReviewMode = useAtomValue(isReviewModeAtom);
+  const currentDictId = usePracticeSessionStore((state) => state.currentDictId);
+  const currentChapter = usePracticeSessionStore((state) => state.currentChapter);
+  const isReviewMode = usePracticeSessionStore((state) => state.reviewModeInfo.isReviewMode);
+  const currentDictInfo = useMemo(() => selectCurrentDictInfo(currentDictId), [currentDictId]);
 
   const currentDictTitle = useMemo(() => {
     if (isReviewMode) {
