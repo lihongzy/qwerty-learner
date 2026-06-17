@@ -111,7 +111,7 @@ export default function SharePicDialog({ showState, setShowState, randomChoose }
               {imageURL ? (
                 <img src={imageURL} alt="分享练习结果" className="w-full rounded-xl" />
               ) : (
-                <div className="flex aspect-[3/4] w-full items-center justify-center rounded-xl border">
+                <div className="flex aspect-3/4 w-full items-center justify-center rounded-xl border">
                   <svg
                     className="mr-3 -ml-1 h-5 w-5 animate-spin"
                     xmlns="http://www.w3.org/2000/svg"

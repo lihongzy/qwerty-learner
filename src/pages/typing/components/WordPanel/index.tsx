@@ -143,12 +143,10 @@ export const WordPanel = () => {
   return (
     <div className="container flex h-full w-full flex-col items-center justify-center">
       {!state.isTyping && (
-        <div className="rounded-app-lg bg-bg-overlay/80 absolute inset-0 z-20 flex items-center justify-center overflow-hidden backdrop-blur-sm">
-          <div className="px-6 text-center">
-            <p className="text-text-strong text-2xl font-semibold select-none">
-              {state.timerData.time ? '按任意键继续练习' : '按任意键开始练习'}
-            </p>
-          </div>
+        <div className="absolute inset-0 z-20 flex items-center justify-center rounded-lg bg-black/10 backdrop-blur-sm">
+          <p className="text-2xl font-semibold select-none">
+            {state.timerData.time ? '按任意键继续练习' : '按任意键开始练习'}
+          </p>
         </div>
       )}
       <div className="container flex w-full justify-between">
