@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useImmerReducer } from 'use-immer';
 import { usePracticeSessionStore } from '@/shared/stores';
 import { useTypingPreferencesStore } from '@/pages/typing/stores';
@@ -10,7 +10,6 @@ import { initialState, TypingStateActionType, typingReducer } from './store';
 
 export function useTypingSession() {
   const [state, dispatch] = useImmerReducer(typingReducer, structuredClone(initialState));
-  const [isLoading, setIsLoading] = useState(true);
   const hasSavedChapterRecordRef = useRef(false);
 
   const { words } = useWordList();
@@ -18,6 +17,10 @@ export function useTypingSession() {
   const reviewModeInfo = usePracticeSessionStore((store) => store.reviewModeInfo);
   const isReviewMode = usePracticeSessionStore((store) => store.reviewModeInfo.isReviewMode);
   const saveChapterRecord = useSaveChapterRecord();
+
+  // 派生是否就绪：reducer 已派发 SETUP_CHAPTER 即视为可练习。
+  // 避免用 useState + useEffect 同步同一份派生值，减少一帧延迟与额外渲染。
+  const isLoading = state.chapterData.words.length === 0;
 
   const skipWord = useCallback(() => {
     dispatch({ type: TypingStateActionType.SKIP_WORD });
@@ -42,10 +45,6 @@ export function useTypingSession() {
       },
     });
   }, [dispatch, isReviewMode, randomConfig.isOpen, reviewModeInfo.reviewRecord?.index, words]);
-
-  useEffect(() => {
-    setIsLoading(state.chapterData.words.length === 0);
-  }, [state.chapterData.words.length]);
 
   useEffect(() => {
     // 窗口失焦时立即暂停，避免计时和输入状态继续推进。

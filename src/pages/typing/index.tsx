@@ -17,19 +17,8 @@ import { useTypingSession } from './useTypingSession';
 const TypingPage = () => {
   const session = useTypingSession();
   const isFinished = session.state.isFinished;
-
-  let mainContent: React.ReactNode = null;
-
-  if (session.isLoading) {
-    mainContent = (
-      <div className="flex flex-col items-center gap-3 text-center">
-        <div className="border-accent-primary/25 border-t-accent-primary h-10 w-10 animate-spin rounded-full border-4" />
-        <h2 className="text-text-muted text-sm font-medium">加载中...</h2>
-      </div>
-    );
-  } else if (!isFinished) {
-    mainContent = <WordPanel />;
-  }
+  // 不再在开局显示加载动画：单词列表与 SETUP_CHAPTER 在同一渲染周期内就绪，
+  // 任何空内容状态交由 WordPanel 内部的"按任意键开始"蒙层处理，避免闪屏。
 
   return (
     <TypingContext.Provider value={{ state: session.state, dispatch: session.dispatch }}>
@@ -66,7 +55,7 @@ const TypingPage = () => {
 
         <div className="mx-auto flex h-full w-full max-w-6xl flex-1 flex-col items-center justify-center px-4">
           <div className="relative flex h-full w-full flex-col items-center">
-            <div className="flex grow items-center justify-center">{mainContent}</div>
+            <div className="flex grow items-center justify-center">{!isFinished && <WordPanel />}</div>
 
             <Speed />
           </div>
