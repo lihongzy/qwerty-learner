@@ -5,13 +5,11 @@ import { useNavigate } from 'react-router';
 import IconCoffee from '~icons/mdi/coffee';
 import IconGithub from '~icons/simple-icons/github';
 import IconExportWords from '~icons/icon-park-outline/excel';
-import { useInfoPanelStore } from '@/app/stores/info-panel';
 import { TypingContext, TypingStateActionType } from '@/pages/typing/store';
 import { useTypingPreferencesStore } from '@/pages/typing/stores';
 import { selectCurrentDictInfo, usePracticeSessionStore } from '@/shared/stores';
-import { InfoPanelType } from '@/shared/types';
+import { DonateDialog } from '@/shared/components/DonateDialog';
 import { RESULT_SCREEN_COPY } from './copy';
-import styles from './index.module.css';
 import { ResultScreenFooter } from './components/ResultScreenFooter';
 import { ResultScreenHeader } from './components/ResultScreenHeader';
 import { AuthorButton } from './components/ResultScreenParts';
@@ -32,6 +30,7 @@ export const ResultScreen = () => {
   const { state, dispatch } = useContext(TypingContext)!;
   const navigate = useNavigate();
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [isDonateDialogOpen, setIsDonateDialogOpen] = useState(false);
 
   // Global state provides the current practice scope and whether the screen is being shown
   // as a normal chapter result or as a review-session result.
@@ -43,7 +42,6 @@ export const ResultScreen = () => {
   const setReviewModeInfo = usePracticeSessionStore((state) => state.setReviewModeInfo);
   const randomConfig = useTypingPreferencesStore((state) => state.randomConfig);
   const setWordDictationConfig = useTypingPreferencesStore((state) => state.setWordDictationConfig);
-  const setInfoPanelState = useInfoPanelStore((state) => state.setInfoPanelState);
 
   // Everything below is derived from the finished typing snapshot.
   // Keeping these values memoized avoids recalculating the same presentation data
@@ -92,15 +90,6 @@ export const ResultScreen = () => {
       console.log(RESULT_SCREEN_COPY.xlsxLoadFailed);
     });
   }, [exportFileName, state.chapterData]);
-
-  // Footer and header actions both open shared app-level info panels, so that state
-  // is funneled through the central store instead of local dialog-only state.
-  const handleOpenInfoPanel = useCallback(
-    (modalType: InfoPanelType) => {
-      setInfoPanelState((previous) => ({ ...previous, [modalType]: true }));
-    },
-    [setInfoPanelState],
-  );
 
   // Dictation mode is a follow-up action from the result screen: reopen the chapter
   // immediately and mark the dictation panel as auto-opened by this transition.
@@ -240,8 +229,8 @@ export const ResultScreen = () => {
         title: RESULT_SCREEN_COPY.donateTitle,
         className:
           'hover:border-amber-300 hover:text-amber-500 dark:hover:border-amber-500/50 dark:hover:text-amber-300',
-        onClick: () => handleOpenInfoPanel('donate'),
-        icon: <IconCoffee fontSize={17} className={styles.imgShake} />,
+        onClick: () => setIsDonateDialogOpen(true),
+        icon: <IconCoffee fontSize={17} />,
       },
       {
         key: 'github',
@@ -252,7 +241,7 @@ export const ResultScreen = () => {
     );
 
     return buttons;
-  }, [exportWords, handleOpenInfoPanel, isReviewMode]);
+  }, [exportWords, isReviewMode]);
 
   useEffect(() => {
     // Force one timer tick when the result screen appears so elapsed time is fully flushed
@@ -261,7 +250,7 @@ export const ResultScreen = () => {
   }, [dispatch]);
 
   // Keep result-screen hotkeys local to the overlay so repeat/next actions remain available after finishing a chapter.
-  const areResultHotkeysEnabled = state.isFinished && !isShareDialogOpen;
+  const areResultHotkeysEnabled = state.isFinished && !isShareDialogOpen && !isDonateDialogOpen;
 
   useHotkeys(
     'enter',
@@ -287,28 +276,31 @@ export const ResultScreen = () => {
   );
 
   return (
-    <Dialog.Root open={state.isFinished} onOpenChange={handleResultScreenOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="bg-mask data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-30 backdrop-blur-sm" />
+    <>
+      <DonateDialog open={isDonateDialogOpen} onOpenChange={setIsDonateDialogOpen} />
+      <Dialog.Root open={state.isFinished} onOpenChange={handleResultScreenOpenChange}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="bg-mask data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 fixed inset-0 z-30 backdrop-blur-sm" />
 
-        <Dialog.Content className="bg-bg-panel shadow-app-panel border-border-main data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-40 flex h-[min(620px,calc(100vh-1.25rem))] w-[min(920px,calc(100vw-1.25rem))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[1.45rem] border outline-none">
-          <ResultScreenHeader chapterTitle={chapterTitle} utilityButtons={utilityButtons} />
+          <Dialog.Content className="bg-bg-panel shadow-app-panel border-border-main data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 fixed top-1/2 left-1/2 z-40 flex h-[min(620px,calc(100vh-1.25rem))] w-[min(920px,calc(100vw-1.25rem))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[1.45rem] border outline-none">
+            <ResultScreenHeader chapterTitle={chapterTitle} utilityButtons={utilityButtons} />
 
-          {/* Main body is intentionally split into a narrow metric rail and a single flexible review panel. */}
-          <div className="relative min-h-0 flex-1 overflow-hidden px-3.5 py-2.5 sm:px-4 lg:px-5">
-            <div className="grid h-full gap-2 lg:grid-cols-[128px_minmax(0,1fr)]">
-              <ResultScreenStatsRail
-                accuracy={state.timerData.accuracy}
-                timeString={timeString}
-                wpm={state.timerData.wpm}
-              />
-              <ResultScreenReviewPanel wrongWords={wrongWords} mistakeLevel={mistakeLevel} />
+            {/* Main body is intentionally split into a narrow metric rail and a single flexible review panel. */}
+            <div className="relative min-h-0 flex-1 overflow-hidden px-3.5 py-2.5 sm:px-4 lg:px-5">
+              <div className="grid h-full gap-2 lg:grid-cols-[128px_minmax(0,1fr)]">
+                <ResultScreenStatsRail
+                  accuracy={state.timerData.accuracy}
+                  timeString={timeString}
+                  wpm={state.timerData.wpm}
+                />
+                <ResultScreenReviewPanel wrongWords={wrongWords} mistakeLevel={mistakeLevel} />
+              </div>
             </div>
-          </div>
 
-          <ResultScreenFooter actionButtons={actionButtons} />
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+            <ResultScreenFooter actionButtons={actionButtons} />
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
   );
 };

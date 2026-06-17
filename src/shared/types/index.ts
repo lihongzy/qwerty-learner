@@ -16,20 +16,15 @@ export type WordWithIndex = Word & {
   index: number;
 };
 
-export type InfoPanelType = "donate" | "vsc" | "community" | "redBook";
-export type InfoPanelState = {
-  [key in InfoPanelType]: boolean;
-};
+export type LoopWordTimesOption = 1 | 3 | 5 | 8 | typeof Number.MAX_SAFE_INTEGER;
 
-export type LoopWordTimesOption = 1 | 3 | 5 | 8 | typeof Number.MAX_SAFE_INTEGER
-
-export type WordDictationType = 'hideAll' | 'hideVowel' | 'hideConsonant' | 'randomHide'
+export type WordDictationType = 'hideAll' | 'hideVowel' | 'hideConsonant' | 'randomHide';
 /**
  * 标记用户是手动打开默写模式，还是通过点击resultScreen中的默写本章节按钮打开的
- * 
+ *
  * 预期行为是，在进入下一章节时，如果是手动打开的默写模式，则保持设定
  * 如果时通过点击resultScreen中的默写本章按钮打开额，则关闭默写模式
  */
-export type WordDictationOpenBy = 'auto' | 'user'
+export type WordDictationOpenBy = 'auto' | 'user';
 
-export type PronunciationType = 'us' | 'uk' | 'romaji' | 'zh' | 'ja' | 'de' | 'hapin' | 'kk' | 'id'
+export type PronunciationType = 'us' | 'uk' | 'romaji' | 'zh' | 'ja' | 'de' | 'hapin' | 'kk' | 'id';
