@@ -1,30 +1,11 @@
-import Loader from '@/shared/components/Loading'
-import { Suspense, useEffect, useState } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
-import { desktopRoutes, sharedRoutes } from './routes'
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 600)
-
-  useEffect(() => {
-    const handleResize = () => {
-      const nextIsMobile = window.innerWidth <= 600
-      if (!nextIsMobile) {
-        window.location.href = '/'
-      }
-      setIsMobile(nextIsMobile)
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  return isMobile
-}
+import Loader from '@/shared/components/Loading';
+import { Suspense } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
+import { desktopRoutes, sharedRoutes } from './routes';
+import { useMediaQuery } from 'usehooks-ts';
 
 export function AppRouter() {
-  const isMobile = useIsMobile()
-
+  const isMobile = useMediaQuery('(max-width: 600px)');
   return (
     <BrowserRouter>
       <Suspense fallback={<Loader />}>
@@ -45,5 +26,5 @@ export function AppRouter() {
         </Routes>
       </Suspense>
     </BrowserRouter>
-  )
+  );
 }
