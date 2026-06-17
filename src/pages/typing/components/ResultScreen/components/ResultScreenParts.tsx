@@ -1,8 +1,8 @@
-import { flip, offset, shift, useFloating, useHover, useInteractions, useRole } from '@floating-ui/react';
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { ElementType, ReactNode, SVGAttributes } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import IconExclamationTriangle from '~icons/heroicons/exclamation-triangle-solid';
 import IconHandThumbUp from '~icons/heroicons/hand-thumb-up-solid';
@@ -178,15 +178,6 @@ export function ResultScreenIconButton({ title, icon, className = '', onClick, h
 export function WordChip({ word }: { word: WordWithIndex }) {
   const currentDictId = usePracticeSessionStore((state) => state.currentDictId);
   const currentDictInfo = useMemo(() => selectCurrentDictInfo(currentDictId), [currentDictId]);
-  const [showTranslation, setShowTranslation] = useState(false);
-  const { x, y, strategy, refs, context } = useFloating({
-    open: showTranslation,
-    onOpenChange: setShowTranslation,
-    middleware: [offset(4), shift(), flip()],
-  });
-  const hover = useHover(context);
-  const role = useRole(context, { role: 'tooltip' });
-  const { getReferenceProps, getFloatingProps } = useInteractions([hover, role]);
   const pronunciationTarget = getPronunciationTarget(word, currentDictInfo.language);
   const { play, stop } = usePronunciationSound(pronunciationTarget, false);
 
@@ -196,34 +187,19 @@ export function WordChip({ word }: { word: WordWithIndex }) {
   }, [play, stop]);
 
   return (
-    <>
-      <button
-        ref={refs.setReference}
-        className="border-border-main bg-bg-elevated hover:border-accent-primary shadow-app-soft inline-flex h-10 w-fit max-w-full shrink-0 cursor-pointer items-center justify-center rounded-xl border px-3 py-0.5 transition-colors duration-150 select-all md:h-11 md:px-4"
-        {...getReferenceProps()}
-        type="button"
-        onClick={onClickWord}
-        title={`朗读 ${pronunciationTarget}`}
-      >
-        <span className="text-text-strong font-mono text-[1.7rem] leading-none font-light whitespace-nowrap md:text-[2rem]">
-          {word.name}
-        </span>
-      </button>
-      {showTranslation && (
-        <div
-          ref={refs.setFloating}
-          className="border-border-main bg-bg-panel text-text-muted shadow-app-soft pointer-events-none flex max-w-xs items-center justify-center rounded-xl border px-2.5 py-1.5 text-xs"
-          style={{
-            position: strategy,
-            top: y ?? 0,
-            left: x ?? 0,
-            width: 'max-content',
-          }}
-          {...getFloatingProps()}
-        >
-          <span className="break-words whitespace-normal">{word.trans}</span>
-        </div>
-      )}
-    </>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            className="h-10 font-mono text-xl font-light md:h-11 md:text-2xl"
+            onClick={onClickWord}
+          >
+            {word.name}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>{word.trans.join('；')}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }

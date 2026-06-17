@@ -53,12 +53,9 @@ const TypingPage = () => {
           </TooltipProvider>
         </Header>
 
-        <div className="mx-auto flex h-full w-full max-w-6xl flex-1 flex-col items-center justify-center px-4">
-          <div className="relative flex h-full w-full flex-col items-center">
-            <div className="flex grow items-center justify-center">{!isFinished && <WordPanel />}</div>
-
-            <Speed />
-          </div>
+        <div className="mx-auto flex h-full w-full max-w-6xl flex-1 flex-col items-center px-4">
+          <div className="flex grow items-center justify-center">{!isFinished && <WordPanel />}</div>
+          <Speed />
         </div>
       </Layout>
 
