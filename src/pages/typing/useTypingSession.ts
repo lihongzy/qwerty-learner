@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useImmerReducer } from 'use-immer';
 import { usePracticeSessionStore } from '@/shared/stores';
 import { useTypingPreferencesStore } from '@/pages/typing/stores';
-import { isDesktop, isLegal } from '@/shared/utils';
+import { isLegal } from '@/shared/utils';
 import { useSaveChapterRecord } from '@/shared/lib/db';
 import { useConfetti } from './hooks/useConfetti';
 import { useWordList } from './hooks/useWordList';
@@ -24,17 +24,6 @@ export function useTypingSession() {
   }, [dispatch]);
 
   useConfetti(state.isFinished);
-
-  useEffect(() => {
-    // 移动端暂时使用兜底提示，后续应改成页面内提示条，避免阻塞交互。
-    if (!isDesktop()) {
-      const timerId = window.setTimeout(() => {
-        alert('Qwerty Learner 暂未针对移动端进行优化，请使用桌面浏览器，或改用连接硬件键盘的平板设备。');
-      }, 500);
-
-      return () => window.clearTimeout(timerId);
-    }
-  }, []);
 
   useEffect(() => {
     if (words === undefined) {
