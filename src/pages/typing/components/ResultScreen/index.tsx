@@ -274,7 +274,7 @@ export const ResultScreen = () => {
   return (
     <>
       <DonateDialog open={isDonateDialogOpen} onOpenChange={setIsDonateDialogOpen} />
-      <Dialog open={true} onOpenChange={handleResultScreenOpenChange}>
+      <Dialog open={state.isFinished} onOpenChange={handleResultScreenOpenChange}>
         <DialogContent className="overflow-hidden p-0 sm:max-w-4xl">
           <ResultScreenHeader chapterTitle={chapterTitle} utilityButtons={utilityButtons} />
 

@@ -12,7 +12,7 @@ import { selectCurrentDictInfo, usePracticeSessionStore } from '@/shared/stores'
 import { getPronunciationTarget } from '@/shared/lib/pronunciation';
 import type { WordWithIndex } from '@/shared/types';
 import clamp from '@/shared/utils';
-import { usePronunciationSound } from '../../../hooks/usePronunciation';
+import { usePronunciationSound } from '@/pages/typing/hooks/usePronunciation';
 
 export type ConclusionBarProps = {
   mistakeLevel: number;
