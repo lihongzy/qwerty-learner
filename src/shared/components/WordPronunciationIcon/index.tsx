@@ -1,5 +1,5 @@
 import { SoundIcon } from './SoundIcon'
-import { usePronunciationSound } from '@/features/typing/hooks/usePronunciation.ts'
+import { usePronunciationSound } from '@/pages/typing/hooks/usePronunciation.ts'
 import { getPronunciationTarget } from '@/shared/lib/pronunciation'
 import type { Word } from '@/shared/types'
 import clsx from 'clsx'

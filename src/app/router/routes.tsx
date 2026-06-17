@@ -1,9 +1,9 @@
-import AnalysisPage from '@/features/analysis'
-import ErrorBookPage from '@/features/error-book'
-import FriendLinkPage from '@/features/friend-link'
-import GalleryPage from '@/features/gallery'
-import { MobilePage } from '@/features/mobile'
-import TypingPage from '@/features/typing'
+import AnalysisPage from '@/pages/analysis'
+import ErrorBookPage from '@/pages/error-book'
+import FriendLinkPage from '@/pages/friend-link'
+import GalleryPage from '@/pages/gallery'
+import { MobilePage } from '@/pages/mobile'
+import TypingPage from '@/pages/typing'
 import type { ReactNode } from 'react'
 
 export type AppRoute = {
