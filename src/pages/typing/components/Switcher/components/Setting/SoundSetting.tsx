@@ -190,7 +190,7 @@ export default function SoundSetting() {
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position="popper">
                 {keySoundResources.map(({ key, name }) => (
                   <SelectItem key={key} value={key}>
                     {name}
