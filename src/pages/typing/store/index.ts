@@ -132,8 +132,12 @@ export const typingReducer = (state: TypingState, action: TypingStateAction) => 
       state.chapterData.userInputLogs[state.chapterData.index].correctCount += 1;
       break;
     }
+    case TypingStateActionType.SET_IS_SKIP:
+      state.isShowSkip = action.payload;
+      break;
     case TypingStateActionType.REPORT_WRONG_WORD: {
       state.chapterData.wrongCount += 1;
+      state.isShowSkip = true;
       const wordLog = state.chapterData.userInputLogs[state.chapterData.index];
       wordLog.wrongCount += 1;
       wordLog.LetterMistakes = mergeLetterMistake(wordLog.LetterMistakes, action.payload.letterMistake);

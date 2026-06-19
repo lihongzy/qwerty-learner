@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { Button } from '@/components/ui/button';
 import { DonateCard } from '@/pages/typing/components/DonateCard';
 import { Header } from '@/app/layout/Header';
 import { Layout } from '@/app/layout/Layout';
@@ -35,18 +35,14 @@ const TypingPage = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button
-                  className={clsx(
-                    'my-btn-primary transition-all duration-300',
-                    // 显示时使用警示色强调可跳过状态；隐藏时同时移除占位和点击能力，避免影响头部布局。
-                    session.state.isShowSkip
-                      ? 'border-accent-warn bg-accent-warn opacity-100'
-                      : 'pointer-events-none invisible w-0 border-transparent px-0 opacity-0',
-                  )}
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className={session.state.isShowSkip ? '' : 'pointer-events-none invisible w-0 px-0 opacity-0'}
                   onClick={session.skipWord}
                 >
                   跳过
-                </button>
+                </Button>
               </TooltipTrigger>
               <TooltipContent>跳过这个单词</TooltipContent>
             </Tooltip>
