@@ -320,7 +320,7 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
       >
         <div
           className={clsx(
-            'relative flex min-h-[7.75rem] max-w-[min(84vw,48rem)] min-w-[min(70vw,40rem)] flex-col items-center justify-center overflow-hidden px-6 py-4',
+            'relative flex min-h-31 max-w-[min(84vw,48rem)] min-w-[min(70vw,40rem)] flex-col items-center justify-center overflow-hidden px-6 py-4',
           )}
           data-tip="按 Tab 快捷键显示完整单词"
         >
@@ -328,7 +328,7 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
             onMouseEnter={() => setIsHoveringWord(true)}
             onMouseLeave={() => setIsHoveringWord(false)}
             className={clsx(
-              'relative flex min-h-[4rem] items-center justify-center px-2 text-center',
+              'relative flex min-h-16 items-center justify-center px-2 text-center',
               wordState.hasWrong && 'my-word-wrong',
             )}
           >
