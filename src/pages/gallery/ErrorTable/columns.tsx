@@ -1,25 +1,20 @@
-import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
-import type { ColumnDef, SortDirection } from '@tanstack/react-table'
-import DeleteIcon from '~icons/weui/delete-filled'
-import PhArrowsDownUpFill from '~icons/ph/arrows-down-up-fill'
-import type { TErrorWordData } from '../hooks/useErrorWords'
+import type { ColumnDef, SortDirection } from '@tanstack/react-table';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import DeleteIcon from '~icons/weui/delete-filled';
+import PhArrowsDownUpFill from '~icons/ph/arrows-down-up-fill';
+import type { TErrorWordData } from '../hooks/useErrorWords';
 
 export type ErrorColumn = {
-  word: string
-  trans: string
-  errorCount: number
-  errorChar: string[]
-}
-
-const sortButtonClassName =
-  'my-focus-ring text-text-main hover:text-accent-primary inline-flex items-center rounded-md px-1 py-1 text-sm font-medium transition-colors duration-150'
+  word: string;
+  trans: string;
+  errorCount: number;
+  errorChar: string[];
+};
 
 function getSortLabel(label: string, sorting: false | SortDirection) {
-  if (!sorting) {
-    return `${label}，当前未排序`
-  }
-
-  return sorting === 'desc' ? `${label}，当前降序` : `${label}，当前升序`
+  if (!sorting) return `${label}，当前未排序`;
+  return sorting === 'desc' ? `${label}，当前降序` : `${label}，当前升序`;
 }
 
 export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnDef<ErrorColumn>[] => [
@@ -27,20 +22,19 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
     accessorKey: 'word',
     size: 120,
     header: ({ column }) => {
-      const sorting = column.getIsSorted()
-
+      const sorting = column.getIsSorted();
       return (
         <button
           type="button"
           tabIndex={-1}
-          className={sortButtonClassName}
+          className="text-muted-foreground hover:text-foreground inline-flex items-center rounded-md px-1 py-1 text-sm font-medium transition-colors"
           aria-label={getSortLabel('单词', sorting)}
           onClick={() => column.toggleSorting(sorting === 'asc')}
         >
           单词
           <PhArrowsDownUpFill className="ml-1.5 h-4 w-4" />
         </button>
-      )
+      );
     },
   },
   {
@@ -52,27 +46,22 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
     accessorKey: 'errorCount',
     size: 90,
     header: ({ column }) => {
-      const sorting = column.getIsSorted()
-
+      const sorting = column.getIsSorted();
       return (
         <button
           type="button"
           tabIndex={-1}
-          className={sortButtonClassName}
+          className="text-muted-foreground hover:text-foreground inline-flex items-center rounded-md px-1 py-1 text-sm font-medium transition-colors"
           aria-label={getSortLabel('错误次数', sorting)}
           onClick={() => column.toggleSorting(sorting === 'asc')}
         >
           错误次数
           <PhArrowsDownUpFill className="ml-1.5 h-4 w-4" />
         </button>
-      )
+      );
     },
     cell: ({ row }) => {
-      return (
-        <span className="text-accent-warn font-['IBM_Plex_Mono','JetBrains_Mono',monospace] font-semibold">
-          {row.original.errorCount}
-        </span>
-      )
+      return <span className="text-destructive font-mono font-semibold">{row.original.errorCount}</span>;
     },
   },
   {
@@ -84,14 +73,14 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
         <div className="flex flex-wrap gap-1.5">
           {(row.getValue('errorChar') as string[]).map((char, index) => (
             <kbd
-              className="border-border-main bg-bg-ghost text-text-main inline-flex min-w-6 items-center justify-center rounded-md border px-2 py-0.5 text-xs"
+              className="bg-muted inline-flex min-w-6 items-center justify-center rounded-md border px-2 py-0.5 text-xs"
               key={`${char}-${index}`}
             >
               {char}
             </kbd>
           ))}
         </div>
-      )
+      );
     },
   },
   {
@@ -100,29 +89,29 @@ export const errorColumns = (onDelete: (word: string) => Promise<void>): ColumnD
     size: 48,
     cell: ({ row }) => {
       return (
-        <Tooltip content="删除记录">
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-label={`删除 ${row.original.word} 的错词记录`}
-            className="my-focus-ring border-border-soft bg-bg-ghost text-text-muted hover:border-state-error hover:text-state-error inline-flex h-8 w-8 items-center justify-center rounded-md border transition-colors duration-150"
-            onClick={() => void onDelete(row.original.word)}
-          >
-            <DeleteIcon />
-          </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label={`删除 ${row.original.word} 的错词记录`}
+              onClick={() => void onDelete(row.original.word)}
+            >
+              <DeleteIcon />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>删除记录</TooltipContent>
         </Tooltip>
-      )
+      );
     },
   },
-]
+];
 
 export function getRowsFromErrorWordData(data: TErrorWordData[]): ErrorColumn[] {
-  return data.map((item) => {
-    return {
-      word: item.word,
-      trans: item.originData.trans.join('; '),
-      errorCount: item.errorCount,
-      errorChar: item.errorChar,
-    }
-  })
+  return data.map((item) => ({
+    word: item.word,
+    trans: item.originData.trans.join('; '),
+    errorCount: item.errorCount,
+    errorChar: item.errorChar,
+  }));
 }

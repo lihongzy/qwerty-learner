@@ -1,42 +1,35 @@
-import { InfoPanel } from '@/shared/components/InfoPanel'
-import { useState } from 'react'
-import IconBook2 from '~icons/tabler/book-2'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import IconBook2 from '~icons/tabler/book-2';
 
 export default function DictRequest() {
-  const [showPanel, setShowPanel] = useState(false)
-
-  const onOpenQwertyLearnerAi = () => {
-    window.open('https://qwertylearner.ai', '_blank')
-    setShowPanel(false)
-  }
+  const [showPanel, setShowPanel] = useState(false);
 
   return (
     <>
-      <button
-        onClick={() => setShowPanel(true)}
-        className="inline-flex items-center gap-2 rounded-md border border-border-main bg-bg-panel px-4 py-2.5 text-sm font-medium text-text-main shadow-app-soft transition-colors duration-150 hover:border-accent-primary hover:text-text-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cool/40"
-      >
-        <IconBook2 className="h-4 w-4 text-accent-primary" />
+      <Button variant="outline" onClick={() => setShowPanel(true)}>
+        <IconBook2 />
         <span>词库征集</span>
-      </button>
+      </Button>
 
-      {showPanel && (
-        <InfoPanel
-          openState={showPanel}
-          title="词库征集"
-          icon={IconBook2}
-          buttonClassName="bg-accent-primary hover:bg-accent-primary-hover"
-          iconClassName="bg-accent-primary-soft text-accent-primary"
-          onClose={() => setShowPanel(false)}
-        >
+      <Dialog open={showPanel} onOpenChange={setShowPanel}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogTitle className="flex items-center gap-3">
+            <span className="bg-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+              <IconBook2 className="h-5 w-5" />
+            </span>
+            词库征集
+          </DialogTitle>
+
           <div className="space-y-4">
-            <div className="rounded-app-md border border-border-main bg-bg-elevated px-4 py-4">
-              <h4 className="mb-2 text-sm font-semibold text-text-strong">提交自定义词库</h4>
-              <p className="text-sm leading-6 text-text-muted">
+            <div className="rounded-lg border p-4">
+              <h4 className="mb-2 text-sm font-semibold">提交自定义词库</h4>
+              <p className="text-muted-foreground text-sm">
                 想补充新词库，可以先阅读
                 <a
                   href="https://github.com/Kaiyiwing/qwerty-learner/blob/master/docs/toBuildDict.md"
-                  className="mx-1 font-medium text-accent-primary transition-colors hover:text-accent-primary-hover"
+                  className="text-primary mx-1 font-medium hover:underline"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -46,24 +39,28 @@ export default function DictRequest() {
               </p>
             </div>
 
-            <div className="rounded-app-md border border-border-main bg-bg-panel px-4 py-4 shadow-app-soft">
-              <h4 className="mb-2 text-sm font-semibold text-text-strong">试试 QwertyLearner.ai</h4>
-              <p className="text-sm leading-6 text-text-muted">需要更快整理词条、释义或例句时，可以用它辅助生成和整理内容。</p>
-
-              <button
-                onClick={onOpenQwertyLearnerAi}
-                className="mt-4 inline-flex w-full items-center justify-center rounded-app-sm bg-accent-primary px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-accent-primary-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cool/40"
+            <div className="rounded-lg border p-4">
+              <h4 className="mb-2 text-sm font-semibold">试试 QwertyLearner.ai</h4>
+              <p className="text-muted-foreground text-sm">
+                需要更快整理词条、释义或例句时，可以用它辅助生成和整理内容。
+              </p>
+              <Button
+                className="mt-4 w-full"
+                onClick={() => {
+                  window.open('https://qwertylearner.ai', '_blank');
+                  setShowPanel(false);
+                }}
               >
                 打开 QwertyLearner.ai
-              </button>
+              </Button>
             </div>
 
-            <div className="rounded-app-md border border-accent-warn/20 bg-accent-warn/10 px-4 py-3 text-xs leading-6 text-text-main">
+            <div className="border-destructive/20 bg-destructive/10 rounded-lg border px-4 py-3 text-xs">
               QwertyLearner.ai 不是内置服务。
             </div>
           </div>
-        </InfoPanel>
-      )}
+        </DialogContent>
+      </Dialog>
     </>
-  )
+  );
 }
