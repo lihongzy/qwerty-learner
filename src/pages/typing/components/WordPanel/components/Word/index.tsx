@@ -319,7 +319,6 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
         lang={currentLanguageCategory !== 'code' ? currentLanguageCategory : 'en'}
         className="flex flex-col items-center justify-center gap-2 pt-3 pb-1"
       >
-        {['romaji', 'hapin'].includes(currentLanguage) && word.notation && <Notation notation={word.notation} />}
         <div
           className={clsx(
             'relative flex min-h-[7.75rem] max-w-[min(84vw,48rem)] min-w-[min(70vw,40rem)] flex-col items-center justify-center overflow-hidden px-6 py-4',
