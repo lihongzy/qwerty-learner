@@ -13,7 +13,6 @@ import { getUTCUnixTimestamp } from '@/shared/utils';
 import useKeySounds from '@/pages/typing/hooks/useKeySounds';
 import { TypingContext, TypingStateActionType } from '@/pages/typing/store';
 import { InputHandler, type WordUpdateAction } from '../InputHandler';
-import { getTypingTarget } from '../../input-profile';
 import { TipAlert } from './TipAlert';
 import { Letter } from '@/shared/components/word-display';
 import { initialWordState, type WordState } from './type';
@@ -42,7 +41,7 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
   const [isShowingFullWord, setIsShowingFullWord] = useState(false);
   const saveWordRecord = useSaveWordRecord();
   const [playKeySound, playBeepSound, playHintSound] = useKeySounds();
-  const typingTarget = useMemo(() => getTypingTarget(word, currentDictInfo), [currentDictInfo, word]);
+  const typingTarget = word.name;
 
   useEffect(() => {
     let headword = '';
@@ -71,17 +70,6 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
 
         setWordState((draft) => {
           draft.inputWord = draft.inputWord.slice(0, Math.max(0, draft.inputWord.length - updateAction.length));
-        });
-        return;
-      }
-
-      if (updateAction.type === 'compose') {
-        if (wordState.hasWrong || updateAction.value.length === 0) {
-          return;
-        }
-
-        setWordState((draft) => {
-          draft.inputWord += updateAction.value;
         });
         return;
       }
