@@ -1,7 +1,6 @@
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCallback, useContext, useMemo } from 'react';
-import { TooltipHint as Tooltip } from '@/shared/ui/tooltip';
 import { TypingContext, TypingStateActionType } from '@/pages/typing/store';
-import { selectCurrentDictInfo, usePracticeSessionStore } from '@/shared/stores';
 import { useTypingPreferencesStore } from '@/pages/typing/stores';
 import IconNext from '~icons/tabler/arrow-narrow-right';
 import IconPrev from '~icons/tabler/arrow-narrow-left';
@@ -12,68 +11,46 @@ export type LastAndNextWordProps = {
 
 export const PrevAndNextWord = ({ type }: LastAndNextWordProps) => {
   const { state, dispatch } = useContext(TypingContext)!;
-  const wordDictationConfig = useTypingPreferencesStore((state) => state.wordDictationConfig);
-  const currentDictId = usePracticeSessionStore((state) => state.currentDictId);
-  const currentLanguage = useMemo(() => selectCurrentDictInfo(currentDictId).language, [currentDictId]);
+  const wordDictationConfig = useTypingPreferencesStore((s) => s.wordDictationConfig);
 
   const newIndex = useMemo(() => state.chapterData.index + (type === 'prev' ? -1 : 1), [state.chapterData.index, type]);
   const word = state.chapterData.words[newIndex];
-  const shortCutKey = useMemo(
-    () => (type === 'prev' ? 'Ctrl + Shift + ArrowLeft' : 'Ctrl + Shift + ArrowRight'),
-    [type],
-  );
+  const shortCutKey = type === 'prev' ? 'Ctrl + Shift + ←' : 'Ctrl + Shift + →';
 
   const onClickWord = useCallback(() => {
-    if (!word) {
-      return;
-    }
-
-    dispatch({ type: TypingStateActionType.SKIP_2_WORD_INDEX, newIndex });
+    if (word) dispatch({ type: TypingStateActionType.SKIP_2_WORD_INDEX, newIndex });
   }, [dispatch, newIndex, word]);
 
   const headWord = useMemo(() => {
-    if (!word) {
-      return '';
-    }
+    if (!word) return '';
+    if (type === 'prev') return word.name;
+    return wordDictationConfig.isOpen ? word.name.replace(/./g, '_') : word.name;
+  }, [type, word, wordDictationConfig.isOpen]);
 
-    const showWord = ['romaji', 'hapin'].includes(currentLanguage) ? word.notation || word.name : word.name;
-
-    if (type === 'prev') {
-      return showWord;
-    }
-
-    return wordDictationConfig.isOpen ? showWord.replace(/./g, '_') : showWord;
-  }, [currentLanguage, type, word, wordDictationConfig.isOpen]);
+  if (!word) return <div />;
 
   return (
-    <>
-      {word ? (
-        <Tooltip content={`快捷键：${shortCutKey}`}>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
           <div
             onClick={onClickWord}
-            className="text-text-muted flex max-w-xs cursor-pointer items-center opacity-60 transition-opacity duration-200 ease-in-out select-none hover:opacity-100"
+            className="text-muted-foreground flex max-w-xs cursor-pointer items-center opacity-60 transition-opacity select-none hover:opacity-100"
           >
-            {type === 'prev' && <IconPrev className="mr-4 shrink-0 grow-0 text-2xl" />}
-
-            <div className={`flex w-full grow flex-col ${type === 'next' ? 'items-end text-right' : ''}`}>
-              <p
-                className={`text-text-main font-mono text-2xl font-normal ${
-                  wordDictationConfig.isOpen ? 'tracking-wider' : 'tracking-normal'
-                }`}
-              >
+            {type === 'prev' && <IconPrev className="mr-4 shrink-0 text-2xl" />}
+            <div className={`flex grow flex-col ${type === 'next' ? 'items-end text-right' : ''}`}>
+              <p className={`font-mono text-2xl font-normal ${wordDictationConfig.isOpen ? 'tracking-wider' : ''}`}>
                 {headWord}
               </p>
               {state.isTransVisible && (
-                <p className="text-text-faint line-clamp-1 max-w-full text-sm font-normal">{word.trans.join('；')}</p>
+                <p className="text-muted-foreground line-clamp-1 max-w-full text-sm">{word.trans.join('；')}</p>
               )}
             </div>
-
-            {type === 'next' && <IconNext className="ml-4 shrink-0 grow-0 text-2xl" />}
+            {type === 'next' && <IconNext className="ml-4 shrink-0 text-2xl" />}
           </div>
-        </Tooltip>
-      ) : (
-        <div />
-      )}
-    </>
+        </TooltipTrigger>
+        <TooltipContent>快捷键：{shortCutKey}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
