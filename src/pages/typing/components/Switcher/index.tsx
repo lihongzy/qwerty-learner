@@ -41,24 +41,18 @@ const StaticSwitcherControls = memo(function StaticSwitcherControls() {
       <TooltipTip content="查看统计">
         <AnalysisButton />
       </TooltipTip>
-      <TooltipTip content="切换深色模式">
-        <button
-          className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-md p-0.5 text-lg transition-colors"
-          type="button"
-          onClick={(e) => {
-            setIsOpenDarkMode((old) => !old);
-            e.currentTarget.blur();
-          }}
-        >
-          {isOpenDarkMode ? <IconSun /> : <IconMoon />}
-        </button>
-      </TooltipTip>
-      <TooltipTip content="指法提示">
-        <HandPositionIllustration />
-      </TooltipTip>
-      <TooltipTip content="设置">
-        <Setting />
-      </TooltipTip>
+      <button
+        className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-md p-0.5 text-lg transition-colors"
+        type="button"
+        onClick={(e) => {
+          setIsOpenDarkMode((old) => !old);
+          e.currentTarget.blur();
+        }}
+      >
+        {isOpenDarkMode ? <IconSun /> : <IconMoon />}
+      </button>
+      <HandPositionIllustration />
+      <Setting />
     </>
   );
 });
@@ -75,20 +69,18 @@ export function Switcher() {
   return (
     <div className="flex items-center justify-center gap-2">
       <TooltipProvider>
-        <TooltipTip content="切换释义显示（Ctrl + Shift + V）">
-          <button
-            className={`hover:bg-muted rounded-md p-0.5 text-lg transition-colors ${
-              state?.isTransVisible ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-            }`}
-            type="button"
-            onClick={(e) => {
-              changeTransVisibleState();
-              e.currentTarget.blur();
-            }}
-          >
-            {state?.isTransVisible ? <IconLanguage /> : <IconLanguageOff />}
-          </button>
-        </TooltipTip>
+        <button
+          className={`hover:bg-muted rounded-md p-0.5 text-lg transition-colors ${
+            state?.isTransVisible ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+          }`}
+          type="button"
+          onClick={(e) => {
+            changeTransVisibleState();
+            e.currentTarget.blur();
+          }}
+        >
+          {state?.isTransVisible ? <IconLanguage /> : <IconLanguageOff />}
+        </button>
 
         <StaticSwitcherControls />
       </TooltipProvider>
