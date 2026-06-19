@@ -1,21 +1,13 @@
-import clsx from 'clsx';
 import { memo } from 'react';
 import { EXPLICIT_SPACE } from '@/shared/constants';
 import { useSharedPreferencesStore } from '@/shared/stores';
 
 export type LetterState = 'normal' | 'correct' | 'wrong';
 
-const stateClassNameMap: Record<string, Record<LetterState, string>> = {
-  true: {
-    normal: 'text-text-faint',
-    correct: 'text-state-success',
-    wrong: 'text-state-error',
-  },
-  false: {
-    normal: 'text-text-main',
-    correct: 'text-state-success',
-    wrong: 'text-state-error',
-  },
+const stateColor: Record<LetterState, string> = {
+  normal: '',
+  correct: 'text-green-600 dark:text-green-400',
+  wrong: 'text-red-600 dark:text-red-400',
 };
 
 export type LetterProps = {
@@ -25,15 +17,12 @@ export type LetterProps = {
 };
 
 export const Letter = memo(({ letter, state = 'normal', visible = true }: LetterProps) => {
-  const fontSizeConfig = useSharedPreferencesStore((state) => state.fontSizeConfig);
+  const fontSize = useSharedPreferencesStore((s) => s.fontSizeConfig.foreignFont);
 
   return (
     <span
-      className={clsx(
-        'm-0 p-0 font-mono font-normal duration-0',
-        stateClassNameMap[String(letter === EXPLICIT_SPACE)][state],
-      )}
-      style={{ fontSize: `${fontSizeConfig.foreignFont}px` }}
+      className={`m-0 p-0 font-mono font-normal ${letter === EXPLICIT_SPACE ? 'text-muted-foreground' : stateColor[state]}`}
+      style={{ fontSize: `${fontSize}px` }}
     >
       {visible ? letter : '_'}
     </span>

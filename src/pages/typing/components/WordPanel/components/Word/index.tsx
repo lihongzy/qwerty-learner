@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'r
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useImmer } from 'use-immer';
 import { EXPLICIT_SPACE } from '@/shared/constants';
-import { TooltipHint as Tooltip } from '@/shared/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { WordPronunciationIcon, type WordPronunciationIconRef } from '@/shared/components/WordPronunciationIcon';
 import { selectCurrentDictInfo, usePracticeSessionStore, useSharedPreferencesStore } from '@/shared/stores';
 import { useTypingPreferencesStore } from '@/pages/typing/stores';
@@ -14,7 +14,6 @@ import useKeySounds from '@/pages/typing/hooks/useKeySounds';
 import { TypingContext, TypingStateActionType } from '@/pages/typing/store';
 import { InputHandler, type WordUpdateAction } from '../InputHandler';
 import { getTypingTarget } from '../../input-profile';
-import { Notation } from './Notation';
 import { TipAlert } from './TipAlert';
 import { Letter } from '@/shared/components/word-display';
 import { initialWordState, type WordState } from './type';
@@ -346,15 +345,22 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
                 ))}
               </div>
               {pronunciationIsOpen && (
-                <Tooltip content="快捷键：Ctrl + J">
-                  <WordPronunciationIcon
-                    word={word}
-                    lang={currentLanguage}
-                    ref={wordPronunciationIconRef}
-                    className="text-text-faint hover:text-accent-primary focus-visible:ring-accent-cool/40 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors duration-150 focus:outline-none focus-visible:ring-2"
-                    iconClassName="h-4 w-4"
-                  />
-                </Tooltip>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="inline-flex">
+                        <WordPronunciationIcon
+                          word={word}
+                          lang={currentLanguage}
+                          ref={wordPronunciationIconRef}
+                          className="h-8 w-8 rounded-full"
+                          iconClassName="h-4 w-4"
+                        />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>快捷键：Ctrl + J</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
             </div>
           </div>
