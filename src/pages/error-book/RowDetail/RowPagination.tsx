@@ -1,82 +1,63 @@
 import { useErrorBookStore } from '../store';
 import type { groupedWordRecords } from '../type';
-import type { FC } from 'react';
 import { useCallback, useMemo } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import NextIcon from '~icons/ooui/next-ltr';
 import PrevIcon from '~icons/ooui/next-rtl';
 
-type IRowPaginationProps = {
+type Props = {
   className?: string;
   allRecords: groupedWordRecords[];
 };
 
-const navButtonClassName =
-  'my-focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-main)] bg-[var(--bg-ghost)] text-[var(--text-main)] transition-colors duration-150 hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]';
+const btnClass =
+  'inline-flex h-9 w-9 items-center justify-center rounded-full border transition-colors hover:border-primary hover:text-primary';
 
-const RowPagination: FC<IRowPaginationProps> = ({ className, allRecords }) => {
-  const currentRowDetail = useErrorBookStore((state) => state.currentRowDetail);
-  const setCurrentRowDetail = useErrorBookStore((state) => state.setCurrentRowDetail);
+export default function RowPagination({ className, allRecords }: Props) {
+  const currentRowDetail = useErrorBookStore((s) => s.currentRowDetail);
+  const setCurrentRowDetail = useErrorBookStore((s) => s.setCurrentRowDetail);
+
   const currentIndex = useMemo(() => {
     if (!currentRowDetail) return -1;
-    return allRecords.findIndex(
-      (record) => record.word === currentRowDetail.word && record.dict === currentRowDetail.dict,
-    );
+    return allRecords.findIndex((r) => r.word === currentRowDetail.word && r.dict === currentRowDetail.dict);
   }, [currentRowDetail, allRecords]);
 
-  const nextRowDetail = useCallback(() => {
-    if (!currentRowDetail) return;
+  const prev = useCallback(() => {
+    if (currentIndex > 0) setCurrentRowDetail(allRecords[currentIndex - 1]);
+  }, [currentIndex, allRecords, setCurrentRowDetail]);
 
-    const index = currentIndex;
-    if (index === -1) return;
-    const nextIndex = index + 1;
-    if (nextIndex >= allRecords.length) return;
-    setCurrentRowDetail(allRecords[nextIndex]);
-  }, [currentRowDetail, currentIndex, allRecords, setCurrentRowDetail]);
-
-  const prevRowDetail = useCallback(() => {
-    if (!currentRowDetail) return;
-
-    const index = currentIndex;
-    if (index === -1) return;
-    const prevIndex = index - 1;
-    if (prevIndex < 0) return;
-    setCurrentRowDetail(allRecords[prevIndex]);
-  }, [currentRowDetail, currentIndex, setCurrentRowDetail, allRecords]);
+  const next = useCallback(() => {
+    if (currentIndex < allRecords.length - 1) setCurrentRowDetail(allRecords[currentIndex + 1]);
+  }, [currentIndex, allRecords, setCurrentRowDetail]);
 
   useHotkeys(
     'left',
     (e) => {
-      prevRowDetail();
+      prev();
       e.stopPropagation();
     },
-    {
-      preventDefault: true,
-    },
+    { preventDefault: true },
   );
-
   useHotkeys(
     'right',
     (e) => {
-      nextRowDetail();
+      next();
       e.stopPropagation();
     },
-    {
-      preventDefault: true,
-    },
+    { preventDefault: true },
   );
 
   return (
     <div className={`flex items-center gap-2 select-none ${className ?? ''}`}>
-      <button className={navButtonClassName} onClick={prevRowDetail} disabled={currentIndex <= 0}>
+      <button className={btnClass} onClick={prev} disabled={currentIndex <= 0}>
         <PrevIcon />
       </button>
-      <span className="font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-sm text-[var(--text-main)]">{`${currentIndex + 1} / ${allRecords.length}`}</span>
-      <button className={navButtonClassName} onClick={nextRowDetail} disabled={currentIndex >= allRecords.length - 1}>
+      <span className="font-mono text-sm">
+        {currentIndex + 1} / {allRecords.length}
+      </span>
+      <button className={btnClass} onClick={next} disabled={currentIndex >= allRecords.length - 1}>
         <NextIcon />
       </button>
     </div>
   );
-};
-
-export default RowPagination;
+}
