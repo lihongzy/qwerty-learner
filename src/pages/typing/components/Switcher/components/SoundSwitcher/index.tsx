@@ -46,12 +46,15 @@ export default function SoundSwitcher() {
       </button>
 
       {open && (
-        <div className="bg-popover absolute top-full left-1/2 z-40 mt-2 w-48 -translate-x-1/2 rounded-lg border p-4 shadow-md">
-          <div className="flex flex-col gap-4">
-            <SettingRow label="按键音" checked={keySoundsConfig.isOpen} onCheckedChange={onChangeKeySound} />
-            <SettingRow label="提示音" checked={hintSoundsConfig.isOpen} onCheckedChange={onChangeHintSound} />
+        <>
+          <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
+          <div className="bg-popover absolute top-full left-1/2 z-40 mt-2 w-48 -translate-x-1/2 rounded-lg border p-4 shadow-md">
+            <div className="flex flex-col gap-4">
+              <SettingRow label="按键音" checked={keySoundsConfig.isOpen} onCheckedChange={onChangeKeySound} />
+              <SettingRow label="提示音" checked={hintSoundsConfig.isOpen} onCheckedChange={onChangeHintSound} />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
