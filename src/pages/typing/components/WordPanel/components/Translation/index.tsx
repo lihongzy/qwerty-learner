@@ -15,8 +15,6 @@ export type TranslationProps = {
 export const Translation = ({ trans, showTrans = true, onMouseEnter, onMouseLeave }: TranslationProps) => {
   const pronunciationConfig = useTypingPreferencesStore((state) => state.pronunciationConfig);
   const fontSizeConfig = useSharedPreferencesStore((state) => state.fontSizeConfig);
-  const isTextSelectable = useSharedPreferencesStore((state) => state.isTextSelectable);
-
   const isShowTransRead = window.speechSynthesis && pronunciationConfig.isTransRead;
   const speechOptions = useMemo(() => ({ volume: pronunciationConfig.transVolume }), [pronunciationConfig.transVolume]);
   const { speak, speaking } = useSpeech(trans, speechOptions);
@@ -33,9 +31,7 @@ export const Translation = ({ trans, showTrans = true, onMouseEnter, onMouseLeav
     >
       <div className="flex max-w-4xl items-start justify-center gap-2 px-8">
         <span
-          className={`text-text-main max-w-4xl text-center font-sans leading-[1.7] transition-opacity duration-200 ${
-            isTextSelectable ? 'select-text' : ''
-          } ${showTrans ? 'opacity-100' : 'opacity-0'}`}
+          className={`text-text-main max-w-4xl text-center font-sans leading-[1.7] transition-opacity duration-200 ${showTrans ? 'opacity-100' : 'opacity-0'}`}
           style={{ fontSize: `${fontSizeConfig.translateFont}px` }}
         >
           {showTrans ? trans : '\u00A0'}

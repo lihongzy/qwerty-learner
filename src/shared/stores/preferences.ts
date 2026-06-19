@@ -10,10 +10,8 @@ export type PhoneticConfig = {
 
 type SharedPreferencesStore = {
   fontSizeConfig: typeof defaultFontSizeConfig;
-  isTextSelectable: boolean;
   phoneticConfig: PhoneticConfig;
   setFontSizeConfig: (nextValue: StateUpdater<typeof defaultFontSizeConfig>) => void;
-  setIsTextSelectable: (nextValue: StateUpdater<boolean>) => void;
   setPhoneticConfig: (nextValue: StateUpdater<PhoneticConfig>) => void;
 };
 
@@ -24,20 +22,12 @@ const defaultPhoneticConfig: PhoneticConfig = {
 
 export const useSharedPreferencesStore = create<SharedPreferencesStore>((set) => ({
   fontSizeConfig: readStoredValue('fontsize', defaultFontSizeConfig),
-  isTextSelectable: readStoredValue('isTextSelectable', false),
   phoneticConfig: readStoredValue('phoneticConfig', defaultPhoneticConfig),
   setFontSizeConfig: (nextValue) => {
     set((state) => {
       const fontSizeConfig = resolveStateUpdater(state.fontSizeConfig, nextValue);
       writeStoredValue('fontsize', fontSizeConfig);
       return { fontSizeConfig };
-    });
-  },
-  setIsTextSelectable: (nextValue) => {
-    set((state) => {
-      const isTextSelectable = resolveStateUpdater(state.isTextSelectable, nextValue);
-      writeStoredValue('isTextSelectable', isTextSelectable);
-      return { isTextSelectable };
     });
   },
   setPhoneticConfig: (nextValue) => {

@@ -5,7 +5,7 @@ import { useImmer } from 'use-immer';
 import { EXPLICIT_SPACE } from '@/shared/constants';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { WordPronunciationIcon, type WordPronunciationIconRef } from '@/shared/components/WordPronunciationIcon';
-import { selectCurrentDictInfo, usePracticeSessionStore, useSharedPreferencesStore } from '@/shared/stores';
+import { selectCurrentDictInfo, usePracticeSessionStore } from '@/shared/stores';
 import { useTypingPreferencesStore } from '@/pages/typing/stores';
 import type { Word } from '@/shared/types';
 import { useSaveWordRecord } from '@/shared/lib/db';
@@ -32,7 +32,7 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
   const wordDictationConfig = useTypingPreferencesStore((state) => state.wordDictationConfig);
   const pronunciationIsOpen = useTypingPreferencesStore((state) => state.pronunciationConfig.isOpen);
   const isShowAnswerOnHover = useTypingPreferencesStore((state) => state.isShowAnswerOnHover);
-  const isTextSelectable = useSharedPreferencesStore((state) => state.isTextSelectable);
+
   const isIgnoreCase = useTypingPreferencesStore((state) => state.isIgnoreCase);
 
   const wordPronunciationIconRef = useRef<WordPronunciationIconRef>(null);
@@ -329,7 +329,6 @@ export const WordComponent = ({ word, onFinish }: { word: Word; onFinish: () => 
             onMouseLeave={() => setIsHoveringWord(false)}
             className={clsx(
               'relative flex min-h-[4rem] items-center justify-center px-2 text-center',
-              { 'select-all': isTextSelectable },
               wordState.hasWrong && 'my-word-wrong',
             )}
           >
