@@ -17,5 +17,6 @@
       ]
     }
   ],
-  "trailingSlash": false
+  "trailingSlash": false,
+  "ignoreCommand": "! git describe --exact-match --tags HEAD 2>/dev/null"
 }
