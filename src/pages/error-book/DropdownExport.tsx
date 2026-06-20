@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import type { Word } from '@/shared/types';
 import { idDictionaryMap } from '@/shared/resources/dictionary';
 import { wordListFetcher } from '@/shared/utils/wordListFetcher';
 import { saveAs } from 'file-saver';
@@ -35,12 +36,12 @@ const DropdownExport = ({ renderRecords }: DropdownProps) => {
       ];
       const dictDataMap = new Map(
         await Promise.all(
-          dictUrls.map(async (url) => {
+          dictUrls.map(async (url): Promise<[string, Word[]]> => {
             try {
-              return [url, await wordListFetcher(url)] as const;
+              return [url, await wordListFetcher(url)];
             } catch (e) {
               console.error(`获取词典数据失败: ${url}`, e);
-              return [url, []] as const;
+              return [url, []];
             }
           }),
         ),

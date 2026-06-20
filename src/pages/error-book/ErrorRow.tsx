@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { idDictionaryMap } from '@/shared/resources/dictionary';
-import { useCallback, memo, type FC } from 'react';
+import { memo, type FC } from 'react';
 import DeleteIcon from '~icons/weui/delete-filled';
 import { LoadingWordUI } from './LoadingWordUI';
 import useGetWord from './hooks/useGetWord';
