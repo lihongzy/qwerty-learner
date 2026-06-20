@@ -17,6 +17,5 @@
       ]
     }
   ],
-  "trailingSlash": false,
-  "ignoreCommand": "bash -c 'case \"$VERCEL_GIT_COMMIT_REF\" in refs/tags/*) exit 1;; *) exit 0;; esac'"
+  "trailingSlash": false
 }
