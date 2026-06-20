@@ -1,90 +1,70 @@
-import DropdownExport from './DropdownExport'
-import ErrorRow from './ErrorRow'
-import type { ISortType } from './HeadWrongNumber'
-import HeadWrongNumber from './HeadWrongNumber'
-import Pagination, { ITEM_PER_PAGE } from './Pagination'
-import RowDetail from './RowDetail'
-import { currentRowDetailAtom } from './store'
-import type { groupedWordRecords } from './type'
-import { db, useDeleteWordRecord } from '@/shared/lib/db'
-import type { WordRecord } from '@/shared/lib/db/record'
-import * as ScrollArea from '@radix-ui/react-scroll-area'
-import { useAtomValue } from 'jotai'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
-import IconArrowLeft from '~icons/tabler/arrow-left'
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
+import { db, useDeleteWordRecord } from '@/shared/lib/db';
+import type { WordRecord } from '@/shared/lib/db/record';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router';
+import IconArrowLeft from '~icons/tabler/arrow-left';
+import DropdownExport from './DropdownExport';
+import ErrorRow from './ErrorRow';
+import type { ISortType } from './HeadWrongNumber';
+import HeadWrongNumber from './HeadWrongNumber';
+import Pagination, { ITEM_PER_PAGE } from './Pagination';
+import RowDetail from './RowDetail';
+import { useErrorBookStore } from './store';
+import type { groupedWordRecords } from './type';
 
-type SummaryCardProps = {
-  label: string
-  value: string
-}
-
-const SummaryCard = ({ label, value }: SummaryCardProps) => (
-  <section className="my-panel px-4 py-3">
+const SummaryCard = ({ label, value }: { label: string; value: string }) => (
+  <section className="rounded-lg border px-4 py-3">
     <div className="flex items-end justify-between gap-3">
-      <div className="text-text-faint text-xs font-medium">{label}</div>
-      <div className="text-text-strong font-['IBM_Plex_Mono','JetBrains_Mono',monospace] text-[1.25rem] font-semibold leading-none tracking-tight">
-        {value}
-      </div>
+      <div className="text-muted-foreground text-xs font-medium">{label}</div>
+      <div className="font-mono text-xl font-semibold">{value}</div>
     </div>
   </section>
-)
+);
 
 export function ErrorBook() {
-  const [groupedRecords, setGroupedRecords] = useState<groupedWordRecords[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const totalPages = useMemo(() => Math.ceil(groupedRecords.length / ITEM_PER_PAGE), [groupedRecords.length])
-  const [sortType, setSortType] = useState<ISortType>('asc')
-  const navigate = useNavigate()
-  const currentRowDetail = useAtomValue(currentRowDetailAtom)
-  const { deleteWordRecord } = useDeleteWordRecord()
+  const [groupedRecords, setGroupedRecords] = useState<groupedWordRecords[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortType, setSortType] = useState<ISortType>('asc');
+  const navigate = useNavigate();
+  const currentRowDetail = useErrorBookStore((s) => s.currentRowDetail);
+  const { deleteWordRecord } = useDeleteWordRecord();
 
-  const onBack = useCallback(() => {
-    navigate('/')
-  }, [navigate])
+  const totalPages = useMemo(() => Math.ceil(groupedRecords.length / ITEM_PER_PAGE), [groupedRecords]);
 
   const setPage = useCallback(
     (page: number) => {
-      if (page < 1 || page > totalPages) return
-      setCurrentPage(page)
+      if (page >= 1 && page <= totalPages) setCurrentPage(page);
     },
     [totalPages],
-  )
+  );
 
   const setSort = useCallback(
-    (nextSortType: ISortType) => {
-      setSortType(nextSortType)
-      setPage(1)
+    (next: ISortType) => {
+      setSortType(next);
+      setPage(1);
     },
     [setPage],
-  )
+  );
 
   const sortedRecords = useMemo(() => {
-    if (sortType === 'none') return groupedRecords
-    return [...groupedRecords].sort((a, b) => {
-      if (sortType === 'asc') {
-        return a.wrongCount - b.wrongCount
-      }
-
-      return b.wrongCount - a.wrongCount
-    })
-  }, [groupedRecords, sortType])
+    if (sortType === 'none') return groupedRecords;
+    return [...groupedRecords].sort((a, b) =>
+      sortType === 'asc' ? a.wrongCount - b.wrongCount : b.wrongCount - a.wrongCount,
+    );
+  }, [groupedRecords, sortType]);
 
   const renderRecords = useMemo(() => {
-    const start = (currentPage - 1) * ITEM_PER_PAGE
-    const end = start + ITEM_PER_PAGE
-    return sortedRecords.slice(start, end)
-  }, [currentPage, sortedRecords])
+    const start = (currentPage - 1) * ITEM_PER_PAGE;
+    return sortedRecords.slice(start, start + ITEM_PER_PAGE);
+  }, [currentPage, sortedRecords]);
 
   const summary = useMemo(() => {
-    const totalWrongCount = groupedRecords.reduce((acc, item) => acc + item.wrongCount, 0)
-    const dictionaryCount = new Set(groupedRecords.map((item) => item.dict)).size
-
-    return {
-      totalWrongCount,
-      dictionaryCount,
-    }
-  }, [groupedRecords])
+    const totalWrongCount = groupedRecords.reduce((acc, item) => acc + item.wrongCount, 0);
+    const dictionaryCount = new Set(groupedRecords.map((item) => item.dict)).size;
+    return { totalWrongCount, dictionaryCount };
+  }, [groupedRecords]);
 
   useEffect(() => {
     db.wordRecords
@@ -92,62 +72,53 @@ export function ErrorBook() {
       .above(0)
       .toArray()
       .then((records) => {
-        const groupMap = new Map<string, groupedWordRecords>()
-
+        const groupMap = new Map<string, groupedWordRecords>();
         records.forEach((record) => {
-          const key = `${record.dict}::${record.word}`
-          const existingGroup = groupMap.get(key)
-
-          if (existingGroup) {
-            existingGroup.records.push(record as WordRecord)
-            existingGroup.wrongCount += record.wrongCount
-            return
+          const key = `${record.dict}::${record.word}`;
+          const group = groupMap.get(key);
+          if (group) {
+            group.records.push(record as WordRecord);
+            group.wrongCount += record.wrongCount;
+          } else {
+            groupMap.set(key, {
+              word: record.word,
+              dict: record.dict,
+              records: [record as WordRecord],
+              wrongCount: record.wrongCount,
+            });
           }
-
-          groupMap.set(key, {
-            word: record.word,
-            dict: record.dict,
-            records: [record as WordRecord],
-            wrongCount: record.wrongCount,
-          })
-        })
-
-        setGroupedRecords(Array.from(groupMap.values()))
-      })
-  }, [])
+        });
+        setGroupedRecords(Array.from(groupMap.values()));
+      });
+  }, []);
 
   const handleDelete = async (word: string, dict: string) => {
-    const deletedCount = await deleteWordRecord(word, dict)
-    if (!deletedCount) return
-
+    const deletedCount = await deleteWordRecord(word, dict);
+    if (!deletedCount) return;
     setGroupedRecords((prev) => {
-      const nextRecords = prev.filter((item) => !(item.word === word && item.dict === dict))
-      const nextTotalPages = Math.max(1, Math.ceil(nextRecords.length / ITEM_PER_PAGE))
-
-      setCurrentPage((prevPage) => Math.min(prevPage, nextTotalPages))
-
-      return nextRecords
-    })
-  }
+      const next = prev.filter((item) => !(item.word === word && item.dict === dict));
+      setCurrentPage((p) => Math.min(p, Math.max(1, Math.ceil(next.length / ITEM_PER_PAGE))));
+      return next;
+    });
+  };
 
   return (
-    <>
-      <div className={`flex h-screen w-full min-h-0 flex-col overflow-hidden px-4 pb-4 pt-4 sm:px-6 lg:px-8 ${currentRowDetail ? 'blur-sm' : ''}`}>
+    <TooltipProvider>
+      <div
+        className={`flex h-screen min-h-0 w-full flex-col overflow-hidden px-4 pt-4 pb-4 sm:px-6 lg:px-8 ${currentRowDetail ? 'blur-sm' : ''}`}
+      >
         <div className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col">
           <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div className="flex flex-col gap-2">
-              <div>
-                <h1 className="text-text-strong text-[1.75rem] font-semibold tracking-tight sm:text-[2rem]">错题本</h1>
-                <p className="text-text-muted mt-1 max-w-2xl text-sm leading-6">
-                  查看高频错误单词、按错误次数排序并导出记录，优先清理最容易反复出错的词条。
-                </p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-semibold sm:text-3xl">错题本</h1>
+              <p className="text-muted-foreground mt-1 max-w-2xl text-sm">
+                查看高频错误单词、按错误次数排序并导出记录，优先清理最容易反复出错的词条。
+              </p>
             </div>
-
-            <button type="button" className="my-btn-secondary my-focus-ring inline-flex gap-2 self-start px-4 sm:self-auto" onClick={onBack}>
-              <IconArrowLeft className="h-4.5 w-4.5" />
+            <Button variant="outline" onClick={() => navigate('/')} className="self-start sm:self-auto">
+              <IconArrowLeft />
               返回练习
-            </button>
+            </Button>
           </div>
 
           <div className="mb-3 grid gap-2 md:grid-cols-4">
@@ -157,33 +128,26 @@ export function ErrorBook() {
             <SummaryCard label="当前页" value={`${currentPage}/${Math.max(totalPages, 1)}`} />
           </div>
 
-          <section className="my-panel flex min-h-0 flex-1 flex-col overflow-hidden px-3 py-3 sm:px-4 sm:py-4">
-            <div className="flex min-h-0 flex-1 flex-col">
-              <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <div className="text-text-strong text-base font-semibold tracking-tight">按单词与词典聚合的错误记录</div>
-                </div>
-                <div className="text-text-muted text-xs sm:text-sm">点击任意行查看详细统计与发音信息</div>
-              </div>
+          <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border px-4 py-4">
+            <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="text-base font-semibold">按单词与词典聚合的错误记录</div>
+              <div className="text-muted-foreground text-xs sm:text-sm">点击任意行查看详细统计与发音信息</div>
+            </div>
 
-              <div className="border-border-main bg-bg-panel text-text-main sticky top-0 z-10 mb-2 grid grid-cols-[1.3fr_2.8fr_0.9fr_1.1fr_auto] items-center gap-3 rounded-app-md border px-4 py-2.5 text-sm font-medium">
-                <span>单词</span>
-                <span>释义</span>
-                <HeadWrongNumber className="justify-self-start" sortType={sortType} setSortType={setSort} />
-                <span>词典</span>
-                <DropdownExport renderRecords={sortedRecords} />
-              </div>
+            <div className="bg-background sticky top-0 z-10 mb-2 grid grid-cols-[1.3fr_2.8fr_0.9fr_1.1fr_auto] items-center gap-3 rounded-lg border px-4 py-2.5 text-sm font-medium">
+              <span>单词</span>
+              <span>释义</span>
+              <HeadWrongNumber className="justify-self-start" sortType={sortType} setSortType={setSort} />
+              <span>词典</span>
+              <DropdownExport renderRecords={sortedRecords} />
+            </div>
 
-              <ScrollArea.Root className="min-h-0 flex-1 overflow-hidden">
-                <ScrollArea.Viewport className="h-full min-h-0">
-                  <div className="flex flex-col gap-2 pb-1">
-                    {renderRecords.map((record) => (
-                      <ErrorRow key={`${record.dict}-${record.word}`} record={record} onDelete={handleDelete} />
-                    ))}
-                  </div>
-                </ScrollArea.Viewport>
-                <ScrollArea.Scrollbar className="flex touch-none select-none bg-transparent" orientation="vertical" />
-              </ScrollArea.Root>
+            <div className="min-h-0 flex-1 overflow-auto">
+              <div className="flex flex-col gap-2 pb-1">
+                {renderRecords.map((record) => (
+                  <ErrorRow key={`${record.dict}-${record.word}`} record={record} onDelete={handleDelete} />
+                ))}
+              </div>
             </div>
           </section>
 
@@ -191,8 +155,8 @@ export function ErrorBook() {
         </div>
       </div>
       {currentRowDetail && <RowDetail currentRowDetail={currentRowDetail} allRecords={sortedRecords} />}
-    </>
-  )
+    </TooltipProvider>
+  );
 }
 
-export default ErrorBook
+export default ErrorBook;

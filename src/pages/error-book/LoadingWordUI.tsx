@@ -1,23 +1,21 @@
-import Loader from '@/shared/components/Loading'
-import type { FC } from 'react'
-import ErrorIcon from '~icons/ic/outline-error'
+import ErrorIcon from '~icons/ic/outline-error';
 
-type LoadingWordUIProps = {
-  className?: string
-  isLoading: boolean
-  hasError: boolean
-}
+type Props = {
+  className?: string;
+  isLoading: boolean;
+  hasError: boolean;
+};
 
-export const LoadingWordUI: FC<LoadingWordUIProps> = ({ className, isLoading, hasError }) => {
+export function LoadingWordUI({ className, isLoading, hasError }: Props) {
   return (
     <div className={className}>
       {hasError ? (
-        <div className="my-tooltip !bg-transparent" data-tip="数据加载失败">
-          <ErrorIcon className="text-red-500" />
-        </div>
+        <ErrorIcon className="text-destructive" />
       ) : (
-        isLoading && <Loader />
+        isLoading && (
+          <span className="border-muted-foreground inline-block h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
+        )
       )}
     </div>
-  )
+  );
 }

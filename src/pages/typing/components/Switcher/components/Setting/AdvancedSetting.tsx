@@ -1,9 +1,6 @@
-import { isTextSelectableAtom } from '@/shared/state'
-import { isIgnoreCaseAtom, isShowAnswerOnHoverAtom, isShowPrevAndNextWordAtom, randomConfigAtom } from '@/pages/typing/state'
-import * as ScrollArea from '@radix-ui/react-scroll-area'
-import * as Switch from '@radix-ui/react-switch'
-import { useAtom } from 'jotai'
-import { useCallback } from 'react'
+import { useTypingPreferencesStore } from '@/pages/typing/stores';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Switch } from '@/components/ui/switch';
 
 function SettingSwitchRow({
   title,
@@ -12,126 +9,72 @@ function SettingSwitchRow({
   onCheckedChange,
   statusLabel,
 }: {
-  title: string
-  description: string
-  checked: boolean
-  onCheckedChange: (checked: boolean) => void
-  statusLabel: string
+  title: string;
+  description: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  statusLabel: string;
 }) {
   return (
-    <section className="flex w-full flex-col items-start gap-5 rounded-app-md border border-border-main bg-bg-panel px-6 py-6 shadow-app-soft">
-      <div className="flex w-full flex-col items-start gap-3">
-        <span className="text-left text-xl font-semibold text-text-strong">{title}</span>
-        <span className="text-left text-sm leading-7 text-text-muted">{description}</span>
+    <section className="flex w-full flex-col gap-4 rounded-lg border p-6">
+      <div className="flex flex-col gap-2">
+        <span className="text-xl font-semibold">{title}</span>
+        <span className="text-muted-foreground text-sm">{description}</span>
       </div>
 
       <div className="flex w-full items-center justify-between gap-4">
-        <Switch.Root checked={checked} onCheckedChange={onCheckedChange} className="my-switch-root">
-          <Switch.Thumb aria-hidden="true" className="my-switch-thumb" />
-        </Switch.Root>
-        <span className="text-right text-xs font-normal leading-tight text-text-muted">{statusLabel}</span>
+        <Switch checked={checked} onCheckedChange={onCheckedChange} />
+        <span className="text-muted-foreground text-xs">{statusLabel}</span>
       </div>
     </section>
-  )
+  );
 }
 
 export default function AdvancedSetting() {
-  const [randomConfig, setRandomConfig] = useAtom(randomConfigAtom)
-  const [isShowPrevAndNextWord, setIsShowPrevAndNextWord] = useAtom(isShowPrevAndNextWordAtom)
-  const [isIgnoreCase, setIsIgnoreCase] = useAtom(isIgnoreCaseAtom)
-  const [isTextSelectable, setIsTextSelectable] = useAtom(isTextSelectableAtom)
-  const [isShowAnswerOnHover, setIsShowAnswerOnHover] = useAtom(isShowAnswerOnHoverAtom)
-
-  // 控制章节练习时是否开启随机排序。
-  const onToggleRandom = useCallback(
-    (checked: boolean) => {
-      setRandomConfig((prev) => ({
-        ...prev,
-        isOpen: checked,
-      }))
-    },
-    [setRandomConfig],
-  )
-
-  // 控制练习页顶部是否显示前后单词提示。
-  const onToggleLastAndNextWord = useCallback(
-    (checked: boolean) => {
-      setIsShowPrevAndNextWord(checked)
-    },
-    [setIsShowPrevAndNextWord],
-  )
-
-  // 控制输入判断时是否忽略英文字母大小写。
-  const onToggleIgnoreCase = useCallback(
-    (checked: boolean) => {
-      setIsIgnoreCase(checked)
-    },
-    [setIsIgnoreCase],
-  )
-
-  // 控制页面上的文本是否允许被鼠标选中。
-  const onToggleTextSelectable = useCallback(
-    (checked: boolean) => {
-      setIsTextSelectable(checked)
-    },
-    [setIsTextSelectable],
-  )
-
-  // 控制默写模式下，鼠标悬浮时是否允许显示答案提示。
-  const onToggleShowAnswerOnHover = useCallback(
-    (checked: boolean) => {
-      setIsShowAnswerOnHover(checked)
-    },
-    [setIsShowAnswerOnHover],
-  )
+  const randomConfig = useTypingPreferencesStore((s) => s.randomConfig);
+  const setRandomConfig = useTypingPreferencesStore((s) => s.setRandomConfig);
+  const isShowPrevAndNextWord = useTypingPreferencesStore((s) => s.isShowPrevAndNextWord);
+  const setIsShowPrevAndNextWord = useTypingPreferencesStore((s) => s.setIsShowPrevAndNextWord);
+  const isIgnoreCase = useTypingPreferencesStore((s) => s.isIgnoreCase);
+  const setIsIgnoreCase = useTypingPreferencesStore((s) => s.setIsIgnoreCase);
+  const isShowAnswerOnHover = useTypingPreferencesStore((s) => s.isShowAnswerOnHover);
+  const setIsShowAnswerOnHover = useTypingPreferencesStore((s) => s.setIsShowAnswerOnHover);
 
   return (
-    <ScrollArea.Root className="flex-1 select-none overflow-y-auto">
-      <ScrollArea.Viewport className="h-full w-full px-3">
-        {/* 高级设置项较多，使用滚动区域承载完整内容。 */}
-        <div className="flex w-full flex-col items-start gap-10 overflow-y-auto px-3 pb-20 pt-8">
-          <SettingSwitchRow
-            title="章节乱序"
-            description="开启后，每次练习章节中单词会随机排序。下一章节生效。"
-            checked={randomConfig.isOpen}
-            onCheckedChange={onToggleRandom}
-            statusLabel={`随机已${randomConfig.isOpen ? '开启' : '关闭'}`}
-          />
+    <ScrollArea className="h-full">
+      <div className="flex w-full flex-col gap-8 px-6 py-8">
+        <SettingSwitchRow
+          title="章节乱序"
+          description="开启后，每次练习章节中单词会随机排序。下一章节生效。"
+          checked={randomConfig.isOpen}
+          onCheckedChange={(v) => setRandomConfig((p) => ({ ...p, isOpen: v }))}
+          statusLabel={`随机已${randomConfig.isOpen ? '开启' : '关闭'}`}
+        />
 
-          <SettingSwitchRow
-            title="练习时展示上一个/下一个单词"
-            description="开启后，练习中会在上方展示上一个和下一个单词。"
-            checked={isShowPrevAndNextWord}
-            onCheckedChange={onToggleLastAndNextWord}
-            statusLabel={`展示单词已${isShowPrevAndNextWord ? '开启' : '关闭'}`}
-          />
+        <SettingSwitchRow
+          title="练习时展示上一个/下一个单词"
+          description="开启后，练习中会在上方展示上一个和下一个单词。"
+          checked={isShowPrevAndNextWord}
+          onCheckedChange={setIsShowPrevAndNextWord}
+          statusLabel={`展示单词已${isShowPrevAndNextWord ? '开启' : '关闭'}`}
+        />
 
-          <SettingSwitchRow
-            title="是否忽略大小写"
-            description="开启后，输入时不区分大小写，如输入“hello”和“Hello”都会被认为是正确的。"
-            checked={isIgnoreCase}
-            onCheckedChange={onToggleIgnoreCase}
-            statusLabel={`忽略大小写已${isIgnoreCase ? '开启' : '关闭'}`}
-          />
+        <SettingSwitchRow
+          title="是否忽略大小写"
+          description={'开启后，输入时不区分大小写，如输入\u201Chello\u201D和\u201CHello\u201D都会被认为是正确的。'}
+          checked={isIgnoreCase}
+          onCheckedChange={setIsIgnoreCase}
+          statusLabel={`忽略大小写已${isIgnoreCase ? '开启' : '关闭'}`}
+        />
 
-          <SettingSwitchRow
-            title="是否允许选择文本"
-            description="开启后，可以通过鼠标选择页面中的文本。"
-            checked={isTextSelectable}
-            onCheckedChange={onToggleTextSelectable}
-            statusLabel={`选择文本已${isTextSelectable ? '开启' : '关闭'}`}
-          />
-
-          <SettingSwitchRow
-            title="是否允许默写模式下显示提示"
-            description="开启后，可以通过鼠标悬浮单词显示正确答案。"
-            checked={isShowAnswerOnHover}
-            onCheckedChange={onToggleShowAnswerOnHover}
-            statusLabel={`显示提示已${isShowAnswerOnHover ? '开启' : '关闭'}`}
-          />
-        </div>
-      </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar className="flex touch-none select-none bg-transparent" orientation="vertical" />
-    </ScrollArea.Root>
-  )
+        <SettingSwitchRow
+          title="是否允许默写模式下显示提示"
+          description="开启后，可以通过鼠标悬浮单词显示正确答案。"
+          checked={isShowAnswerOnHover}
+          onCheckedChange={setIsShowAnswerOnHover}
+          statusLabel={`显示提示已${isShowAnswerOnHover ? '开启' : '关闭'}`}
+        />
+      </div>
+    </ScrollArea>
+  );
 }

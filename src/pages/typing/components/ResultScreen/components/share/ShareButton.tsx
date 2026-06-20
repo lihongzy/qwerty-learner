@@ -1,14 +1,14 @@
-import { useCallback, useMemo, useState } from 'react'
-import { TooltipHint as Tooltip } from '@/shared/ui/tooltip'
-import IconShare2 from '~icons/tabler/share-2'
-import SharePicDialog from './SharePicDialog'
+import { useCallback, useMemo, useState } from 'react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import IconShare2 from '~icons/tabler/share-2';
+import SharePicDialog from './SharePicDialog';
 
 type ShareButtonProps = {
-  onOpenChange?: (isOpen: boolean) => void
-}
+  onOpenChange?: (isOpen: boolean) => void;
+};
 
 export default function ShareButton({ onOpenChange }: ShareButtonProps) {
-  const [isShowSharePanel, setIsShowSharePanel] = useState(false)
+  const [isShowSharePanel, setIsShowSharePanel] = useState(false);
 
   const randomChoose = useMemo(
     () => ({
@@ -16,20 +16,20 @@ export default function ShareButton({ onOpenChange }: ShareButtonProps) {
       promoteRandom: Math.random(),
     }),
     [],
-  )
+  );
 
   const onClickShare = useCallback(() => {
-    onOpenChange?.(true)
-    setIsShowSharePanel(true)
-  }, [onOpenChange])
+    onOpenChange?.(true);
+    setIsShowSharePanel(true);
+  }, [onOpenChange]);
 
   const handleShareDialogOpenChange = useCallback(
     (isOpen: boolean) => {
-      onOpenChange?.(isOpen)
-      setIsShowSharePanel(isOpen)
+      onOpenChange?.(isOpen);
+      setIsShowSharePanel(isOpen);
     },
     [onOpenChange],
-  )
+  );
 
   return (
     <>
@@ -41,15 +41,20 @@ export default function ShareButton({ onOpenChange }: ShareButtonProps) {
         />
       )}
 
-      <Tooltip content="分享练习结果">
-        <button
-          type="button"
-          className="border-border-main bg-bg-elevated text-text-muted hover:border-accent-primary hover:text-text-strong inline-flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
-          onClick={onClickShare}
-        >
-          <IconShare2 />
-        </button>
-      </Tooltip>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
+              onClick={onClickShare}
+            >
+              <IconShare2 />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>分享练习结果</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </>
-  )
+  );
 }

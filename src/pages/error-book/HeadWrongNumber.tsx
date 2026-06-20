@@ -1,44 +1,31 @@
-import clsx from 'clsx'
-import type { FC } from 'react'
-import { useCallback } from 'react'
-import DownIcon from '~icons/fa/sort-down'
-import UPIcon from '~icons/fa/sort-up'
+import { useCallback } from 'react';
+import DownIcon from '~icons/fa/sort-down';
+import UpIcon from '~icons/fa/sort-up';
 
-type IHeadWrongNumberProps = {
-  className?: string
-  sortType: ISortType
-  setSortType: (sortType: ISortType) => void
-}
+export type ISortType = 'asc' | 'desc' | 'none';
 
-export type ISortType = 'asc' | 'desc' | 'none'
+type Props = {
+  className?: string;
+  sortType: ISortType;
+  setSortType: (sortType: ISortType) => void;
+};
 
-const HeadWrongNumber: FC<IHeadWrongNumberProps> = ({ className, sortType, setSortType }) => {
-  const onClick = useCallback(() => {
-    const sortTypes: Record<ISortType, ISortType> = {
-      asc: 'desc',
-      desc: 'none',
-      none: 'asc',
-    }
+const sortCycle: Record<ISortType, ISortType> = { asc: 'desc', desc: 'none', none: 'asc' };
 
-    setSortType(sortTypes[sortType])
-  }, [setSortType, sortType])
+export default function HeadWrongNumber({ className, sortType, setSortType }: Props) {
+  const onClick = useCallback(() => setSortType(sortCycle[sortType]), [setSortType, sortType]);
 
   return (
     <button
       type="button"
-      className={clsx(
-        'my-focus-ring inline-flex items-center gap-2 rounded-[var(--radius-sm)] border border-transparent px-2 py-1 text-left text-sm font-medium text-[var(--text-main)] transition-colors duration-150 hover:border-[var(--border-main)] hover:bg-[var(--bg-ghost)]',
-        className,
-      )}
+      className={`text-muted-foreground hover:border-border hover:bg-muted inline-flex items-center gap-2 rounded-md border border-transparent px-2 py-1 text-sm font-medium transition-colors ${className ?? ''}`}
       onClick={onClick}
     >
       错误次数
       <span className="flex flex-col items-center justify-center text-[11px] leading-none">
-        <UPIcon className={clsx('-mb-1', sortType === 'asc' ? 'text-[var(--accent-primary)]' : 'text-[var(--text-faint)]')} />
-        <DownIcon className={clsx(sortType === 'desc' ? 'text-[var(--accent-primary)]' : 'text-[var(--text-faint)]')} />
+        <UpIcon className={`-mb-1 ${sortType === 'asc' ? 'text-primary' : 'text-muted-foreground/40'}`} />
+        <DownIcon className={sortType === 'desc' ? 'text-primary' : 'text-muted-foreground/40'} />
       </span>
     </button>
-  )
+  );
 }
-
-export default HeadWrongNumber

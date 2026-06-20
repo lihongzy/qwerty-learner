@@ -29,4 +29,4 @@ export const RESULT_SCREEN_COPY = {
   metricTime: '用时',
   metricWpm: 'WPM',
   xlsxLoadFailed: '加载 xlsx 模块失败',
-} as const
+} as const;

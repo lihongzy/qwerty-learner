@@ -1,14 +1,18 @@
-import { KEY_SOUND_URL_PREFIX, SOUND_URL_PREFIX, keySoundResources } from '@/shared/resources/soundResource'
-import { hintSoundsConfigAtom, keySoundsConfigAtom } from '@/pages/typing/state'
-import { useAtomValue, useSetAtom } from 'jotai'
-import { useCallback, useEffect, useMemo } from 'react'
-import useSound from 'use-sound'
+import { KEY_SOUND_URL_PREFIX, SOUND_URL_PREFIX, keySoundResources } from '@/shared/resources/soundResource';
+import { useTypingSoundStore } from '@/pages/typing/stores';
+import { useCallback, useEffect, useMemo } from 'react';
+import useSound from 'use-sound';
 
-export type PlayFunction = ReturnType<typeof useSound>[0]
+export type PlayFunction = ReturnType<typeof useSound>[0];
 
 export default function useKeySounds(): [PlayFunction, PlayFunction, PlayFunction] {
-  const { isOpen: isKeyOpen, isOpenClickSound, volume: keyVolume, resource: keyResource } = useAtomValue(keySoundsConfigAtom)
-  const setKeySoundsConfig = useSetAtom(keySoundsConfigAtom)
+  const {
+    isOpen: isKeyOpen,
+    isOpenClickSound,
+    volume: keyVolume,
+    resource: keyResource,
+  } = useTypingSoundStore((state) => state.keySoundsConfig);
+  const setKeySoundsConfig = useTypingSoundStore((state) => state.setKeySoundsConfig);
   const {
     isOpen: isHintOpen,
     isOpenWrongSound,
@@ -16,12 +20,12 @@ export default function useKeySounds(): [PlayFunction, PlayFunction, PlayFunctio
     volume: hintVolume,
     wrongResource,
     correctResource,
-  } = useAtomValue(hintSoundsConfigAtom)
+  } = useTypingSoundStore((state) => state.hintSoundsConfig);
 
   const fallbackResource = useMemo(
     () => keySoundResources.find((item) => item.key === 'Default') || keySoundResources[0],
     [],
-  )
+  );
 
   const matchedResource = useMemo(
     () =>
@@ -29,51 +33,51 @@ export default function useKeySounds(): [PlayFunction, PlayFunction, PlayFunctio
         ? keySoundResources.find((item) => item.filename === keyResource.filename && item.key === keyResource.key)
         : undefined,
     [keyResource],
-  )
+  );
 
   useEffect(() => {
     if (fallbackResource && !matchedResource) {
-      setKeySoundsConfig((prev) => ({ ...prev, resource: fallbackResource }))
+      setKeySoundsConfig((prev) => ({ ...prev, resource: fallbackResource }));
     }
-  }, [fallbackResource, matchedResource, setKeySoundsConfig])
+  }, [fallbackResource, matchedResource, setKeySoundsConfig]);
 
-  const resolvedKeyResource = matchedResource || fallbackResource
+  const resolvedKeyResource = matchedResource || fallbackResource;
   const keySoundUrl = useMemo(
     () => (resolvedKeyResource ? `${KEY_SOUND_URL_PREFIX}${resolvedKeyResource.filename}` : undefined),
     [resolvedKeyResource],
-  )
+  );
 
   const [playClickSoundRaw] = useSound(keySoundUrl ?? '', {
     volume: keyVolume,
     interrupt: true,
     soundEnabled: Boolean(keySoundUrl),
-  })
+  });
   const [playWrongSoundRaw] = useSound(`${SOUND_URL_PREFIX}${wrongResource.filename}`, {
     volume: hintVolume,
     interrupt: true,
-  })
+  });
   const [playCorrectSoundRaw] = useSound(`${SOUND_URL_PREFIX}${correctResource.filename}`, {
     volume: hintVolume,
     interrupt: true,
-  })
+  });
 
   const playClickSound = useCallback(() => {
     if (isKeyOpen && isOpenClickSound) {
-      playClickSoundRaw()
+      playClickSoundRaw();
     }
-  }, [isKeyOpen, isOpenClickSound, playClickSoundRaw])
+  }, [isKeyOpen, isOpenClickSound, playClickSoundRaw]);
 
   const playWrongSound = useCallback(() => {
     if (isHintOpen && isOpenWrongSound) {
-      playWrongSoundRaw()
+      playWrongSoundRaw();
     }
-  }, [isHintOpen, isOpenWrongSound, playWrongSoundRaw])
+  }, [isHintOpen, isOpenWrongSound, playWrongSoundRaw]);
 
   const playCorrectSound = useCallback(() => {
     if (isHintOpen && isOpenCorrectSound) {
-      playCorrectSoundRaw()
+      playCorrectSoundRaw();
     }
-  }, [isHintOpen, isOpenCorrectSound, playCorrectSoundRaw])
+  }, [isHintOpen, isOpenCorrectSound, playCorrectSoundRaw]);
 
-  return [playClickSound, playWrongSound, playCorrectSound]
+  return [playClickSound, playWrongSound, playCorrectSound];
 }

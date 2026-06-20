@@ -1,9 +1,8 @@
-import { defaultFontSizeConfig } from '@/shared/constants'
-import { fontSizeConfigAtom } from '@/shared/state'
-import * as ScrollArea from '@radix-ui/react-scroll-area'
-import * as Slider from '@radix-ui/react-slider'
-import { useAtom } from 'jotai'
-import { useCallback } from 'react'
+import { defaultFontSizeConfig } from '@/shared/constants';
+import { useSharedPreferencesStore } from '@/shared/stores';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Slider } from '@/components/ui/slider';
+import { Button } from '@/components/ui/button';
 
 function FontSizeBlock({
   label,
@@ -13,99 +12,57 @@ function FontSizeBlock({
   step,
   onValueChange,
 }: {
-  label: string
-  value: number
-  min: number
-  max: number
-  step: number
-  onValueChange: (value: [number]) => void
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  onValueChange: (value: number[]) => void;
 }) {
   return (
-    <div className="flex w-full flex-col items-start gap-4 rounded-app-md border border-border-main bg-bg-elevated px-5 py-5">
-      <span className="text-left text-base font-medium text-text-main">{label}</span>
-      <div className="flex h-5 w-full items-center justify-between">
-        <Slider.Root value={[value]} min={min} max={max} step={step} className="my-slider" onValueChange={onValueChange}>
-          <Slider.Track>
-            <Slider.Range />
-          </Slider.Track>
-          <Slider.Thumb />
-        </Slider.Root>
-        <span className="ml-4 w-12 text-xs font-normal text-text-muted">{value}px</span>
+    <div className="flex w-full flex-col gap-3 rounded-lg border p-4">
+      <span className="text-sm font-medium">{label}</span>
+      <div className="flex items-center gap-4">
+        <Slider aria-label={label} value={[value]} min={min} max={max} step={step} onValueChange={onValueChange} />
+        <span className="text-muted-foreground w-12 shrink-0 text-xs">{value}px</span>
       </div>
     </div>
-  )
+  );
 }
 
 export default function ViewSetting() {
-  const [fontSizeConfig, setFontsizeConfig] = useAtom(fontSizeConfigAtom)
-
-  // 调整外语单词的显示字号。
-  const onChangeForeignFontSize = useCallback(
-    (value: [number]) => {
-      setFontsizeConfig((prev) => ({
-        ...prev,
-        foreignFont: value[0],
-      }))
-    },
-    [setFontsizeConfig],
-  )
-
-  // 调整中文释义的显示字号。
-  const onChangeTranslateFontSize = useCallback(
-    (value: [number]) => {
-      setFontsizeConfig((prev) => ({
-        ...prev,
-        translateFont: value[0],
-      }))
-    },
-    [setFontsizeConfig],
-  )
-
-  // 一键恢复到默认字号配置。
-  const onResetFontSize = useCallback(() => {
-    setFontsizeConfig({ ...defaultFontSizeConfig })
-  }, [setFontsizeConfig])
+  const fontSizeConfig = useSharedPreferencesStore((s) => s.fontSizeConfig);
+  const setFontsizeConfig = useSharedPreferencesStore((s) => s.setFontSizeConfig);
 
   return (
-    <ScrollArea.Root className="flex-1 select-none overflow-y-auto">
-      <ScrollArea.Viewport className="h-full w-full px-3">
-        {/* 显示设置内容放在滚动区域内，避免面板高度不够时被截断。 */}
-        <div className="flex w-full flex-col items-start gap-10 overflow-y-auto px-3 pb-20 pt-8">
-          <section className="flex w-full flex-col items-start gap-6 rounded-app-md border border-border-main bg-bg-panel px-6 py-6 shadow-app-soft">
-            <span className="text-left text-xl font-semibold text-text-strong">字体设置</span>
+    <ScrollArea className="h-full">
+      <div className="flex w-full flex-col gap-8 px-6 py-8">
+        <section className="flex w-full flex-col gap-6 rounded-lg border p-6">
+          <span className="text-xl font-semibold">字体设置</span>
 
-            {/* 滑块值直接绑定到全局字号配置，拖动时实时更新界面。 */}
-            <FontSizeBlock
-              label="外语字体"
-              value={fontSizeConfig.foreignFont}
-              min={20}
-              max={96}
-              step={4}
-              onValueChange={onChangeForeignFontSize}
-            />
+          <FontSizeBlock
+            label="外语字体"
+            value={fontSizeConfig.foreignFont}
+            min={20}
+            max={96}
+            step={4}
+            onValueChange={([v]) => setFontsizeConfig((p) => ({ ...p, foreignFont: v }))}
+          />
 
-            {/* 中文释义字号范围更小，避免占用过多纵向空间。 */}
-            <FontSizeBlock
-              label="中文字体"
-              value={fontSizeConfig.translateFont}
-              min={14}
-              max={60}
-              step={4}
-              onValueChange={onChangeTranslateFontSize}
-            />
-          </section>
+          <FontSizeBlock
+            label="中文字体"
+            value={fontSizeConfig.translateFont}
+            min={14}
+            max={60}
+            step={4}
+            onValueChange={([v]) => setFontsizeConfig((p) => ({ ...p, translateFont: v }))}
+          />
+        </section>
 
-          <button
-            className="ml-1 inline-flex items-center justify-center rounded-md bg-accent-primary px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-primary-hover disabled:cursor-not-allowed disabled:bg-bg-elevated disabled:text-text-faint"
-            type="button"
-            onClick={onResetFontSize}
-            title="重置字体设置"
-          >
-            重置字体设置
-          </button>
-        </div>
-      </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar className="flex touch-none select-none bg-transparent" orientation="vertical" />
-    </ScrollArea.Root>
-  )
+        <Button variant="outline" onClick={() => setFontsizeConfig({ ...defaultFontSizeConfig })}>
+          重置字体设置
+        </Button>
+      </div>
+    </ScrollArea>
+  );
 }
