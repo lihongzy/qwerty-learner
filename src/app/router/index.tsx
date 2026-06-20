@@ -13,6 +13,9 @@ export function AppRouter() {
     <RouterComponent>
       <Suspense fallback={<Loader />}>
         <Routes>
+          {sharedRoutes.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
           {isMobile ? (
             <Route path="/*" element={<Navigate to="/mobile" replace />} />
           ) : (
@@ -23,9 +26,6 @@ export function AppRouter() {
               <Route path="/*" element={<Navigate to="/" replace />} />
             </>
           )}
-          {sharedRoutes.map((route) => (
-            <Route key={route.path} path={route.path} element={route.element} />
-          ))}
         </Routes>
       </Suspense>
     </RouterComponent>
