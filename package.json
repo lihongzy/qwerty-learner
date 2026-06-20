@@ -9,7 +9,9 @@
     "check:encoding": "node scripts/check-encoding.mjs",
     "preview": "vite preview",
     "tauri": "tauri",
-    "prepare": "husky"
+    "prepare": "husky",
+    "predeploy": "pnpm build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.19",
@@ -60,6 +62,7 @@
     "@tauri-apps/cli": "^2",
     "@types/canvas-confetti": "^1.9.0",
     "@types/howler": "^2.2.12",
+    "gh-pages": "^6.3.0",
     "@types/node": "^25.2.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
