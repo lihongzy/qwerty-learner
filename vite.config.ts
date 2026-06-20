@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig(async () => ({
-  base: '/qwerty-learner/',
+  base: process.env.NODE_ENV === 'production' ? '/qwerty-learner/' : '/',
   plugins: [react(), tailwindcss(), Icons({ compiler: 'jsx', jsx: 'react' })],
   resolve: {
     alias: {
