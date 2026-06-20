@@ -1,7 +1,6 @@
 import { usePracticeSessionStore } from '@/shared/stores';
 import { useDeleteWordRecord } from '@/shared/lib/db';
 import type { Dictionary } from '@/shared/types/resource';
-import range from '@/shared/utils/range';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import IcOutlineCollectionsBookmark from '~icons/ic/outline-collections-bookmark';
@@ -129,7 +128,7 @@ export default function DictDetail({ dictionary: dict }: { dictionary: Dictionar
         {curTab === 'chapters' && (
           <div className="min-h-0 flex-1 overflow-auto rounded-lg border p-3">
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {range(0, dict.chapterCount, 1).map((index) => (
+              {Array.from({ length: dict.chapterCount }, (_, i) => i).map((index) => (
                 <Chapter
                   key={`${dict.id}-${index}`}
                   index={index}
